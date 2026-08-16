@@ -4,287 +4,287 @@
     "title": "Input, Output, និង Type Conversion",
     "description": "រៀនពីរបៀបអាន user input, បង្កើត formatted output, និង convert ស្រួលរវាង data types របស់ Python។",
     "courseName": "Python",
-    "moduleName": "Module 1 — Fundamentals",
-    "url": "/learn/python/module/module-1-fundamentals/lesson/input-and-output"
-  },
-  {
-    "type": "lesson",
-    "title": "Variables និង Data Types",
-    "description": "រៀនពីរបៀបដែល Python store data ដោយប្រើ variables, និងយល់ពី built-in data types ដែលអ្នកនឹងប្រើជានិច្ច។",
-    "courseName": "Python",
-    "moduleName": "Module 1 — Fundamentals",
-    "url": "/learn/python/module/module-1-fundamentals/lesson/variables-and-types"
-  },
-  {
-    "type": "lesson",
-    "title": "Python គឺអ្វី?",
-    "description": "សេចក្តីណែនាំអំពី Python — វាជាអ្វី, ហេតុអ្វីបានជាវាសំខាន់, ហើយហេតុអ្វីបានជាវាជាភាសាដែលគេជ្រើបំផុតសម្រាប់ data science និង AI។",
-    "courseName": "Python",
-    "moduleName": "Module 1 — Fundamentals",
-    "url": "/learn/python/module/module-1-fundamentals/lesson/what-is-python"
-  },
-  {
-    "type": "lesson",
-    "title": "Decorators និង Closures",
-    "description": "រៀនពីទស្សនៈវិជ្ជាកម្រិតខ្ពស់របស់ Python ក្នុងការប្រើប្រាស់អនុគមន៍ ដែលអនុញ្ញាតឱ្យអ្នកកែច្នៃ និងបន្ថែមសមត្ថភាពដល់អនុគមន៍ចាស់ៗដោយមិនបាច់កែប្រែកូដដើមរបស់វា។",
-    "courseName": "Python",
-    "moduleName": "Module 10 Advanced Python",
-    "url": "/learn/python/module/module-10-advanced-python/lesson/decorators-and-closures"
-  },
-  {
-    "type": "lesson",
-    "title": "Iterators និង Generators",
-    "description": "រៀនពីរបៀបបង្កើត Generators ដោយប្រើប្រាស់ពាក្យគន្លឹះ yield ដើម្បីសន្សំសំចៃ Memory នៅពេលធ្វើការជាមួយទិន្នន័យរាប់លានជួរ។",
-    "courseName": "Python",
-    "moduleName": "Module 10 Advanced Python",
-    "url": "/learn/python/module/module-10-advanced-python/lesson/iterators-and-generators"
-  },
-  {
-    "type": "lesson",
-    "title": "Regex និង Datetime",
-    "description": "រៀនពីបច្ចេកទេសស្វែងរកលំនាំអត្ថបទ (Pattern matching) ដ៏មានឥទ្ធិពលជាមួយ Regex និងរបៀបគ្រប់គ្រងម៉ោងនិងកាលបរិច្ឆេទក្នុង Python។",
-    "courseName": "Python",
-    "moduleName": "Module 10 Advanced Python",
-    "url": "/learn/python/module/module-10-advanced-python/lesson/regex-and-datetime"
-  },
-  {
-    "type": "lesson",
-    "title": "Higher-Order និង Pure Functions",
-    "description": "ឈ្វេងយល់ពីទស្សនៈវិជ្ជាដ៏ជ្រាលជ្រៅរបស់ Functional Programming រួមមាន Pure Functions, Immutability, និងការប្រើប្រាស់ Higher-Order Functions កម្រិតខ្ពស់។",
-    "courseName": "Python",
-    "moduleName": "Module 11 Functional Programming",
-    "url": "/learn/python/module/module-11-functional-programming/lesson/higher-order-functions"
-  },
-  {
-    "type": "lesson",
-    "title": "Map, Filter, និង Reduce",
-    "description": "រៀនពីរបៀបដំណើរការបញ្ជីទិន្នន័យ (Lists) ដោយមិនចាំបាច់ប្រើ for loops ដោយប្រើប្រាស់អនុគមន៍ map(), filter(), និង reduce() ដែលមានប្រសិទ្ធភាពខ្ពស់។",
-    "courseName": "Python",
-    "moduleName": "Module 11 Functional Programming",
-    "url": "/learn/python/module/module-11-functional-programming/lesson/map-filter-reduce"
-  },
-  {
-    "type": "lesson",
-    "title": "Asyncio Basics",
-    "description": "ឈ្វេងយល់ពី Asyncio ដែលជាបច្ចេកវិទ្យាទំនើបបំផុតរបស់ Python សម្រាប់ការសរសេរកូដ Concurrency ដោយប្រើប្រាស់ពាក្យគន្លឹះ async និង await ជំនួសឱ្យការប្រើ Threading ដ៏ស្មុគស្មាញ។",
-    "courseName": "Python",
-    "moduleName": "Module 12 Concurrency",
-    "url": "/learn/python/module/module-12-concurrency/lesson/asyncio-basics"
-  },
-  {
-    "type": "lesson",
-    "title": "Threading និង Multiprocessing",
-    "description": "រៀនពីរបៀបធ្វើឱ្យកុំព្យូទ័ររបស់អ្នកធ្វើការងារច្រើនក្នុងពេលតែមួយ (Concurrency & Parallelism) ដើម្បីសន្សំសំចៃពេលវេលាដោយប្រើប្រាស់ Threading និង Multiprocessing។",
-    "courseName": "Python",
-    "moduleName": "Module 12 Concurrency",
-    "url": "/learn/python/module/module-12-concurrency/lesson/threading-and-multiprocessing"
-  },
-  {
-    "type": "lesson",
-    "title": "Debugging និង Mocking",
-    "description": "រៀនពីរបៀបស្វែងរកកំហុសក្នុងកូដ (Bugs) ដោយប្រើប្រាស់ PDB និងរបៀបក្លែងបន្លំ (Mocking) API ឬ Database ក្នុងពេលធ្វើតេស្ត។",
-    "courseName": "Python",
-    "moduleName": "Module 13 Testing Debugging",
-    "url": "/learn/python/module/module-13-testing-debugging/lesson/debugging-and-mocking"
-  },
-  {
-    "type": "lesson",
-    "title": "Unit Testing ជាមួយ Pytest",
-    "description": "រៀនពីរបៀបសរសេរកូដដើម្បីតេស្តកូដរបស់អ្នកដោយស្វ័យប្រវត្តិ (Automated Testing) ដើម្បីធានាថាកម្មវិធីរបស់អ្នកដំណើរការបានត្រឹមត្រូវ ១០០% មុននឹងដាក់ឱ្យប្រើប្រាស់។",
-    "courseName": "Python",
-    "moduleName": "Module 13 Testing Debugging",
-    "url": "/learn/python/module/module-13-testing-debugging/lesson/pytest-and-unittest"
-  },
-  {
-    "type": "lesson",
-    "title": "PEP 8 និង Clean Code",
-    "description": "រៀនពីរបៀបសរសេរកូដ Python ឱ្យត្រូវតាមស្តង់ដារអន្តរជាតិ (PEP 8) និងគន្លឹះក្នុងការសរសេរកូដដែលអ្នកផ្សេងអានយល់បានយ៉ាងងាយស្រួល (Clean Code)។",
-    "courseName": "Python",
-    "moduleName": "Module 14 Performance Best Practices",
-    "url": "/learn/python/module/module-14-performance-best-practices/lesson/pep8-and-clean-code"
-  },
-  {
-    "type": "lesson",
-    "title": "Profiling និង Optimization",
-    "description": "ឈ្វេងយល់ពីវិធីសាស្ត្រក្នុងការស្វែងរកចំណុចខ្សោយ (Bottlenecks) របស់កម្មវិធីដោយប្រើប្រាស់ Profilers និងបច្ចេកទេសធ្វើឱ្យកូដ Python ដើរលឿនជាងមុន។",
-    "courseName": "Python",
-    "moduleName": "Module 14 Performance Best Practices",
-    "url": "/learn/python/module/module-14-performance-best-practices/lesson/profiling-and-optimization"
-  },
-  {
-    "type": "lesson",
-    "title": "CLI Applications",
-    "description": "អនុវត្តចំណេះដឹង Python របស់អ្នកដោយបង្កើតកម្មវិធី Command-Line Interface (CLI) ដែលមានប្រយោជន៍សម្រាប់ការងារប្រចាំថ្ងៃ ដោយប្រើប្រាស់បណ្ណាល័យ argparse ដ៏មានអានុភាព។",
-    "courseName": "Python",
-    "moduleName": "Module 15 Real World Projects",
-    "url": "/learn/python/module/module-15-real-world-projects/lesson/cli-applications"
-  },
-  {
-    "type": "lesson",
-    "title": "Web Scraping និង APIs",
-    "description": "រៀនពីរបៀបធ្វើឱ្យកម្មវិធី Python របស់អ្នកមានជីវិត ដោយការទាញយកទិន្នន័យពិតៗពីវេបសាយ (Web Scraping) និងការនិយាយផ្ទាល់ជាមួយម៉ាស៊ីនមេ (APIs) ដោយប្រើប្រាស់ requests និង BeautifulSoup។",
-    "courseName": "Python",
-    "moduleName": "Module 15 Real World Projects",
-    "url": "/learn/python/module/module-15-real-world-projects/lesson/web-scraping-and-apis"
+    "moduleName": "មេរៀនទី ១៖ មូលដ្ឋានគ្រឹះ និងការដំឡើងបរិស្ថានសរសេរកូដ (Foundations & Setup)",
+    "url": "/learn/python/module/module-1-foundations-setup/lesson/input-and-output"
   },
   {
     "type": "lesson",
     "title": "Operators និង Expressions",
     "description": "ចាប់ផ្តើមជាម្ចាស់ជាមួយ operators របស់ Python — arithmetic, comparison, logical, bitwise, និង assignment — និងយល់ពីរបៀប evaluate expressions។",
     "courseName": "Python",
-    "moduleName": "Module 2 Operators",
-    "url": "/learn/python/module/module-2-operators/lesson/operators-and-expressions"
+    "moduleName": "មេរៀនទី ១៖ មូលដ្ឋានគ្រឹះ និងការដំឡើងបរិស្ថានសរសេរកូដ (Foundations & Setup)",
+    "url": "/learn/python/module/module-1-foundations-setup/lesson/operators-and-expressions"
+  },
+  {
+    "type": "lesson",
+    "title": "Variables និង Data Types",
+    "description": "រៀនពីរបៀបដែល Python store data ដោយប្រើ variables, និងយល់ពី built-in data types ដែលអ្នកនឹងប្រើជានិច្ច។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ១៖ មូលដ្ឋានគ្រឹះ និងការដំឡើងបរិស្ថានសរសេរកូដ (Foundations & Setup)",
+    "url": "/learn/python/module/module-1-foundations-setup/lesson/variables-and-types"
+  },
+  {
+    "type": "lesson",
+    "title": "Python គឺអ្វី?",
+    "description": "សេចក្តីណែនាំអំពី Python — វាជាអ្វី, ហេតុអ្វីបានជាវាសំខាន់, ហើយហេតុអ្វីបានជាវាជាភាសាដែលគេជ្រើបំផុតសម្រាប់ data science និង AI។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ១៖ មូលដ្ឋានគ្រឹះ និងការដំឡើងបរិស្ថានសរសេរកូដ (Foundations & Setup)",
+    "url": "/learn/python/module/module-1-foundations-setup/lesson/what-is-python"
   },
   {
     "type": "lesson",
     "title": "for Loops និង Iteration",
     "description": "Iterate លើ sequences, ranges, និង iterable ណាមួយជាមួយ for loop, ហើយប្រើ enumerate(), zip(), និង list comprehensions។",
     "courseName": "Python",
-    "moduleName": "Module 3 Control Flow",
-    "url": "/learn/python/module/module-3-control-flow/lesson/for-loops"
+    "moduleName": "មេរៀនទី ២៖ លក្ខខណ្ឌ និងរង្វិលជុំ (Control Flow & Logic)",
+    "url": "/learn/python/module/module-2-control-flow-logic/lesson/for-loops"
   },
   {
     "type": "lesson",
     "title": "Conditionals — if, elif, else",
     "description": "គ្រប់គ្រងអ្វីដែល program ធ្វើ ដោយផ្អែកលើ conditions ដោយប្រើ if, elif, និង else, រួមទាំង conditional expression (ternary operator)។",
     "courseName": "Python",
-    "moduleName": "Module 3 Control Flow",
-    "url": "/learn/python/module/module-3-control-flow/lesson/if-elif-else"
+    "moduleName": "មេរៀនទី ២៖ លក្ខខណ្ឌ និងរង្វិលជុំ (Control Flow & Logic)",
+    "url": "/learn/python/module/module-2-control-flow-logic/lesson/if-elif-else"
   },
   {
     "type": "lesson",
     "title": "while Loops និង Loop Control",
     "description": "ប្រើ while loops សម្រាប់ repetition ដោយផ្អែកលើ condition ហើយចាប់ផ្តើមជាម្ចាស់ជាមួយ break, continue, និង else clause។",
     "courseName": "Python",
-    "moduleName": "Module 3 Control Flow",
-    "url": "/learn/python/module/module-3-control-flow/lesson/while-loops"
-  },
-  {
-    "type": "lesson",
-    "title": "Defining និង Calling Functions",
-    "description": "រៀនកំណត់ reusable blocks of code ជាមួយ def, យល់ពី parameters vs arguments, return values, និង scope។",
-    "courseName": "Python",
-    "moduleName": "Module 4 Functions",
-    "url": "/learn/python/module/module-4-functions/lesson/defining-functions"
-  },
-  {
-    "type": "lesson",
-    "title": "Lambda Functions និង Higher-Order Functions",
-    "description": "សរសេរ anonymous functions ដែលខ្លីជាមួយ lambda, ហើយ pass functions ជា arguments ដោយប្រើ map(), filter(), និង sorted()។",
-    "courseName": "Python",
-    "moduleName": "Module 4 Functions",
-    "url": "/learn/python/module/module-4-functions/lesson/lambda-and-higher-order"
-  },
-  {
-    "type": "lesson",
-    "title": "Scope, Closures, និង Decorators",
-    "description": "យល់ពីរបៀបដែល Python resolve names ជាមួយ LEGB rule, របៀប closures capture state, និងរបៀប decorators wrap functions។",
-    "courseName": "Python",
-    "moduleName": "Module 4 Functions",
-    "url": "/learn/python/module/module-4-functions/lesson/scope-and-closures"
+    "moduleName": "មេរៀនទី ២៖ លក្ខខណ្ឌ និងរង្វិលជុំ (Control Flow & Logic)",
+    "url": "/learn/python/module/module-2-control-flow-logic/lesson/while-loops"
   },
   {
     "type": "lesson",
     "title": "Dictionaries និង Sets",
     "description": "រៀនប្រើ Dictionary (Key-Value Pairs) និង Set (Unique Values) ដើម្បីរក្សាទុក និងស្វែងរកទិន្នន័យបានលឿន។",
     "courseName": "Python",
-    "moduleName": "Module 5 Data Structures",
-    "url": "/learn/python/module/module-5-data-structures/lesson/dictionaries-and-sets"
+    "moduleName": "មេរៀនទី ៣៖ រចនាសម្ព័ន្ធទិន្នន័យស្នូល (Core Data Structures)",
+    "url": "/learn/python/module/module-3-core-data-structures/lesson/dictionaries-and-sets"
   },
   {
     "type": "lesson",
     "title": "Lists និង Tuples",
     "description": "ចាប់ផ្តើមជាម្ចាស់ជាមួយ sequence types សំខាន់ពីររបស់ Python — list ដែលអាចប្តូរបាន និង tuple ដែលប្តូរមិនបាន — រួមទាំង operations, methods, និងពេលណាគួរជ្រើនីមួយ។",
     "courseName": "Python",
-    "moduleName": "Module 5 Data Structures",
-    "url": "/learn/python/module/module-5-data-structures/lesson/lists-and-tuples"
+    "moduleName": "មេរៀនទី ៣៖ រចនាសម្ព័ន្ធទិន្នន័យស្នូល (Core Data Structures)",
+    "url": "/learn/python/module/module-3-core-data-structures/lesson/lists-and-tuples"
   },
   {
     "type": "lesson",
     "title": "Strings in Depth",
     "description": "ឈ្វេងយល់លម្អិតអំពីការប្រើប្រាស់អក្សរនិងអត្ថបទនៅក្នុង Python របៀបកាត់យកផ្នែកណាមួយនៃអត្ថបទ និងបច្ចេកទេសផ្លាស់ប្តូរទម្រង់អក្សរដែលគេប្រើញឹកញាប់។",
     "courseName": "Python",
-    "moduleName": "Module 5 Data Structures",
-    "url": "/learn/python/module/module-5-data-structures/lesson/strings-in-depth"
+    "moduleName": "មេរៀនទី ៣៖ រចនាសម្ព័ន្ធទិន្នន័យស្នូល (Core Data Structures)",
+    "url": "/learn/python/module/module-3-core-data-structures/lesson/strings-in-depth"
   },
   {
     "type": "lesson",
-    "title": "ការប្រើប្រាស់ CSV និង JSON",
-    "description": "រៀនពីរបៀបអាន និងសរសេរទិន្នន័យដែលមានរចនាសម្ព័ន្ធ (Structured Data) ដូចជាឯកសារ CSV សម្រាប់តារាងទិន្នន័យ និង JSON សម្រាប់ទិន្នន័យពី Web API។",
+    "title": "Decorators និង Closures",
+    "description": "រៀនពីទស្សនៈវិជ្ជាកម្រិតខ្ពស់របស់ Python ក្នុងការប្រើប្រាស់អនុគមន៍ ដែលអនុញ្ញាតឱ្យអ្នកកែច្នៃ និងបន្ថែមសមត្ថភាពដល់អនុគមន៍ចាស់ៗដោយមិនបាច់កែប្រែកូដដើមរបស់វា។",
     "courseName": "Python",
-    "moduleName": "Module 6 File Handling",
-    "url": "/learn/python/module/module-6-file-handling/lesson/csv-and-json"
+    "moduleName": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+    "url": "/learn/python/module/module-4-functions-modular-programming/lesson/decorators-and-closures"
   },
   {
     "type": "lesson",
-    "title": "File System Operations",
-    "description": "រៀនពីរបៀបគ្រប់គ្រងឯកសារ និងថត (Directories) ដោយប្រើប្រាស់ pathlib ដើម្បីស្វែងរក បង្កើត ចម្លង និងលុបទីតាំងឯកសារ។",
+    "title": "Defining និង Calling Functions",
+    "description": "រៀនកំណត់ reusable blocks of code ជាមួយ def, យល់ពី parameters vs arguments, return values, និង scope។",
     "courseName": "Python",
-    "moduleName": "Module 6 File Handling",
-    "url": "/learn/python/module/module-6-file-handling/lesson/file-system-operations"
+    "moduleName": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+    "url": "/learn/python/module/module-4-functions-modular-programming/lesson/defining-functions"
   },
   {
     "type": "lesson",
-    "title": "Reading និង Writing Files",
-    "description": "រៀនពីរបៀបបើក អាន និងសរសេរទិន្នន័យចូលទៅក្នុង Text Files ជាមួយ Python ដោយប្រើប្រាស់ Context Manager (with) យ៉ាងមានសុវត្ថិភាព។",
+    "title": "Higher-Order និង Pure Functions",
+    "description": "ឈ្វេងយល់ពីទស្សនៈវិជ្ជាដ៏ជ្រាលជ្រៅរបស់ Functional Programming រួមមាន Pure Functions, Immutability, និងការប្រើប្រាស់ Higher-Order Functions កម្រិតខ្ពស់។",
     "courseName": "Python",
-    "moduleName": "Module 6 File Handling",
-    "url": "/learn/python/module/module-6-file-handling/lesson/reading-and-writing-files"
-  },
-  {
-    "type": "lesson",
-    "title": "Custom Exceptions និង Logging",
-    "description": "រៀនពីរបៀបបង្កើតកំហុសផ្ទាល់ខ្លួន (Custom Exceptions) ជាមួយពាក្យគន្លឹះ raise និងរបៀបប្រើប្រាស់ logging module ដើម្បីតាមដានសកម្មភាពកម្មវិធី។",
-    "courseName": "Python",
-    "moduleName": "Module 7 Exception Handling",
-    "url": "/learn/python/module/module-7-exception-handling/lesson/custom-exceptions-and-logging"
-  },
-  {
-    "type": "lesson",
-    "title": "Exception Handling (Try, Except, Finally)",
-    "description": "រៀនពីរបៀបការពារកម្មវិធីរបស់អ្នកកុំឱ្យគាំងនៅពេលមានបញ្ហាកើតឡើង ដោយប្រើប្រាស់ try, except, else, និង finally blocks។",
-    "courseName": "Python",
-    "moduleName": "Module 7 Exception Handling",
-    "url": "/learn/python/module/module-7-exception-handling/lesson/try-except-finally"
-  },
-  {
-    "type": "lesson",
-    "title": "Classes និង Objects",
-    "description": "រៀនមូលដ្ឋាននៃ object-oriented programming ក្នុង Python — ការកំណត់ classes, បង្កើត instances, និងការប្រើ attributes និង methods។",
-    "courseName": "Python",
-    "moduleName": "Module 8 Oop",
-    "url": "/learn/python/module/module-8-oop/lesson/classes-and-objects"
-  },
-  {
-    "type": "lesson",
-    "title": "Encapsulation និង Dunder Methods",
-    "description": "គ្រប់គ្រង access ទៅ class internals ជាមួយ encapsulation conventions, ហើយធ្វើឱ្យ objects របស់អ្នកដំណើរការដូច built-in Python types ដោយប្រើ dunder (magic) methods។",
-    "courseName": "Python",
-    "moduleName": "Module 8 Oop",
-    "url": "/learn/python/module/module-8-oop/lesson/encapsulation-and-dunder-methods"
-  },
-  {
-    "type": "lesson",
-    "title": "Inheritance និង Polymorphism",
-    "description": "ពង្រីក classes ដែលមានស្រាប់ជាមួយ inheritance, override methods, ប្រើ super(), ហើយសរសេរ code ដែលដំណើរការជាមួយ object ណាមួយដែលត្រូវគ្នាតាម polymorphism។",
-    "courseName": "Python",
-    "moduleName": "Module 8 Oop",
-    "url": "/learn/python/module/module-8-oop/lesson/inheritance-and-polymorphism"
+    "moduleName": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+    "url": "/learn/python/module/module-4-functions-modular-programming/lesson/higher-order-functions"
   },
   {
     "type": "lesson",
     "title": "Modules និង Packages",
     "description": "រៀនពីរបៀបនាំចូលកូដពីកន្លែងផ្សេង (Importing) និងការបង្កើតម៉ូឌុលផ្ទាល់ខ្លួនដើម្បីរៀបចំកូដឱ្យមានសណ្តាប់ធ្នាប់ ព្រមទាំងការប្រើប្រាស់ Standard Library របស់ Python។",
     "courseName": "Python",
-    "moduleName": "Module 9 Modules Packages",
-    "url": "/learn/python/module/module-9-modules-packages/lesson/importing-and-creating-modules"
+    "moduleName": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+    "url": "/learn/python/module/module-4-functions-modular-programming/lesson/importing-and-creating-modules"
+  },
+  {
+    "type": "lesson",
+    "title": "Iterators និង Generators",
+    "description": "រៀនពីរបៀបបង្កើត Generators ដោយប្រើប្រាស់ពាក្យគន្លឹះ yield ដើម្បីសន្សំសំចៃ Memory នៅពេលធ្វើការជាមួយទិន្នន័យរាប់លានជួរ។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+    "url": "/learn/python/module/module-4-functions-modular-programming/lesson/iterators-and-generators"
+  },
+  {
+    "type": "lesson",
+    "title": "Lambda Functions និង Higher-Order Functions",
+    "description": "សរសេរ anonymous functions ដែលខ្លីជាមួយ lambda, ហើយ pass functions ជា arguments ដោយប្រើ map(), filter(), និង sorted()។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+    "url": "/learn/python/module/module-4-functions-modular-programming/lesson/lambda-and-higher-order"
+  },
+  {
+    "type": "lesson",
+    "title": "Map, Filter, និង Reduce",
+    "description": "រៀនពីរបៀបដំណើរការបញ្ជីទិន្នន័យ (Lists) ដោយមិនចាំបាច់ប្រើ for loops ដោយប្រើប្រាស់អនុគមន៍ map(), filter(), និង reduce() ដែលមានប្រសិទ្ធភាពខ្ពស់។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+    "url": "/learn/python/module/module-4-functions-modular-programming/lesson/map-filter-reduce"
+  },
+  {
+    "type": "lesson",
+    "title": "Regex និង Datetime",
+    "description": "រៀនពីបច្ចេកទេសស្វែងរកលំនាំអត្ថបទ (Pattern matching) ដ៏មានឥទ្ធិពលជាមួយ Regex និងរបៀបគ្រប់គ្រងម៉ោងនិងកាលបរិច្ឆេទក្នុង Python។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+    "url": "/learn/python/module/module-4-functions-modular-programming/lesson/regex-and-datetime"
+  },
+  {
+    "type": "lesson",
+    "title": "Scope, Closures, និង Decorators",
+    "description": "យល់ពីរបៀបដែល Python resolve names ជាមួយ LEGB rule, របៀប closures capture state, និងរបៀប decorators wrap functions។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+    "url": "/learn/python/module/module-4-functions-modular-programming/lesson/scope-and-closures"
+  },
+  {
+    "type": "lesson",
+    "title": "ការប្រើប្រាស់ CSV និង JSON",
+    "description": "រៀនពីរបៀបអាន និងសរសេរទិន្នន័យដែលមានរចនាសម្ព័ន្ធ (Structured Data) ដូចជាឯកសារ CSV សម្រាប់តារាងទិន្នន័យ និង JSON សម្រាប់ទិន្នន័យពី Web API។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៥៖ ការគ្រប់គ្រង File និងការដោះស្រាយបញ្ហា (File Handling & Error Management)",
+    "url": "/learn/python/module/module-5-file-handling-error-management/lesson/csv-and-json"
+  },
+  {
+    "type": "lesson",
+    "title": "Custom Exceptions និង Logging",
+    "description": "រៀនពីរបៀបបង្កើតកំហុសផ្ទាល់ខ្លួន (Custom Exceptions) ជាមួយពាក្យគន្លឹះ raise និងរបៀបប្រើប្រាស់ logging module ដើម្បីតាមដានសកម្មភាពកម្មវិធី។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៥៖ ការគ្រប់គ្រង File និងការដោះស្រាយបញ្ហា (File Handling & Error Management)",
+    "url": "/learn/python/module/module-5-file-handling-error-management/lesson/custom-exceptions-and-logging"
+  },
+  {
+    "type": "lesson",
+    "title": "Debugging និង Mocking",
+    "description": "រៀនពីរបៀបស្វែងរកកំហុសក្នុងកូដ (Bugs) ដោយប្រើប្រាស់ PDB និងរបៀបក្លែងបន្លំ (Mocking) API ឬ Database ក្នុងពេលធ្វើតេស្ត។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៥៖ ការគ្រប់គ្រង File និងការដោះស្រាយបញ្ហា (File Handling & Error Management)",
+    "url": "/learn/python/module/module-5-file-handling-error-management/lesson/debugging-and-mocking"
+  },
+  {
+    "type": "lesson",
+    "title": "File System Operations",
+    "description": "រៀនពីរបៀបគ្រប់គ្រងឯកសារ និងថត (Directories) ដោយប្រើប្រាស់ pathlib ដើម្បីស្វែងរក បង្កើត ចម្លង និងលុបទីតាំងឯកសារ។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៥៖ ការគ្រប់គ្រង File និងការដោះស្រាយបញ្ហា (File Handling & Error Management)",
+    "url": "/learn/python/module/module-5-file-handling-error-management/lesson/file-system-operations"
+  },
+  {
+    "type": "lesson",
+    "title": "Unit Testing ជាមួយ Pytest",
+    "description": "រៀនពីរបៀបសរសេរកូដដើម្បីតេស្តកូដរបស់អ្នកដោយស្វ័យប្រវត្តិ (Automated Testing) ដើម្បីធានាថាកម្មវិធីរបស់អ្នកដំណើរការបានត្រឹមត្រូវ ១០០% មុននឹងដាក់ឱ្យប្រើប្រាស់។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៥៖ ការគ្រប់គ្រង File និងការដោះស្រាយបញ្ហា (File Handling & Error Management)",
+    "url": "/learn/python/module/module-5-file-handling-error-management/lesson/pytest-and-unittest"
+  },
+  {
+    "type": "lesson",
+    "title": "Reading និង Writing Files",
+    "description": "រៀនពីរបៀបបើក អាន និងសរសេរទិន្នន័យចូលទៅក្នុង Text Files ជាមួយ Python ដោយប្រើប្រាស់ Context Manager (with) យ៉ាងមានសុវត្ថិភាព។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៥៖ ការគ្រប់គ្រង File និងការដោះស្រាយបញ្ហា (File Handling & Error Management)",
+    "url": "/learn/python/module/module-5-file-handling-error-management/lesson/reading-and-writing-files"
+  },
+  {
+    "type": "lesson",
+    "title": "Exception Handling (Try, Except, Finally)",
+    "description": "រៀនពីរបៀបការពារកម្មវិធីរបស់អ្នកកុំឱ្យគាំងនៅពេលមានបញ្ហាកើតឡើង ដោយប្រើប្រាស់ try, except, else, និង finally blocks។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៥៖ ការគ្រប់គ្រង File និងការដោះស្រាយបញ្ហា (File Handling & Error Management)",
+    "url": "/learn/python/module/module-5-file-handling-error-management/lesson/try-except-finally"
+  },
+  {
+    "type": "lesson",
+    "title": "Classes និង Objects",
+    "description": "រៀនមូលដ្ឋាននៃ object-oriented programming ក្នុង Python — ការកំណត់ classes, បង្កើត instances, និងការប្រើ attributes និង methods។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៦៖ ការសរសេរកូដបែប Object-Oriented (OOP)",
+    "url": "/learn/python/module/module-6-oop/lesson/classes-and-objects"
+  },
+  {
+    "type": "lesson",
+    "title": "Encapsulation និង Dunder Methods",
+    "description": "គ្រប់គ្រង access ទៅ class internals ជាមួយ encapsulation conventions, ហើយធ្វើឱ្យ objects របស់អ្នកដំណើរការដូច built-in Python types ដោយប្រើ dunder (magic) methods។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៦៖ ការសរសេរកូដបែប Object-Oriented (OOP)",
+    "url": "/learn/python/module/module-6-oop/lesson/encapsulation-and-dunder-methods"
+  },
+  {
+    "type": "lesson",
+    "title": "Inheritance និង Polymorphism",
+    "description": "ពង្រីក classes ដែលមានស្រាប់ជាមួយ inheritance, override methods, ប្រើ super(), ហើយសរសេរ code ដែលដំណើរការជាមួយ object ណាមួយដែលត្រូវគ្នាតាម polymorphism។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៦៖ ការសរសេរកូដបែប Object-Oriented (OOP)",
+    "url": "/learn/python/module/module-6-oop/lesson/inheritance-and-polymorphism"
+  },
+  {
+    "type": "lesson",
+    "title": "Asyncio Basics",
+    "description": "ឈ្វេងយល់ពី Asyncio ដែលជាបច្ចេកវិទ្យាទំនើបបំផុតរបស់ Python សម្រាប់ការសរសេរកូដ Concurrency ដោយប្រើប្រាស់ពាក្យគន្លឹះ async និង await ជំនួសឱ្យការប្រើ Threading ដ៏ស្មុគស្មាញ។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៧៖ ប្រព័ន្ធអេកូឡូស៊ី និងឧបករណ៍បន្ថែម (Ecosystem & Tooling)",
+    "url": "/learn/python/module/module-7-ecosystem-tooling/lesson/asyncio-basics"
   },
   {
     "type": "lesson",
     "title": "Pip និង Virtual Environments",
     "description": "រៀនពីរបៀបដំឡើង Library ពីខាងក្រៅដោយប្រើប្រាស់ pip និងការប្រើប្រាស់ Virtual Environment (venv) ដើម្បីការពារកុំឱ្យមានជម្លោះរវាងគម្រោងផ្សេងៗគ្នា។",
     "courseName": "Python",
-    "moduleName": "Module 9 Modules Packages",
-    "url": "/learn/python/module/module-9-modules-packages/lesson/pip-and-virtual-environments"
+    "moduleName": "មេរៀនទី ៧៖ ប្រព័ន្ធអេកូឡូស៊ី និងឧបករណ៍បន្ថែម (Ecosystem & Tooling)",
+    "url": "/learn/python/module/module-7-ecosystem-tooling/lesson/pip-and-virtual-environments"
+  },
+  {
+    "type": "lesson",
+    "title": "Threading និង Multiprocessing",
+    "description": "រៀនពីរបៀបធ្វើឱ្យកុំព្យូទ័ររបស់អ្នកធ្វើការងារច្រើនក្នុងពេលតែមួយ (Concurrency & Parallelism) ដើម្បីសន្សំសំចៃពេលវេលាដោយប្រើប្រាស់ Threading និង Multiprocessing។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៧៖ ប្រព័ន្ធអេកូឡូស៊ី និងឧបករណ៍បន្ថែម (Ecosystem & Tooling)",
+    "url": "/learn/python/module/module-7-ecosystem-tooling/lesson/threading-and-multiprocessing"
+  },
+  {
+    "type": "lesson",
+    "title": "Web Scraping និង APIs",
+    "description": "រៀនពីរបៀបធ្វើឱ្យកម្មវិធី Python របស់អ្នកមានជីវិត ដោយការទាញយកទិន្នន័យពិតៗពីវេបសាយ (Web Scraping) និងការនិយាយផ្ទាល់ជាមួយម៉ាស៊ីនមេ (APIs) ដោយប្រើប្រាស់ requests និង BeautifulSoup។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៧៖ ប្រព័ន្ធអេកូឡូស៊ី និងឧបករណ៍បន្ថែម (Ecosystem & Tooling)",
+    "url": "/learn/python/module/module-7-ecosystem-tooling/lesson/web-scraping-and-apis"
+  },
+  {
+    "type": "lesson",
+    "title": "CLI Applications",
+    "description": "អនុវត្តចំណេះដឹង Python របស់អ្នកដោយបង្កើតកម្មវិធី Command-Line Interface (CLI) ដែលមានប្រយោជន៍សម្រាប់ការងារប្រចាំថ្ងៃ ដោយប្រើប្រាស់បណ្ណាល័យ argparse ដ៏មានអានុភាព។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៨៖ គម្រោងបញ្ចប់វគ្គ (Capstone Project Tracks)",
+    "url": "/learn/python/module/module-8-capstone-projects/lesson/cli-applications"
+  },
+  {
+    "type": "lesson",
+    "title": "PEP 8 និង Clean Code",
+    "description": "រៀនពីរបៀបសរសេរកូដ Python ឱ្យត្រូវតាមស្តង់ដារអន្តរជាតិ (PEP 8) និងគន្លឹះក្នុងការសរសេរកូដដែលអ្នកផ្សេងអានយល់បានយ៉ាងងាយស្រួល (Clean Code)។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៨៖ គម្រោងបញ្ចប់វគ្គ (Capstone Project Tracks)",
+    "url": "/learn/python/module/module-8-capstone-projects/lesson/pep8-and-clean-code"
+  },
+  {
+    "type": "lesson",
+    "title": "Profiling និង Optimization",
+    "description": "ឈ្វេងយល់ពីវិធីសាស្ត្រក្នុងការស្វែងរកចំណុចខ្សោយ (Bottlenecks) របស់កម្មវិធីដោយប្រើប្រាស់ Profilers និងបច្ចេកទេសធ្វើឱ្យកូដ Python ដើរលឿនជាងមុន។",
+    "courseName": "Python",
+    "moduleName": "មេរៀនទី ៨៖ គម្រោងបញ្ចប់វគ្គ (Capstone Project Tracks)",
+    "url": "/learn/python/module/module-8-capstone-projects/lesson/profiling-and-optimization"
   }
 ]
