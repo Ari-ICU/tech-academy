@@ -88,40 +88,65 @@ export default async function CourseOverviewPage({
         </ol>
       </nav>
 
-      <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+      <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 text-gray-900 dark:text-white tracking-tight">
         {course.title}
       </h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-10 text-lg">
+      <p className="text-gray-600 dark:text-gray-400 mb-10 text-base sm:text-lg max-w-3xl leading-relaxed">
         {course.description}
       </p>
 
       {course.modules.length > 0 ? (
-        <div className="space-y-8">
-          {course.modules.map((mod) => (
+        <div className="space-y-6">
+          {course.modules.map((mod, modIdx) => (
             <div
               key={mod.slug}
-              className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 bg-white dark:bg-gray-800"
+              className="border border-gray-200 dark:border-gray-800 rounded-2xl p-6 sm:p-7 bg-white dark:bg-gray-900 shadow-sm"
             >
-              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
-                {mod.title}
-              </h2>
-              <ul className="space-y-2">
+              {/* Module Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-gray-100 dark:border-gray-800 gap-2 mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-sm border border-blue-100 dark:border-blue-900 shrink-0">
+                    {String(modIdx + 1).padStart(2, "0")}
+                  </div>
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white leading-tight">
+                    {mod.title}
+                  </h2>
+                </div>
+                <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider pl-12 sm:pl-0">
+                  {mod.lessons.length} មេរៀន
+                </span>
+              </div>
+
+              {/* Lessons Grid / List */}
+              <div className="grid gap-3">
                 {mod.lessons.map((lesson) => (
-                  <li key={lesson.slug}>
-                    <Link
-                      href={`/learn/${courseSlug}/module/${mod.slug}/lesson/${lesson.slug}`}
-                      className="flex items-center gap-3 p-3 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <span className="text-gray-400 text-sm w-6 text-right">
-                        {lesson.order}
+                  <Link
+                    key={lesson.slug}
+                    href={`/learn/${courseSlug}/module/${mod.slug}/lesson/${lesson.slug}`}
+                    className="group flex items-start justify-between gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-800/80 hover:border-blue-300 dark:hover:border-blue-700 bg-gray-50/50 dark:bg-gray-800/40 hover:bg-white dark:hover:bg-gray-800 transition-all shadow-none hover:shadow-md"
+                  >
+                    <div className="flex items-start gap-3.5 flex-1 min-w-0">
+                      <span className="w-7 h-7 rounded-lg bg-gray-200/70 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300 font-semibold text-xs flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        {String(lesson.order).padStart(2, "0")}
                       </span>
-                      <span className="text-gray-900 dark:text-white">
-                        {lesson.title}
-                      </span>
-                    </Link>
-                  </li>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors text-sm sm:text-base leading-snug">
+                          {lesson.title}
+                        </h3>
+                        {lesson.description && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2 leading-relaxed">
+                            {lesson.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 group-hover:bg-blue-600 flex items-center justify-center shrink-0 transition-colors mt-0.5">
+                      <span className="text-gray-400 group-hover:text-white transition-colors text-xs font-bold">→</span>
+                    </div>
+                  </Link>
                 ))}
-              </ul>
+              </div>
             </div>
           ))}
         </div>

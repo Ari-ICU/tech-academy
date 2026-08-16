@@ -36,9 +36,12 @@ export function LessonSidebar({
         {modules.map((mod) => (
           <div key={mod.slug} className="mb-6">
             {/* Module header */}
-            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-950 dark:text-gray-200 mb-2 px-2">
+            <Link
+              href={`/learn/${courseSlug}/module/${mod.slug}`}
+              className="block text-[11px] font-bold uppercase tracking-wider text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 mb-2 px-2 transition-colors"
+            >
               {mod.title}
-            </h3>
+            </Link>
 
             <ul className="space-y-0.5">
               {mod.lessons.map((lesson, index) => {

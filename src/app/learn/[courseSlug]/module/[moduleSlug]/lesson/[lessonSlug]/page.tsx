@@ -8,7 +8,6 @@ import {
   getCourse as getCourseData,
 } from "@/server/services/courses.service";
 import { LessonSidebar } from "@/components/LessonSidebar";
-import { TableOfContents } from "@/components/TableOfContents";
 import { QuizBlock } from "@/components/QuizBlock";
 import { BookmarkButton } from "@/components/BookmarkButton";
 import { LessonContent } from "@/components/LessonContent";
@@ -70,9 +69,12 @@ export default async function LessonPage({
 
   const lessonId = `${courseSlug}/${moduleSlug}/${lessonSlug}`;
 
+  const currentModule = course.modules.find((m) => m.slug === moduleSlug);
+  const moduleTitle = currentModule?.title ?? moduleSlug;
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      {/* Breadcrumb */}
+      {/* Enhanced Breadcrumb with Full Module Path */}
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex flex-wrap items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
           <li>
@@ -91,7 +93,7 @@ export default async function LessonPage({
           <li>
             <Link
               href={`/learn/${courseSlug}`}
-              className="hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
             >
               {course.title}
             </Link>
@@ -102,7 +104,20 @@ export default async function LessonPage({
             </svg>
           </li>
           <li>
-            <span className="text-gray-900 dark:text-white font-medium truncate max-w-[200px] inline-block align-bottom">
+            <Link
+              href={`/learn/${courseSlug}/module/${moduleSlug}`}
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors truncate max-w-[240px] inline-block align-bottom"
+            >
+              {moduleTitle}
+            </Link>
+          </li>
+          <li aria-hidden="true">
+            <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </li>
+          <li>
+            <span className="text-blue-600 dark:text-blue-400 font-semibold truncate max-w-[220px] inline-block align-bottom">
               {lesson.title}
             </span>
           </li>
@@ -121,9 +136,20 @@ export default async function LessonPage({
 
         {/* Main Content */}
         <article className="flex-1 min-w-0">
+          {/* Path & Milestone Badge */}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/60">
+              <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
+              {moduleTitle}
+            </span>
+            <span className="text-xs font-semibold text-gray-400 dark:text-gray-500">
+              • ផ្នែកទី {lesson.order}
+            </span>
+          </div>
+
           {/* Title + actions */}
           <div className="flex items-start justify-between gap-4 mb-3">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight tracking-tight">
               {lesson.title}
             </h1>
             <div className="shrink-0 mt-1">
@@ -137,7 +163,7 @@ export default async function LessonPage({
             </div>
           </div>
 
-          <p className="text-gray-500 dark:text-gray-400 text-base leading-relaxed mb-8 max-w-2xl">
+          <p className="text-gray-600 dark:text-gray-400 text-base leading-relaxed mb-8 max-w-3xl">
             {lesson.description}
           </p>
 
@@ -218,11 +244,6 @@ export default async function LessonPage({
             )}
           </nav>
         </article>
-
-        {/* Right Table of Contents */}
-        <div className="hidden xl:block">
-          <TableOfContents objectives={lesson.objectives} />
-        </div>
       </div>
 
       {/* Mobile Drawer */}
