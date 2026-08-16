@@ -49,32 +49,18 @@ quiz:
 
 សូមមើលគំនូសតាងនេះ ដើម្បីយល់ពីតួនាទីរបស់ Function ក្នុងប្រព័ន្ធទាំងមូល៖
 
-```text
-          បញ្ចូលទិន្នន័យ (Input)
-             │
-             ▼
-     +----------------+
-     |    Function    |
-     |                |
-     | ដំណើរការទិន្នន័យ |
-     +----------------+
-             │
-             ▼
-         ទិន្នន័យចេញ (Return Value)
+```mermaid
+flowchart TD
+    Input["បញ្ចូលទិន្នន័យ (Input)"] --> Func["Function\n(ដំណើរការទិន្នន័យ)"]
+    Func --> Return["ទិន្នន័យចេញ (Return Value)"]
 ```
 
 ម្យ៉ាងវិញទៀត អ្នកអាចគិតពីវាតាមលំហូរនេះ៖
-```text
-Arguments (តម្លៃពិត)
-     │
-     ▼
-Parameters (អថេរតំណាង)
-     │
-     ▼
- រត់កូដ (Execute Code)
-     │
-     ▼
- បញ្ជូនលទ្ធផល (Return)
+```mermaid
+flowchart TD
+    A["Arguments (តម្លៃពិត)"] --> B["Parameters (អថេរតំណាង)"]
+    B --> C["រត់កូដ (Execute Code)"]
+    C --> D["បញ្ជូនលទ្ធផល (Return)"]
 ```
 
 ---
@@ -117,18 +103,13 @@ return
 ### វដ្តជីវិតរបស់ Function (Function Lifecycle)
 
 រាល់ Function ទាំងអស់មានលំហូរជីវិតដូចខាងក្រោម៖
-```text
-បង្កើត (Define)
-↓
-ហៅឱ្យដើរ (Call)
-↓
-ចម្លងតម្លៃ Arguments (Arguments copied)
-↓
-រត់កូដខាងក្នុង (Body executes)
-↓
-បញ្ជូនតម្លៃ (Return)
-↓
-បញ្ចប់ដំណើរការ (Function ends)
+```mermaid
+flowchart TD
+    Define["បង្កើត (Define)"] --> Call["ហៅឱ្យដើរ (Call)"]
+    Call --> Copy["ចម្លងតម្លៃ Arguments (Arguments copied)"]
+    Copy --> Run["រត់កូដខាងក្នុង (Body executes)"]
+    Run --> Return["បញ្ជូនតម្លៃ (Return)"]
+    Return --> End["បញ្ចប់ដំណើរការ (Function ends)"]
 ```
 ការយល់ដឹងពីលំហូរនេះជួយឱ្យអ្នកដឹងច្បាស់ថា កូដមិនរត់ដោយខ្លួនឯងទេ លុះត្រាតែមានអ្នកហៅវា។
 

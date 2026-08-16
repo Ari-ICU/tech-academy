@@ -70,15 +70,15 @@ print(type([1,2]))    # <class 'list'>
 
 សូមក្រឡេកមើលពីរបៀបដែល Class បង្កើត Objects ជាច្រើនដាច់ដោយឡែកពីគ្នា៖
 
-```text
-       Class (ប្លង់)
-       BankAccount
-            │
-   ┌────────┴────────┐
-   │                 │
-Object (acc1)     Object (acc2)
-Owner="Sok"       Owner="Sao"
-Balance=100       Balance=500
+```mermaid
+flowchart TD
+    ClassNode["Class (ប្លង់)\nBankAccount"]
+    
+    Obj1["Object (acc1)\nOwner='Sok'\nBalance=100"]
+    Obj2["Object (acc2)\nOwner='Sao'\nBalance=500"]
+    
+    ClassNode --> Obj1
+    ClassNode --> Obj2
 ```
 
 ### ២. ការបំបែក Memory របស់ Object

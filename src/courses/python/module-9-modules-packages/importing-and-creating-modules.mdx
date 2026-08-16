@@ -49,22 +49,28 @@ quiz:
 
 នៅក្នុង Python កូដទាំងអស់មិនមែនសុទ្ធតែស្ថិតនៅកន្លែងតែមួយនោះទេ។ វាត្រូវបានបែងចែកជា ៣ ផ្នែកធំៗ៖
 
-```text
-Python Ecosystem
-│
-├── 1. Built-in (មានស្រាប់ មិនបាច់ Import)
-│     ├── print(), len(), int()
-│
-├── 2. Standard Library (មកជាមួយ Python តែត្រូវ Import សិនទើបប្រើបាន)
-│     ├── math
-│     ├── os
-│     └── json
-│
-└── 3. Third-party Packages (ត្រូវទាញយកពីអុីនធឺណិតតាមរយៈ pip)
-      ├── numpy (សម្រាប់គណិតវិទ្យា Data Science)
-      ├── pandas (សម្រាប់វិភាគទិន្នន័យ)
-      ├── requests (សម្រាប់ទាញយកទិន្នន័យពី Website)
-      └── fastapi (សម្រាប់បង្កើត Web API)
+```mermaid
+flowchart TD
+    Ecosystem["Python Ecosystem"]
+    
+    BuiltIn["1. Built-in (មានស្រាប់ មិនបាច់ Import)"]
+    StdLib["2. Standard Library (ត្រូវ Import សិន)"]
+    ThirdParty["3. Third-party Packages (ទាញយកតាម pip)"]
+    
+    Ecosystem --> BuiltIn
+    Ecosystem --> StdLib
+    Ecosystem --> ThirdParty
+    
+    BuiltIn --> B1["print(), len(), int()"]
+    
+    StdLib --> S1["math"]
+    StdLib --> S2["os"]
+    StdLib --> S3["json"]
+    
+    ThirdParty --> T1["numpy (គណិតវិទ្យា & Data Science)"]
+    ThirdParty --> T2["pandas (វិភាគទិន្នន័យ)"]
+    ThirdParty --> T3["requests (ទាញយកទិន្នន័យពី Web)"]
+    ThirdParty --> T4["fastapi (បង្កើត Web API)"]
 ```
 
 ---

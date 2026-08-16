@@ -60,17 +60,11 @@ quiz:
 
 នៅក្នុង Python ពេលអ្នកប្រើប្រាស់ឈ្មោះអថេរណាមួយ វាស្វែងរកពីខាងក្នុងចេញមកខាងក្រៅតាមលំដាប់នេះ៖
 
-```text
-Built-in (របស់មានស្រាប់ក្នុង Python ដូចជា print, len)
-     ▲
-     │
-Global (អថេរនៅខាងក្រៅបំផុត ឧ. name = "Python")
-     ▲
-     │
-Enclosing (នៅក្នុង Function ខាងក្រៅ def outer():)
-     ▲
-     │
-Local (នៅក្នុង Function បច្ចុប្បន្ន def inner():)
+```mermaid
+flowchart BT
+    Local["Local Scope\n( inner(): )"] --> Enclosing["Enclosing Scope\n( outer(): )"]
+    Enclosing --> Global["Global Scope\n( name = 'Python' )"]
+    Global --> BuiltIn["Built-in Scope\n( print, len, ... )"]
 ```
 
 **របៀបដែលវាដំណើរការ៖**
@@ -157,22 +151,10 @@ print(c())
 
 ## 🧠 របៀបដែល Closure ធ្វើការនៅពីក្រោយខ្នង
 
-```text
-counter() ដើរ
-│
-├── បង្កើត count = 0
-│
-└── បញ្ជូនលទ្ធផលត្រឡប់ជាអនុគមន៍ increment()
-
-        │
-        ▼
-
-Function ខាងក្រៅចប់ ប៉ុន្តែវានៅតែរក្សាទុកសេចក្តីយោង (keeps reference)
-
-        │
-        ▼
-
-វាចងចាំថា count = 0
+```mermaid
+flowchart TD
+    Start["1. counter() ដើរ\n(បង្កើត count = 0 & return increment)"] --> Finished["2. counter() ចប់\n(រក្សាទុក Reference ទៅ count)"]
+    Finished --> Remembers["3. increment() ដើរ\n(ចងចាំ និងធ្វើបច្ចុប្បន្នភាព count)"]
 ```
 **ចំណុចសំខាន់:** Closure មិនមែនគ្រាន់តែ "ចម្លង (Copy)" Variable នោះទេ ប៉ុន្តែវា **រក្សាទុកសេចក្តីយោង (Reference)** ទៅ Variable នោះតែម្តង។ ដូច្នេះទើបយើងអាចកែប្រែតម្លៃរបស់វានៅពេលក្រោយបាន។
 
@@ -191,21 +173,13 @@ Function ខាងក្រៅចប់ ប៉ុន្តែវានៅតែ�
 
 ## 🎁 សេចក្តីផ្តើមអំពី Decorators ជារូបភាព
 
-```text
-Function ដើមរបស់អ្នក (Your Function)
-      │
-      ▼
-ឆ្លងកាត់ Decorator
-      │
-      ▼
-ធ្វើអ្វីមួយមុន (Before)
-      ↓
-រត់កូដ Function ដើម (Original Function)
-      ↓
-ធ្វើអ្វីមួយក្រោយ (After)
-      │
-      ▼
-លទ្ធផលចុងក្រោយ (Result)
+```mermaid
+flowchart TD
+    Orig["Function ដើមរបស់អ្នក (Your Function)"] --> Dec["ឆ្លងកាត់ Decorator"]
+    Dec --> Before["1. ធ្វើអ្វីមួយមុន (Before)"]
+    Before --> Run["2. រត់កូដ Function ដើម (Original Function)"]
+    Run --> After["3. ធ្វើអ្វីមួយក្រោយ (After)"]
+    After --> Result["លទ្ធផលចុងក្រោយ (Result)"]
 ```
 
 ---

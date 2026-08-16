@@ -63,13 +63,9 @@ print(name)
 
 គំរូផ្នត់គំនិត (Mental Model) ដ៏ល្អបំផុតគឺ៖
 
-```text
-Variable
-   │
-   ▼
-+-------+        +----------------+
-| name  | -----> |    "Sokha"     |
-+-------+        +----------------+
+```mermaid
+flowchart LR
+    A["Variable: name"] --> B["Memory Object: 'Sokha'"]
 ```
 
 Variable គឺរក្សាទុកត្រឹមតែ **សេចក្តីយោង (Reference)** ទៅកាន់ Object នៅក្នុងអង្គចងចាំ (Memory) ប៉ុណ្ណោះ។

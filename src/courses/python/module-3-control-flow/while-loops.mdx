@@ -47,23 +47,13 @@ quiz:
 
 សូមមើលគំនូសតាងនេះ ដើម្បីយល់ពីដំណើរការទាំងមូលនៃ `while` loop៖
 
-```text
-        ចាប់ផ្តើម (Start)
-          │
-          ▼
-   ពិនិត្យលក្ខខណ្ឌ (Check Condition?)
-      ពិត (True) │ មិនពិត (False)
-                 │
-                 ▼
-      រត់កូដ (Execute Body)
-                 │
-                 ▼
-   ប្តូរស្ថានភាព (Update Variable)
-                 │
-                 └──────────────┐
-                                │
-                                ▼
-                         ពិនិត្យម្តងទៀត (Check Again)
+```mermaid
+flowchart TD
+    Start(["ចាប់ផ្តើម (Start)"]) --> Check{"ពិនិត្យលក្ខខណ្ឌ (Check Condition?)"}
+    Check -- "ពិត (True)" --> Exec["រត់កូដ (Execute Body)"]
+    Exec --> Update["ប្តូរស្ថានភាព (Update Variable)"]
+    Update --> Check
+    Check -- "មិនពិត (False)" --> End(["បញ្ចប់ (End)"])
 ```
 
 អ្វីដែលសំខាន់បំផុតរបស់ `while` loop គឺ៖
