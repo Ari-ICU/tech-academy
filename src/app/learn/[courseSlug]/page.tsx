@@ -108,9 +108,12 @@ export default async function CourseOverviewPage({
                   <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-sm border border-blue-100 dark:border-blue-900 shrink-0">
                     {String(modIdx + 1).padStart(2, "0")}
                   </div>
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white leading-tight">
+                  <Link
+                    href={`/learn/${courseSlug}/module/${mod.slug}`}
+                    className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors leading-tight"
+                  >
                     {mod.title}
-                  </h2>
+                  </Link>
                 </div>
                 <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider pl-12 sm:pl-0">
                   {mod.lessons.length} មេរៀន
