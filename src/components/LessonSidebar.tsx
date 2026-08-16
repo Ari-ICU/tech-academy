@@ -25,7 +25,7 @@ export function LessonSidebar({
     if (sidebarRef.current) {
       const activeEl = sidebarRef.current.querySelector('[aria-current="page"]');
       if (activeEl) {
-        activeEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        activeEl.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   }, [activeLesson.slug, activeLesson.moduleSlug]);
