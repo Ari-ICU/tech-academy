@@ -448,5 +448,147 @@ calculate_tax_and_send_email_and_save_database()
 
 ---
 
-## Overall Rating
-មេរៀននេះគឺជាគ្រឹះដ៏សំខាន់បំផុតមួយសម្រាប់អ្នក។ មិនថាអ្នកនឹងរៀនពី Lambda Functions, Decorators, ការសរសេរកម្មវិធីបែប OOP ឬ Machine Learning នៅថ្ងៃមុខនោះទេ អ្នកនឹងត្រូវប្រើប្រាស់ការយល់ដឹងពី Scope, Return vs Print, និង Parameters ដែលអ្នកទើបតែទទួលបានពីរមេរៀននេះជាមិនខាន!
+## 🚀 Mini-Project: កម្មវិធី Quiz សួរសំណួរ និងគិតពិន្ទុ (Interactive Quiz Application)
+
+### 🎯 គោលបំណងគម្រោង
+អនុវត្តចំណេះដឹងពីមេរៀនទី ៤ ដោយរៀបចំកូដជា **Functions** ដាច់ដោយឡែកពីគ្នា (Modular Programming), ទទួល Parameters, បញ្ជូនតម្លៃ Return Values, និងគណនាភាគរយពិន្ទុសរុប។
+
+```mermaid
+graph TD
+    A["ចាប់ផ្តើម (Start)"] --> B["display_welcome()"]
+    B --> C["ask_question(question_data)"]
+    C --> D{"តើ User ឆ្លើយត្រូវ?"}
+    D -- "ត្រូវ (Yes)" --> E["return True"]
+    D -- "ខុស (No)" --> F["return False"]
+    E --> G["score += 1"]
+    F --> H["បន្តសំណួរបន្ទាប់"]
+    G --> H
+    H --> I{"នៅសល់សំណួរទៀត?"}
+    I -- "មាន" --> C
+    I -- "អស់" --> J["calculate_grade(score, total)"]
+    J --> K["display_results(score, total, grade)"]
+    K --> L["បញ្ចប់ (End)"]
+```
+
+### 💻 កូដពេញលេញ (Full Source Code)
+
+```python
+# -------------------------------------------------------------
+# Mini-Project: Modular Interactive Quiz Application
+# -------------------------------------------------------------
+
+quiz_questions = [
+    {
+        "question": "តើពាក្យគន្លឹះអ្វីដែលប្រើសម្រាប់បង្កើត Function ក្នុង Python?",
+        "options": ["A. func", "B. def", "C. function", "D. define"],
+        "answer": "B"
+    },
+    {
+        "question": "តើ Keyword Argument ណាដែលប្រើសម្រាប់កំណត់តម្លៃ default?",
+        "options": ["A. def add(a, b=0):", "B. def add(a, default b):", "C. def add(a: b=0):", "D. def add(a, set b):"],
+        "answer": "A"
+    },
+    {
+        "question": "តើតម្លៃអ្វីដែល Function ត្រឡប់មកវិញដោយស្វ័យប្រវត្តិ ប្រសិនបើគ្មាន return?",
+        "options": ["A. 0", "B. False", "C. None", "D. undefined"],
+        "answer": "C"
+    }
+]
+
+def display_welcome(title="Python Knowledge Quiz"):
+    """បង្ហាញផ្ទាំងស្វាគមន៍មកកាន់កម្មវិធី Quiz"""
+    print("==========================================")
+    print(f"       🧠 {title} 🧠       ")
+    print("==========================================\n")
+
+def ask_question(q_data, question_number):
+    """បង្ហាញសំណួរ ជម្រើស និងផ្ទៀងផ្ទាត់ចម្លើយ"""
+    print(f"សំណួរទី {question_number}: {q_data['question']}")
+    for opt in q_data["options"]:
+        print(f"   {opt}")
+    
+    user_ans = input("👉 ចម្លើយរបស់អ្នក (A/B/C/D): ").strip().upper()
+    
+    if user_ans == q_data["answer"]:
+        print("✅ ត្រឹមត្រូវ! ពូកែណាស់!\n")
+        return True
+    else:
+        print(f"❌ មិនត្រឹមត្រូវទេ! ចម្លើយត្រឹមត្រូវគឺ: {q_data['answer']}\n")
+        return False
+
+def calculate_grade(score, total):
+    """គណនាភាគរយ និងកម្រិតនិទ្ទេស"""
+    percentage = (score / total) * 100
+    if percentage >= 80:
+        grade = "A (ល្អឥតខ្ចោះ 🌟)"
+    elif percentage >= 60:
+        grade = "B (ល្អ 👍)"
+    else:
+        grade = "C (ត្រូវព្យាយាមបន្ថែម 💪)"
+    return percentage, grade
+
+def run_quiz():
+    """Function ចម្បងសម្រាប់គ្រប់គ្រងដំណើរការ Quiz ទាំងមូល"""
+    display_welcome()
+    
+    total_score = 0
+    total_questions = len(quiz_questions)
+
+    for i, q in enumerate(quiz_questions, start=1):
+        is_correct = ask_question(q, i)
+        if is_correct:
+            total_score += 1
+
+    percent, grade = calculate_grade(total_score, total_questions)
+
+    print("==========================================")
+    print("           📊 លទ្ធផលចុងក្រោយ           ")
+    print("==========================================")
+    print(f"🎯 ពិន្ទុសរុប : {total_score}/{total_questions}")
+    print(f"📈 ភាគរយ   : {percent:.1f}%")
+    print(f"🏆 និទ្ទេស   : {grade}")
+    print("==========================================")
+
+# ចាប់ផ្តើមដំណើរការ
+run_quiz()
+```
+
+### 🖥️ ឧទាហរណ៍នៃការដំណើរការកូដ (Sample Run)
+```text
+==========================================
+       🧠 Python Knowledge Quiz 🧠       
+==========================================
+
+សំណួរទី 1: តើពាក្យគន្លឹះអ្វីដែលប្រើសម្រាប់បង្កើត Function ក្នុង Python?
+   A. func
+   B. def
+   C. function
+   D. define
+👉 ចម្លើយរបស់អ្នក (A/B/C/D): B
+✅ ត្រឹមត្រូវ! ពូកែណាស់!
+
+សំណួរទី 2: តើ Keyword Argument ណាដែលប្រើសម្រាប់កំណត់តម្លៃ default?
+   A. def add(a, b=0):
+   B. def add(a, default b):
+   C. def add(a: b=0):
+   D. def add(a, set b):
+👉 ចម្លើយរបស់អ្នក (A/B/C/D): A
+✅ ត្រឹមត្រូវ! ពូកែណាស់!
+
+សំណួរទី 3: តើតម្លៃអ្វីដែល Function ត្រឡប់មកវិញដោយស្វ័យប្រវត្តិ ប្រសិនបើគ្មាន return?
+   A. 0
+   B. False
+   C. None
+   D. undefined
+👉 ចម្លើយរបស់អ្នក (A/B/C/D): C
+✅ ត្រឹមត្រូវ! ពូកែណាស់!
+
+==========================================
+           📊 លទ្ធផលចុងក្រោយ           
+==========================================
+🎯 ពិន្ទុសរុប : 3/3
+📈 ភាគរយ   : 100.0%
+🏆 និទ្ទេស   : A (ល្អឥតខ្ចោះ 🌟)
+==========================================
+```
+

@@ -339,3 +339,123 @@ person = {
 - **Set** មិនអនុញ្ញាតឱ្យមានទិន្នន័យស្ទួនទេ។
 - **Set** ពូកែខាងពិនិត្យទិន្នន័យ (Membership Testing) និងបំបាត់ទិន្នន័យស្ទួនបានយ៉ាងងាយ។
 - ប្រើប្រាស់ **Set Operations** (`|`, `&`, `-`, `^`) ដើម្បីប្រៀបធៀប និងផ្គុំទិន្នន័យដ៏ឆ្លាតវៃ។
+
+---
+
+## 🚀 Mini-Project: កម្មវិធីគ្រប់គ្រងបញ្ជីទំនាក់ទំនងទូរសព្ទ (Contact Book Application)
+
+### 🎯 គោលបំណងគម្រោង
+អនុវត្តចំណេះដឹងពីមេរៀនទី ៣ អំពី **Dictionary** (Key-Value pairs, `.get()`, `.items()`, ការបន្ថែម/កែប្រែ/លុប) និង **Set** (ការទាញយក Unique Tags/Categories)។
+
+```mermaid
+graph TD
+    A["ចាប់ផ្តើម (Start)"] --> B["បង្ហាញ Menu ជម្រើស 1-5"]
+    B --> C{"ជម្រើសរបស់អ្នក?"}
+    C -- "1" --> D["បង្ហាញបញ្ជីទំនាក់ទំនងទាំងអស់ (View Contacts)"]
+    C -- "2" --> E["ស្វែងរកឈ្មោះទំនាក់ទំនង (Search Contact)"]
+    C -- "3" --> F["បន្ថែម ឬកែប្រែទំនាក់ទំនង (Add/Update)"]
+    C -- "4" --> G["លុបទំនាក់ទំនង (Delete Contact)"]
+    C -- "5" --> H["ចាកចេញ (Exit)"]
+    D --> B
+    E --> B
+    F --> B
+    G --> B
+    H --> I["បញ្ចប់កម្មវិធី (End)"]
+```
+
+### 💻 កូដពេញលេញ (Full Source Code)
+
+```python
+# -------------------------------------------------------------
+# Mini-Project: Console Contact Book Application
+# -------------------------------------------------------------
+
+contacts = {
+    "Sokha": {"phone": "012345678", "email": "sokha@gmail.com", "category": "Work"},
+    "Bopha": {"phone": "098765432", "email": "bopha@hotmail.com", "category": "Family"},
+    "Dara":  {"phone": "011223344", "email": "dara@dev.io",      "category": "Friend"}
+}
+
+def display_menu():
+    print("\n==========================================")
+    print("   📖 កម្មវិធីគ្រប់គ្រងបញ្ជីទំនាក់ទំនង (Contact Book)   ")
+    print("==========================================")
+    print("1. 📋 បង្ហាញបញ្ជីទំនាក់ទំនងទាំងអស់")
+    print("2. 🔍 ស្វែងរកទំនាក់ទំនងតាមឈ្មោះ")
+    print("3. ➕ បន្ថែម ឬកែប្រែទំនាក់ទំនង")
+    print("4. 🗑️  លុបទំនាក់ទំនង")
+    print("5. 🚪 ចាកចេញពីកម្មវិធី")
+    print("==========================================")
+
+while True:
+    display_menu()
+    choice = input("👉 សូមជ្រើសរើសជម្រើសមួយ (1-5): ").strip()
+
+    if choice == "1":
+        print("\n--- 📋 បញ្ជីទំនាក់ទំនងទាំងអស់ ---")
+        if not contacts:
+            print("📭 មិនមានទំនាក់ទំនងនៅក្នុងបញ្ជីនៅឡើយទេ។")
+        else:
+            for name, details in contacts.items():
+                print(f"👤 {name:10} | 📞 {details['phone']} | 📧 {details['email']} | 🏷️ {details['category']}")
+        
+        # ប្រើ Set ដើម្បីបង្ហាញ Category ប្លែកៗទាំងអស់
+        unique_categories = {details["category"] for details in contacts.values()}
+        print(f"\n📂 ប្រភេទទាំងអស់ (Categories): {', '.join(unique_categories)}")
+
+    elif choice == "2":
+        search_name = input("\n🔍 សូមបញ្ចូលឈ្មោះដែលចង់ស្វែងរក: ").strip()
+        contact = contacts.get(search_name)
+        if contact:
+            print(f"\n✅ រកឃើញព័ត៌មានរបស់ {search_name}:")
+            print(f"   📞 លេខទូរសព្ទ: {contact['phone']}")
+            print(f"   📧 អ៊ីមែល      : {contact['email']}")
+            print(f"   🏷️  ប្រភេទ      : {contact['category']}")
+        else:
+            print(f"❌ រកមិនឃើញឈ្មោះ '{search_name}' នៅក្នុងបញ្ជីឡើយ។")
+
+    elif choice == "3":
+        name = input("\n👤 សូមបញ្ចូលឈ្មោះ: ").strip()
+        phone = input("📞 សូមបញ្ចូលលេខទូរសព្ទ: ").strip()
+        email = input("📧 សូមបញ្ចូលអ៊ីមែល: ").strip()
+        category = input("🏷️ សូមបញ្ចូលប្រភេទ (Work/Family/Friend): ").strip()
+        
+        contacts[name] = {"phone": phone, "email": email, "category": category}
+        print(f"✅ បានរក្សាទុកព័ត៌មានរបស់ '{name}' ដោយជោគជ័យ!")
+
+    elif choice == "4":
+        name = input("\n🗑️ សូមបញ្ចូលឈ្មោះដែលត្រូវលុប: ").strip()
+        if name in contacts:
+            del contacts[name]
+            print(f"🗑️ បានលុប '{name}' ចេញពីបញ្ជីហើយ។")
+        else:
+            print(f"❌ ឈ្មោះ '{name}' មិនមាននៅក្នុងបញ្ជីទេ។")
+
+    elif choice == "5":
+        print("\n👋 សូមអរគុណសម្រាប់ការប្រើប្រាស់ Contact Book! ជួបគ្នាពេលក្រោយ។")
+        break
+    else:
+        print("⚠️ ជម្រើសមិនត្រឹមត្រូវទេ! សូមជ្រើសរើសលេខចន្លោះពី 1 ដល់ 5។")
+```
+
+### 🖥️ ឧទាហរណ៍នៃការដំណើរការកូដ (Sample Run)
+```text
+==========================================
+   📖 កម្មវិធីគ្រប់គ្រងបញ្ជីទំនាក់ទំនង (Contact Book)   
+==========================================
+1. 📋 បង្ហាញបញ្ជីទំនាក់ទំនងទាំងអស់
+2. 🔍 ស្វែងរកទំនាក់ទំនងតាមឈ្មោះ
+3. ➕ បន្ថែម ឬកែប្រែទំនាក់ទំនង
+4. 🗑️  លុបទំនាក់ទំនង
+5. 🚪 ចាកចេញពីកម្មវិធី
+==========================================
+👉 សូមជ្រើសរើសជម្រើសមួយ (1-5): 1
+
+--- 📋 បញ្ជីទំនាក់ទំនងទាំងអស់ ---
+👤 Sokha      | 📞 012345678 | 📧 sokha@gmail.com | 🏷️ Work
+👤 Bopha      | 📞 098765432 | 📧 bopha@hotmail.com | 🏷️ Family
+👤 Dara       | 📞 011223344 | 📧 dara@dev.io | 🏷️ Friend
+
+📂 ប្រភេទទាំងអស់ (Categories): Work, Family, Friend
+```
+
