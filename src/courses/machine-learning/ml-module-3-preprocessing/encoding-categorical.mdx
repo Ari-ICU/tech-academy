@@ -1,0 +1,71 @@
+---
+title: Encoding Categorical Variables
+description: ស្វែងយល់អំពី Encoding Categorical Variables នៅក្នុងបរិបទនៃ Machine Learning with Python។
+objectives:
+  - យល់ដឹងពីមូលដ្ឋានទ្រឹស្តីនៃ Encoding Categorical Variables
+  - អនុវត្ត Encoding Categorical Variables ដោយប្រើប្រាស់ scikit-learn ឬកញ្ចប់ Python ពាក់ព័ន្ធ
+  - វាយតម្លៃប្រសិទ្ធភាពម៉ូដែល និងបកស្រាយលទ្ធផល
+module: ml-module-3-preprocessing
+order: 3
+quiz:
+  - question: តើអ្វីជាគំនិតចម្បងនៅពីក្រោយ Encoding Categorical Variables?
+    options:
+      - ការធ្វើឱ្យប្រសើរវ៉ិចទ័រ និងការកាត់បន្ថយថ្លៃដើម
+      - ការកំណត់ទម្រង់ផ្ទុកទិន្នន័យ (Memory storage)
+      - ការកំណត់ផ្លូវបណ្តាញ (Web routing) និងតក្កវិជ្ជាបញ្ជា
+      - ការធ្វើលិបិក្រមមូលដ្ឋានទិន្នន័យដែលមានប្រសិទ្ធភាពខ្ពស់
+    correctAnswer: 1
+    explanation: Encoding Categorical Variables គឺជាគន្លឹះសំខាន់ក្នុងដំណើរការ ML ដើម្បីជួយដល់រចនាសម្ព័ន្ធម៉ូដែល ការតំណាងទិន្នន័យ ឬការកំណត់ប៉ារ៉ាម៉ែត្រឱ្យប្រសើរ។
+  - question: តើឧបករណ៍មួយណាដែលត្រូវបានប្រើជាទូទៅដើម្បីអនុវត្ត Encoding Categorical Variables នៅក្នុង Python?
+    options:
+      - scikit-learn ឬបណ្ណាល័យ ML ពាក់ព័ន្ធ
+      - Django web framework
+      - ExpressJS runtime
+      - Docker Engine
+    correctAnswer: 1
+    explanation: Scikit-learn គឺជាកញ្ចប់ Python ស្តង់ដារសម្រាប់ការអនុវត្តក្បួនដោះស្រាយ Machine Learning ស្នូល។
+---
+
+## 🌐 ទិដ្ឋភាពទូទៅ
+
+Encoding Categorical Variables គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+នៅក្នុង Machine Learning, Encoding Categorical Variables ដើរតួនាទីយ៉ាងសំខាន់។ ដោយការយល់ច្បាស់ពីគំនិតនេះ អ្នកអាចដោះស្រាយបញ្ហាប្រឈមសំខាន់ៗក្នុងការកែតម្រូវទិន្នន័យ (Data fitting) ការវិភាគទស្សន៍ទាយ (Predictive analytics) និងការស្វែងរកលំនាំរចនាសម្ព័ន្ធ (Structural pattern mining)។
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+នៅពេលសិក្សាអំពី **Encoding Categorical Variables** សូមផ្តោតលើចំណុចលម្អិតខាងក្រោម៖
+
+1. **ក្បួនដោះស្រាយ និងគណិតវិទ្យា (Algorithms & Math)**៖ អនុគមន៍គោលបំណង ឬការបំប្លែងស្ថិតិនៅពីក្រោយ។
+2. **ការសរសេរកូដ (Coding)**៖ ការអនុវត្តជាក់ស្តែងដោយប្រើ Python APIs។
+3. **ការអនុវត្តល្អបំផុត (Best Practices)**៖ ជៀសវាងកំហុសទូទៅដូចជា ការលេចធ្លាយទិន្នន័យ (Data leakage), target drift, ឬ overfitting។
+
+---
+
+## 💻 កូដ
+
+ខាងក្រោមនេះគឺជាទម្រង់កូដស្តង់ដារដែលបង្ហាញពីរបៀបសរសេរវានៅក្នុង Python៖
+
+```python
+# Implementing Encoding Categorical Variables
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+print("Initializing: Encoding Categorical Variables")
+# Template code demonstrating the concept
+X = np.random.rand(100, 2)
+y = np.random.randint(0, 2, 100)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+print("Dataset split completed successfully.")
+```
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+ការយល់ដឹងពី Encoding Categorical Variables គឺពិតជាមានសារៈសំខាន់នៅពេលដែលអ្នកឈានទៅប្រើប្រាស់រចនាសម្ព័ន្ធដែលស្មុគស្មាញជាងមុន។ សូមសាកល្បងដំណើរការកូដឧទាហរណ៍ សាកល្បងផ្លាស់ប្តូរប៉ារ៉ាម៉ែត្រ និងធ្វើតេស្តការយល់ដឹងរបស់អ្នកជាមួយសំណួរ quiz!

@@ -1,0 +1,58 @@
+---
+title: ការវិភាគការលក់ E-commerce (E-commerce Sales Analysis)
+description: គម្រោងអនុវត្តផ្ទាល់! យកចំណេះដឹងពី Pandas, EDA, និង Data Visualization មកដោះស្រាយបញ្ហាអាជីវកម្មពិតៗ។
+objectives:
+  - អនុវត្តវដ្តជីវិតនៃការវិភាគទិន្នន័យទាំងមូល (Data Analysis Lifecycle)
+  - សម្អាតទិន្នន័យលក់ (Cleaning Sales Data)
+  - ស្វែងរកអតិថិជនគោលដៅ និងផលិតផលដែលលក់ដាច់បំផុត (Insights)
+module: da-module-11-projects
+order: 1
+quiz:
+  - question: នៅក្នុងគម្រោងពិតប្រាកដ តើដំណាក់កាលមួយណាដែលស៊ីពេលរបស់ Data Analyst ច្រើនជាងគេ?
+    options:
+      - ការគូរក្រាហ្វិក (Visualization)
+      - ការធ្វើរបាយការណ៍ (Reporting)
+      - ការសម្អាតទិន្នន័យ (Data Cleaning / Preparation)
+      - ការសរសេរកូដ SQL
+    correctAnswer: 3
+    explanation: 'យោងតាមអ្នកជំនាញ Data Analyst ចំណាយពេលប្រហែល ៦០ ទៅ ៨០ ភាគរយ ទៅលើការប្រមូល និងសម្អាតទិន្នន័យ (Data Cleaning) មុនពេលពួកគេអាចចាប់ផ្តើមវិភាគបាន។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+អបអរសាទរ! អ្នកបានរៀនពីឧបករណ៍សំខាន់ៗអស់ហើយ។ ឥឡូវនេះគឺជាពេលដែលត្រូវពាក់មួកជា **Data Analyst ពិតប្រាកដ** ។ នៅក្នុងគម្រោងនេះ អ្នកនឹងដើរតួជាអ្នកវិភាគទិន្នន័យឱ្យក្រុមហ៊ុន E-commerce មួយ ដែលថៅកែចង់ដឹងថា៖ តើខែណាដែលលក់ដាច់បំផុត ហើយផលិតផលណាដែលទាញចំណូលបានច្រើនជាងគេ?
+
+---
+
+## 🛠️ គម្រោងអនុវត្តន៍ (Project Walkthrough)
+
+### ១. សំណួរអាជីវកម្ម (Business Questions)
+1. តើប្រាក់ចំណូលសរុបប្រចាំខែនីមួយៗមានចំនួនប៉ុន្មាន?
+2. តើទីក្រុងណាដែលបញ្ជាទិញច្រើនជាងគេ?
+
+### ២. កូដគំរូសម្រាប់ចាប់ផ្តើម (Starter Code)
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# ១. អានទិន្នន័យ
+df = pd.read_csv("sales_data.csv")
+
+# ២. សម្អាតទិន្នន័យ
+df = df.dropna()
+df['Order Date'] = pd.to_datetime(df['Order Date'])
+df['Month'] = df['Order Date'].dt.month
+
+# ៣. វិភាគ
+monthly_sales = df.groupby('Month')['Total Price'].sum()
+
+# ៤. បង្ហាញជាក្រាហ្វិក
+monthly_sales.plot(kind='bar', color='skyblue')
+plt.title("ចំណូលប្រចាំខែ")
+plt.xlabel("ខែ")
+plt.ylabel("ប្រាក់ចំណូល ($)")
+plt.show()
+```
+
+អ្នកអាចយកកូដគំរូនេះទៅសាកល្បងជាមួយនឹងសំណុំទិន្នន័យ (Dataset) ផ្ទាល់ខ្លួនរបស់អ្នកបាន។ ការអនុវត្តផ្ទាល់គឺជាមធ្យោបាយតែមួយគត់ ដើម្បីក្លាយជា Data Analyst ដ៏ឆ្នើម!

@@ -1,0 +1,76 @@
+---
+title: YOLO Overview
+description: ស្វែងយល់អំពី YOLO Overview នៅក្នុងបរិបទនៃ Deep Learning with Python។
+objectives:
+  - យល់ដឹងពីរចនាសម្ព័ន្ធ deep architectures និងប្រតិបត្តិការនៃ YOLO Overview
+  - អនុវត្ត YOLO Overview ដោយប្រើប្រាស់ TensorFlow/Keras ឬ PyTorch
+  - ហ្វឹកហាត់ (Train), វាយតម្លៃ (evaluate) និងធ្វើឱ្យប្រសើរ (optimize) ដល់បណ្តាញ deep networks ទំនើបៗ
+module: dl-module-11-cv
+order: 4
+quiz:
+  - question: តើអ្វីជាតួនាទីចម្បងនៃ YOLO Overview នៅក្នុង Deep Learning?
+    options:
+      - ការតំណាងគណិតវិទ្យាវ៉ិចទ័រ និងការគូសវាសមិនមែនលីនេអ៊ែរ (non-linear mappings)
+      - ការកំណត់ផ្លូវបណ្តាញកម្មវិធី (Client-side application routing)
+      - ការកំណត់រចនាសម្ព័ន្ធបង្ហាញអត្ថបទ
+      - ការគ្រប់គ្រង Thread នៅលើផ្នែករឹង (hardware) មូលដ្ឋាន
+    correctAnswer: 1
+    explanation: YOLO Overview ផ្តល់នូវរចនាសម្ព័ន្ធគណនា ឬសមាសភាគម៉ូដែលដែលចាំបាច់សម្រាប់ដំណើរការសរសៃប្រសាទ (neural processing)។
+  - question: តើ framework មួយណាដែលត្រូវបានប្រើជាទូទៅដើម្បីអនុវត្ត YOLO Overview នៅក្នុងខ្សែសង្វាក់ deep learning?
+    options:
+      - TensorFlow/Keras ឬ PyTorch
+      - Webpack bundler
+      - ExpressJS server
+      - PostgreSQL database
+    correctAnswer: 1
+    explanation: TensorFlow/Keras និង PyTorch គឺជាបណ្ណាល័យ Python ឈានមុខគេសម្រាប់ការកសាងរចនាសម្ព័ន្ធ deep learning។
+---
+
+## 🌐 ទិដ្ឋភាពទូទៅ
+
+YOLO Overview គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+នៅក្នុង Deep Learning, YOLO Overview ផ្តល់នូវធាតុផ្សំជាមូលដ្ឋានសម្រាប់ការរៀនពីឋានានុក្រមនៃលក្ខណៈពិសេសដែលស្មុគស្មាញ (complex feature hierarchies)។ ដោយការយល់ច្បាស់ពីប្រធានបទនេះ អ្នកនឹងយល់ពីរបៀបបង្កើតម៉ូដែលសម្រាប់ទិន្នន័យដែលមានវិមាត្រខ្ពស់ (high-dimensional inputs) ដូចជា រូបភាព សំឡេង និងអត្ថបទដើម។
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+នៅពេលសិក្សាអំពី **YOLO Overview** សូមផ្តោតលើចំណុចសំខាន់ៗខាងក្រោម៖
+
+1. **ក្រាហ្វគណនា (Computational Graphs)**៖ របៀបដែល gradient ហូរឆ្លងកាត់ស្រទាប់នានា។
+2. **Framework API**៖ ការសរសេរកូដ Keras ឬ PyTorch ផ្ទាល់។
+3. **ការជ្រើសរើស Hyperparameter**៖ ការធ្វើឱ្យប្រសើរដល់ស្រទាប់ អត្រារៀន (learning rates) និងទំហំបាច់ (batch size)។
+
+---
+
+## 💻 កូដ
+
+ខាងក្រោមនេះគឺជាទម្រង់កូដស្តង់ដារដែលបង្ហាញពីរបៀបសរសេរវានៅក្នុង Python៖
+
+```python
+# Implementing YOLO Overview
+import torch
+import torch.nn as nn
+
+print("Initializing: YOLO Overview")
+# Basic PyTorch structure
+class SimpleModel(nn.Module):
+    def __init__(self):
+        super(SimpleModel, self).__init__()
+        self.fc = nn.Linear(10, 2)
+        
+    def forward(self, x):
+        return self.fc(x)
+
+model = SimpleModel()
+print("PyTorch model initialized successfully.")
+```
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+ការយល់ដឹងពី YOLO Overview គឺពិតជាមានសារៈសំខាន់នៅពេលដែលអ្នកបង្កើតរចនាសម្ព័ន្ធទំនើបៗ (state-of-the-art architectures)។ សូមដំណើរការកូដឧទាហរណ៍ សាកល្បងផ្លាស់ប្តូរ hyperparameters និងធ្វើ quiz ដើម្បីសាកល្បងការចងចាំរបស់អ្នក!

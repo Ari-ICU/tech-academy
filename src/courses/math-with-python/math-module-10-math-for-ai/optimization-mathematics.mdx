@@ -1,0 +1,60 @@
+---
+title: ការដោះស្រាយបញ្ហាតម្លៃតូចបំផុត (Optimization)
+description: ពង្រីកចំណេះដឹង Calculus ដើម្បីដោះស្រាយបញ្ហាជាក់ស្តែង ឧទាហរណ៍ដូចជារកមើលវិធីវេចខ្ចប់ផលិតផលដោយចំណាយដើមទុនតិចបំផុត។
+objectives:
+  - ប្រើប្រាស់ SciPy `optimize` ដើម្បីស្វែងរកចំណុច Min/Max ដោយស្វ័យប្រវត្តិ
+  - ឃើញពីភាពខុសគ្នារវាងការដោះស្រាយសមីការ (SymPy) និងការរុករកដោយលេខ (Numerical Optimization - SciPy)
+module: math-module-10-math-for-ai
+order: 3
+quiz:
+  - question: ហេតុអ្វីបានជា Data Scientists ចូលចិត្តប្រើប្រាស់បណ្ណាល័យ "SciPy (Numerical Optimization)" ជាង "SymPy (Symbolic)" នៅពេលប្រឈមមុខនឹងសំណុំទិន្នន័យធំៗក្នុង Machine Learning?
+    options:
+      - ព្រោះ SymPy ត្រូវគិតរករូបមន្តគណិតវិទ្យាពិតប្រាកដ (Exact Formula) ដែលប្រើប្រាស់អង្គចងចាំ និងពេលវេលាច្រើនពេក ពេលសមីការស្មុគស្មាញ ខណៈដែល SciPy ប្រើក្បួនស្មានជិតៗ (Approximation) ដែលលឿនជាងរាប់ពាន់ដង។
+      - ព្រោះ SymPy គណនាខុសជានិច្ច
+      - ព្រោះ SciPy មិនគិតថ្លៃ
+      - គ្មានចម្លើយណាត្រូវទេ
+    correctAnswer: 1
+    explanation: 'នៅក្នុង Machine Learning គេកម្រត្រូវការចម្លើយដែលសុក្រឹត ១០០% ណាស់។ គេគ្រាន់តែត្រូវការចម្លើយដែលប្រហែលជិតបំផុត (Approximation) ក្នុងរយៈពេលដ៏ខ្លីប៉ុណ្ណោះ ទើប Numerical Optimization (SciPy, TensorFlow, PyTorch) ពេញនិយមជាង Symbolic Math (SymPy)។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងម៉ូឌុល Calculus យើងប្រើ SymPy ដើម្បីរកដេរីវេ រួចអោយស្មើ ០ រួចដោះស្រាយសមីការ។ វាដំណើរការល្អលើក្រដាស ប៉ុន្តែមិនល្អសម្រាប់កុំព្យូទ័រពេលទិន្នន័យមានរាប់លានទេ! បណ្ណាល័យ `scipy.optimize` ត្រូវបានបង្កើតឡើងដើម្បីរកចំណុចបាត (Minimum) ដោយស្វ័យប្រវត្តិ តាមរយៈក្បួនដូចជា Gradient Descent ។
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ប្រើប្រាស់ `scipy.optimize.minimize`
+
+ឧបមាថាយើងចង់រកចំណុចបាតនៃអនុគមន៍ $f(x) = (x - 3)^2 + 5$។ (មើលនឹងភ្នែកក៏ដឹងថាកំហុសតិចបំផុត ៥ គឺកើតឡើងនៅពេល $x = 3$)។ 
+
+តោះប្រើ SciPy!
+
+```python
+import numpy as np
+from scipy.optimize import minimize
+
+# ១. បង្កើតអនុគមន៍ធម្មតារបស់ Python (Objective Function)
+def cost_function(x):
+    # វានឹងគណនាតម្លៃ (x-3)^2 + 5
+    return (x - 3)**2 + 5
+
+# ២. កំណត់ចំណុចចាប់ផ្តើមនៃការស្មាន (Initial Guess)
+# យើងអោយកុំព្យូទ័រចាប់ផ្តើមស្មានពី x = 0 ទៅ
+x_start = [0.0]
+
+# ៣. ហៅមុខងារ minimize ដើម្បអោយវាដើររកបាត (Optimization)
+result = minimize(cost_function, x_start)
+
+# ៤. បញ្ចេញលទ្ធផល
+print("ស្ថានភាពជោគជ័យ?:", result.success)
+print("តម្លៃ x ដែលធ្វើអោយកំហុសតិចបំផុត (x-value):", result.x[0])
+print("តម្លៃកំហុសតិចបំផុតនោះ (Cost):", result.fun)
+
+# លទ្ធផលរំពឹងទុក:
+# x ប្រហែល 3.00000...
+# Cost ប្រហែល 5.0
+```
+
+`minimize` បានប្រើប្រាស់ក្បួនជម្រាលដ៏ស្មុគស្មាញដោយលាក់បាំងពីក្រោយខ្នង (Under the hood) ដើម្បីដើររកចម្លើយអោយយើងដោយស្វ័យប្រវត្តិ! វាក៏ជាក្បួនដែលគេប្រើក្នុងការអោយ AI រៀនទម្រង់របស់មុខមនុស្ស (Facial Recognition) ផងដែរ!

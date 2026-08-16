@@ -1,0 +1,193 @@
+---
+title: Threading និង Multiprocessing
+description: រៀនពីរបៀបធ្វើឱ្យកុំព្យូទ័ររបស់អ្នកធ្វើការងារច្រើនក្នុងពេលតែមួយ (Concurrency & Parallelism) ដើម្បីសន្សំសំចៃពេលវេលាដោយប្រើប្រាស់ Threading និង Multiprocessing។
+objectives:
+  - ស្វែងយល់ពីភាពខុសគ្នារវាងការសរសេរកូដធម្មតា (Synchronous) និងការសរសេរកូដស្របគ្នា (Concurrent/Parallel)
+  - យល់ដឹងពីឥទ្ធិពលនៃ GIL (Global Interpreter Lock) នៅក្នុង Python
+  - ប្រើប្រាស់ Threading សម្រាប់ការងាររង់ចាំ (I/O-Bound) និង Multiprocessing សម្រាប់ការងារគណនា (CPU-Bound)
+module: module-12-concurrency
+order: 1
+quiz:
+  - question: តើអ្វីទៅជាបញ្ហាធំបំផុតរបស់ 'Threading' នៅក្នុង Python (CPython) សម្រាប់ការងារគណនាធ្ងន់ៗ (CPU-Bound)?
+    options:
+      - Threading ប្រើប្រាស់ Memory ច្រើនពេក
+      - បញ្ហា GIL (Global Interpreter Lock) ដែលអនុញ្ញាតឱ្យមានតែ Thread មួយគត់ដំណើរការកូដ Python ក្នុងពេលតែមួយ
+      - Threading អាចប្រើបានតែនៅលើ Windows ប៉ុណ្ណោះ
+      - Threading មិនអាចអានឯកសារ (File I/O) បានទេ
+    correctAnswer: 2
+    explanation: 'ដោយសារតែ GIL ទោះបីជាកុំព្យូទ័រអ្នកមាន 8 Cores ក៏ Threading នៅក្នុង Python អាចរត់កូដបានតែមួយ Core ដែរក្នុងពេលតែមួយ។ នេះធ្វើឱ្យ Threading មិនល្អសម្រាប់ការងារគណនាធ្ងន់ៗ តែវាល្អសម្រាប់ការងាររង់ចាំ (I/O) ដូចជាទាញយកទិន្នន័យពីអុីនធឺណិត។'
+  - question: ប្រសិនបើអ្នកចង់ដំណើរការ AI ម៉ូដែលដែលស៊ី CPU ខ្លាំងឱ្យដើរលឿនជាងមុន តើអ្នកគួរជ្រើសរើសមួយណា?
+    options:
+      - Threading
+      - Multiprocessing
+      - Asyncio
+      - គ្មានចម្លើយត្រឹមត្រូវ
+    correctAnswer: 2
+    explanation: 'Multiprocessing បង្កើតដំណើរការ (Process) ដាច់ដោយឡែកពីគ្នា ដែល Process នីមួយៗមាន GIL ផ្ទាល់ខ្លួនរបស់វា។ វាអនុញ្ញាតឱ្យកុំព្យូទ័រប្រើប្រាស់ Cores ទាំងអស់របស់វាដើម្បីគណនាព្រមៗគ្នា (True Parallelism)។'
+---
+
+## 🌐 Overview
+
+ជាធម្មតា កូដ Python ដំណើរការម្តងមួយបន្ទាត់ពីលើចុះក្រោម។ បើបន្ទាត់ទី១ ត្រូវការពេល ៥ នាទីដើម្បីទាញយកទិន្នន័យ បន្ទាត់ទី២ ត្រូវអង្គុយរង់ចាំទាល់តែ ៥ នាទីទើបអាចដំណើរការបាន ទោះបីជាបន្ទាត់ទី២ មិនពឹងផ្អែកលើលទ្ធផលបន្ទាត់ទី១ ក៏ដោយ។ នេះគឺជាការខ្ជះខ្ជាយពេលវេលាដ៏ធំ!
+នៅក្នុងមេរៀននេះ យើងនឹងរៀនពីសិល្បៈនៃការបញ្ជាឱ្យកុំព្យូទ័រធ្វើការងារ **"ច្រើនក្នុងពេលតែមួយ"** តាមរយៈបច្ចេកទេសពីរគឺ **Threading** និង **Multiprocessing**។
+
+---
+
+## 📚 Definitions
+
+- **Synchronous (សមកាលកម្ម):** ធ្វើការងារមួយចប់ ទើបបន្តទៅការងារមួយទៀត (តម្រង់ជួរគ្នា)។
+- **Concurrency (ការធ្វើការងារស្របគ្នា):** វិធីសាស្ត្រដែលប្រព័ន្ធអាចគ្រប់គ្រងការងារច្រើនក្នុងពេលតែមួយ (តែមិនចាំបាច់រត់ព្រមគ្នាក្នុងវិនាទីតែមួយទេ គឺការផ្លាស់ប្តូរវេនគ្នាលឿនៗ)។
+- **Parallelism (ស្របគ្នាសុទ្ធសាធ):** ការងារពីរ ឬច្រើន ត្រូវបានដំណើរការពិតប្រាកដក្នុងវិនាទីតែមួយ (ត្រូវការ CPU ច្រើន Cores)។
+- **I/O-Bound Task:** ការងារដែលចំណាយពេលភាគច្រើនទៅលើការ **"រង់ចាំ"** (ឧ. ទាញទិន្នន័យពី Web, អានឯកសារ)។ ល្អបំផុតសម្រាប់ **Threading**។
+- **CPU-Bound Task:** ការងារដែលចំណាយពេលភាគច្រើនលើការ **"គណនា"** (ឧ. គណនាគណិតវិទ្យា, បង្រួមរូបភាព)។ ល្អបំផុតសម្រាប់ **Multiprocessing**។
+- **GIL (Global Interpreter Lock):** សោរសុវត្ថិភាពរបស់ Python ដែលរារាំងមិនឱ្យ Thread ច្រើនរត់កូដក្នុងពេលតែមួយ។
+
+---
+
+## 💡 The Core Idea
+
+ស្រមៃថា **អ្នកជាមេចុងភៅតែម្នាក់ឯង នៅក្នុងផ្ទះបាយមួយ (Python GIL)**។
+- **Synchronous:** អ្នកដាក់ដាំទឹកពុះ (ចំណាយពេល១០នាទី) រួចអ្នកឈរមើលទាល់តែទឹកពុះ ទើបអ្នកចាប់ផ្តើមហាន់សាច់ (ចំណាយពេល៥នាទី)។ សរុប ១៥នាទី។
+- **Threading (Concurrency):** អ្នកដាក់ដាំទឹក រួចអ្នកមិនឈរចាំទេ អ្នកងាកទៅហាន់សាច់បណ្តើរៗ។ ពេលទឹកពុះ អ្នកដាក់មីចូល។ សរុប ១០នាទី។ (អ្នកនៅតែជាមនុស្សតែម្នាក់ តែអ្នកឆ្លាតក្នុងការប្តូរវេនការងារក្នុងពេលទំនេរ)។ នេះល្អបំផុតសម្រាប់ការងារ **I/O-Bound (រង់ចាំ)**។
+- **Multiprocessing (Parallelism):** អ្នកជួលចុងភៅម្នាក់ទៀតមកជួយ។ អ្នកដាំទឹក ចំណែកគាត់ហាន់សាច់។ ការងារទាំងពីរដើរទៅមុខស្របគ្នាក្នុងវិនាទីតែមួយពិតប្រាកដ! នេះល្អបំផុតសម្រាប់ការងារ **CPU-Bound (ហត់នឿយគណនា)**។
+
+---
+
+## 📖 In Depth
+
+**ហេតុអ្វីបានជា Python មាន GIL?**
+Python ប្រើប្រាស់ប្រព័ន្ធរាប់ចំនួន Reference (Reference Counting) ដើម្បីគ្រប់គ្រង Memory។ ប្រសិនបើមាន Thread ២ ព្យាយាមដក និងបូកចំនួន Reference នេះក្នុងពេលតែមួយ Memory អាចនឹងខូច។ ទើបអ្នកបង្កើត Python ដាក់ GIL ដើម្បីឱ្យមានតែ Thread មួយគត់អាចប្រើប្រាស់ Memory បានក្នុងពេលតែមួយ។ Multiprocessing អាចគេចផុតពី GIL បានដោយសារវាចម្លង Memory ថ្មី (Process ថ្មី) ដាច់ដោយឡែក។
+
+---
+
+## 💻 Code Breakdown
+
+```python
+# ឧទាហរណ៍ទី១: បញ្ហារបស់ Synchronous Code
+import time
+
+def download_file(file_name):
+    print(f"ចាប់ផ្តើមទាញយក: {file_name}")
+    time.sleep(2) # ធ្វើពុតជាទាញយក (រង់ចាំ ២ វិនាទី)
+    print(f"ទាញយកជោគជ័យ: {file_name}")
+
+start_time = time.time()
+download_file("រូបភាពទី១.jpg")
+download_file("រូបភាពទី២.jpg")
+download_file("រូបភាពទី៣.jpg")
+print(f"ចំណាយពេលសរុប (Sync): {time.time() - start_time:.2f} វិនាទី")
+# លទ្ធផល: នឹងចំណាយពេល ៦ វិនាទី យ៉ាងយឺត!
+```
+
+```python
+# ឧទាហរណ៍ទី២: ការសន្សំពេលដោយប្រើ Threading (សម្រាប់ I/O-Bound)
+import time
+import threading
+
+def download_file(file_name):
+    print(f"ចាប់ផ្តើមទាញយក: {file_name}")
+    time.sleep(2)
+    print(f"ទាញយកជោគជ័យ: {file_name}")
+
+start_time = time.time()
+
+# បង្កើត Threads ចំនួន ៣
+thread1 = threading.Thread(target=download_file, args=("រូបភាពទី១.jpg",))
+thread2 = threading.Thread(target=download_file, args=("រូបភាពទី២.jpg",))
+thread3 = threading.Thread(target=download_file, args=("រូបភាពទី៣.jpg",))
+
+# បញ្ជាឱ្យរត់ (មិនរង់ចាំទេ)
+thread1.start()
+thread2.start()
+thread3.start()
+
+# បញ្ជាឱ្យកម្មវិធីមេរង់ចាំទាល់តែ Threads ទាំង៣ចប់សិន ទើបទៅមុខទៀត
+thread1.join()
+thread2.join()
+thread3.join()
+
+print(f"ចំណាយពេលសរុប (Threading): {time.time() - start_time:.2f} វិនាទី")
+# លទ្ធផល: ចំណាយពេលត្រឹមតែ ២ វិនាទី ប៉ុណ្ណោះ!
+```
+
+```python
+# ឧទាហរណ៍ទី៣: ការប្រើប្រាស់ Multiprocessing (សម្រាប់ CPU-Bound)
+import time
+import multiprocessing
+
+def heavy_calculation(name):
+    print(f"Process {name}: ចាប់ផ្តើមគណនា...")
+    result = sum(i * i for i in range(10000000)) # គណនាធ្ងន់ (CPU-Bound)
+    print(f"Process {name}: បញ្ចប់!")
+
+# សំខាន់: នៅលើ Windows កូដ Multiprocessing ត្រូវតែស្ថិតក្នុង if __name__ == '__main__': ជានិច្ច
+if __name__ == '__main__':
+    start_time = time.time()
+    
+    # បង្កើត Processes (វានឹងបើកកម្មវិធី Python ថ្មីនៅពីក្រោយ)
+    process1 = multiprocessing.Process(target=heavy_calculation, args=("A",))
+    process2 = multiprocessing.Process(target=heavy_calculation, args=("B",))
+    
+    process1.start()
+    process2.start()
+    
+    process1.join()
+    process2.join()
+    
+    print(f"ចំណាយពេលសរុប (Multiprocessing): {time.time() - start_time:.2f} វិនាទី")
+```
+
+---
+
+## 🌐 ការអនុវត្តជាក់ស្តែង (Real-world Application)
+
+**ការប្រើប្រាស់ `concurrent.futures` ដើម្បីងាយស្រួលសរសេរកូដ**
+
+ជំនួសឱ្យការបង្កើត Thread ម្តងមួយៗដោយដៃ (`thread.start()`, `thread.join()`) ស្ថាបត្យករ Python បានបង្កើតម៉ូឌុល `concurrent.futures` ម៉្យាងហៅថា **Pool** ដែលងាយស្រួលជាងឆ្ងាយ។
+
+```python
+import concurrent.futures
+import time
+
+def fetch_data(url):
+    print(f"កំពុងទាញយក: {url}")
+    time.sleep(1.5) # ចំណាយពេលអុីនធឺណិត
+    return f"ទិន្នន័យពី {url}"
+
+urls = [
+    "example.com/api/1", "example.com/api/2", 
+    "example.com/api/3", "example.com/api/4"
+]
+
+start_time = time.time()
+
+# ប្រើប្រាស់ ThreadPoolExecutor ដើម្បីកាត់បន្ថយកូដស្មុគស្មាញ
+# max_workers=4 មានន័យថា អនុញ្ញាតឱ្យមានកម្មករ ៤នាក់ធ្វើការព្រមគ្នា
+with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+    # ផែនទី (Map) នឹងបញ្ជូន URL នីមួយៗទៅឱ្យអនុគមន៍ fetch_data ធ្វើការព្រមៗគ្នា
+    results = executor.map(fetch_data, urls)
+
+for res in results:
+    print(res)
+
+print(f"ការងារត្រូវបានបញ្ចប់ក្នុងពេល {time.time() - start_time:.2f} វិនាទី!")
+# បើអត់ប្រើ Thread ត្រូវចំណាយ 1.5 * 4 = 6 វិនាទី
+# តែឥឡូវចំណាយត្រឹមតែ 1.5 វិនាទីប៉ុណ្ណោះ!
+```
+
+---
+
+## ❌ Common Mistakes
+
+- **ប្រើប្រាស់ Threading សម្រាប់ការងារគណនាធ្ងន់ (CPU-Bound):** បើអ្នកចង់បង្វឹក AI ម៉ូដែល ហើយអ្នកប្រើ Threading វាមិនត្រឹមតែមិនលឿនជាងមុនទេ ថែមទាំងដើរយឺតជាងមុនទៀត (ដោយសារតែការដណ្តើមគ្នាកាន់សោរ GIL)។ ត្រូវចងចាំថា: គណនា=Multiprocessing, រង់ចាំ=Threading។
+- **ភ្លេច `if __name__ == '__main__':` ពេលប្រើ Multiprocessing:** នៅលើប្រព័ន្ធប្រតិបត្តិការ Windows បើអ្នកមិនដាក់កូដបង្កើត Process ក្នុង Block នេះទេ វានឹងបើក Process ថ្មីចូលគ្នាមិនឈប់ (Infinite Recursive Loop) រហូតដល់កុំព្យូទ័រគាំង។
+- **ការប្រើអថេររួមគ្នាដោយគ្មានសោរ (Race Condition):** បើ Thread ពីរព្យាយាមបូកលេខចូលទៅក្នុងអថេរតែមួយក្នុងពេលតែមួយ លទ្ធផលអាចនឹងខុស។ គេត្រូវប្រើ `threading.Lock()` ដើម្បីការពារ តែវារាងស្មុគស្មាញបន្តិច។
+
+---
+
+## ✅ Key Takeaways
+
+- **Synchronous:** ធ្វើការម្តងមួយៗ (ងាយស្រួលសរសេរ តែយឺត)។
+- ប្រើ **Threading** នៅពេលកម្មវិធីរបស់អ្នកចំណាយពេលភាគច្រើនទៅលើការរង់ចាំ (I/O-Bound ដូចជា អាន File, ទាញយកពី Web)។
+- ប្រើ **Multiprocessing** នៅពេលកម្មវិធីរបស់អ្នកត្រូវធ្វើគណិតវិទ្យា ឬការគណនាធ្ងន់ៗ (CPU-Bound) ដើម្បីប្រើប្រាស់ CPU Cores ឱ្យអស់លទ្ធភាពពិតប្រាកដ។
+- **`concurrent.futures.ThreadPoolExecutor`** គឺជាវិធីទំនើប និងងាយស្រួលបំផុតក្នុងការសរសេរកូដ Threading ជាជាងការសរសេរកូដ `threading.Thread` ដោយខ្លួនឯង។

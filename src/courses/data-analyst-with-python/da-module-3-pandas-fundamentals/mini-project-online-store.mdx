@@ -1,0 +1,78 @@
+---
+title: Mini Project - ការវិភាគការលក់តាមអ៊ីនធឺណិត (Online Store Sales)
+description: យកចំណេះដឹង Pandas Fundamentals ទាំងអស់មកអនុវត្តក្នុងគម្រោងជាក់ស្តែង ដើម្បីជួយម្ចាស់ហាងអនឡាញវិភាគរកទំនិញដែលលក់ដាច់ជាងគេ។
+objectives:
+  - អានទិន្នន័យ (CSV) ចូលទៅក្នុង Pandas DataFrame
+  - អនុវត្តការច្រោះទិន្នន័យ (Filtering) យកតែប្រតិបត្តិការជោគជ័យ
+  - ប្រើប្រាស់ GroupBy និង Sorting ដើម្បីស្វែងរកទំនិញ (Top Products)
+module: da-module-3-pandas-fundamentals
+order: 10
+quiz:
+  - question: នៅក្នុងគម្រោងនេះ ដើម្បីរកមើលថាអតិថិជនមកពីខេត្តណាដែលចំណាយលុយទិញច្រើនជាងគេ តើក្បួនតក្កវិជ្ជា (Logic) ណាដែលត្រឹមត្រូវ?
+    options:
+      - ប្រើ `df.sort_values(by="ខេត្ត")` ជាការស្រេច
+      - ប្រើ `df.groupby("ខេត្ត")["ចំណាយ"].sum()` បន្ទាប់មក ប្រើ `.sort_values(ascending=False)` ដើម្បីទាញយកអ្នកនៅលើគេ
+      - ប្រើ `df.head(10)`
+      - មិនអាចធ្វើទៅបានទេ
+    correctAnswer: 2
+    explanation: 'នេះគឺជាលំហូរការងារពិតប្រាកដ (Real-world workflow)! អ្នកត្រូវ GroupBy "ខេត្ត" រួចបូកសរុប "ចំណាយ" សិន។ លទ្ធផលដែលបានមក គឺខេត្តរាយប៉ាយគ្មានសណ្តាប់ធ្នាប់ ដូច្នេះអ្នកត្រូវប្រើ Sort Values (ពីធំមកតូច) បន្ថែមទៀត ទើបអាចដឹងថាខេត្តណានៅលេខ ១!'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+សូមស្វាគមន៍មកកាន់គម្រោងធំទី ២! ម្ចាស់ហាងអនឡាញ "Khmer E-Shop" បានផ្ញើឯកសារ Excel (`sales_data.csv`) មកអោយអ្នក ដោយមានទិន្នន័យលក់រាប់ពាន់ជួរ។ គាត់ចង់អោយអ្នកជួយធ្វើរបាយការណ៍សង្ខេបមួយ។ តោះចាប់ផ្តើមសរសេរកូដ!
+
+---
+
+## 💻 គម្រោង៖ វិភាគការលក់អនឡាញ
+
+ឧបមាថាយើងមានទិន្នន័យ `sales_data.csv` ដែលមានជួរឈរដូចជា៖ `ID`, `Customer`, `City`, `Product`, `Category`, `Price`, `Status` (ជោគជ័យ ឫ បោះបង់)។
+
+```python
+import pandas as pd
+
+# ១. អានឯកសារ CSV ចូលមកក្នុង Pandas
+# (អ្នកសន្មតថាឯកសារនេះមាននៅក្នុងកុំព្យូទ័ររួចហើយ)
+# df = pd.read_csv("sales_data.csv")
+
+# សម្រាប់ការរៀន យើងបង្កើត DataFrame គំរូមួយតូច:
+data = {
+    'Customer': ['សុខ', 'សៅ', 'វ៉ាន់', 'លីណា', 'រដ្ឋា'],
+    'City': ['Phnom Penh', 'Siem Reap', 'Phnom Penh', 'Battambang', 'Siem Reap'],
+    'Product': ['iPhone', 'T-Shirt', 'MacBook', 'T-Shirt', 'iPad'],
+    'Category': ['Electronics', 'Clothing', 'Electronics', 'Clothing', 'Electronics'],
+    'Price': [1000, 20, 1500, 20, 600],
+    'Status': ['Completed', 'Completed', 'Cancelled', 'Completed', 'Completed']
+}
+df = pd.DataFrame(data)
+
+print("ទិន្នន័យដើម (៥ជួរ):")
+print(df.head())
+print("-" * 30)
+
+# ២. ការសំអាតបឋម (Filtering)
+# ថៅកែមិនចង់រាប់បញ្ចូលការកុម្ម៉ង់ដែល 'Cancelled' នោះទេ ព្រោះអត់បានលុយ!
+successful_sales = df[df["Status"] == "Completed"]
+print(f"មានចំនួន {len(successful_sales)} ការបញ្ជាទិញដែលបានជោគជ័យ។")
+print("-" * 30)
+
+# ៣. ស្វែងរកប្រភេទទំនិញដែលលក់ដាច់ជាងគេ (GroupBy + Sorting)
+# យើងប្រើប្រាស់ successful_sales ជាគោល (ព្រោះវាបានកាត់អា Cancelled ចោលហើយ)
+category_revenue = successful_sales.groupby("Category")["Price"].sum()
+
+# រៀបលំដាប់ពីធំមកតូច
+top_categories = category_revenue.sort_values(ascending=False)
+
+print("ចំណូលតាមប្រភេទទំនិញ (Top Categories):")
+print(top_categories)
+print("-" * 30)
+
+# ៤. រកមើលទីក្រុងដែលមានការចំណាយច្រើនជាងគេ
+city_revenue = successful_sales.groupby("City")["Price"].sum().sort_values(ascending=False)
+
+print("ទីក្រុងដែលចំណាយច្រើនជាងគេ (Top City):")
+print(city_revenue.head(1)) # ប្រើ head(1) យកតែខេត្តលេខ ១
+```
+
+### ការសន្និដ្ឋាន
+ឃើញទេ? ដោយការប្រើប្រាស់ `read_csv`, ការច្រោះ (Filtering), GroupBy និង Sorting បញ្ចូលគ្នាជាចង្វាក់ (Chain) អ្នកអាចបំប្លែងទិន្នន័យឆៅរាប់ម៉ឺនជួរ ទៅជារបាយការណ៍ដែលថៅកែចង់បានក្នុងរយៈពេលមិនដល់ ៥ នាទី។ នៅក្នុងម៉ូឌុលបន្ទាប់ យើងនឹងរៀនពីរបៀបដោះស្រាយ "ទិន្នន័យកខ្វក់" ដែលជាបញ្ហាឈឺក្បាលបំផុតរបស់ Data Analyst!

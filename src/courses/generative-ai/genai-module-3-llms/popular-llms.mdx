@@ -1,0 +1,68 @@
+---
+title: Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek)
+description: ស្វែងយល់អំពី Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek) នៅក្នុងបរិបទនៃ Generative AI with Python។
+objectives:
+  - យល់ដឹងពីមូលដ្ឋានទ្រឹស្តីនៃ Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek)
+  - អនុវត្ត និងពិសោធន៍ជាមួយ Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek) នៅក្នុង scripts ជាក់ស្តែង
+  - ពង្រាយ (Deploy) និងពង្រីក (scale) ការកំណត់រចនាសម្ព័ន្ធ Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek) នៅក្នុងកម្មវិធីផលិតកម្ម (production applications)
+module: genai-module-3-llms
+order: 9
+quiz:
+  - question: តើអ្វីទៅជាអត្ថប្រយោជន៍ចម្បងនៃ Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek) នៅក្នុង Generative AI?
+    options:
+      - ការរចនា Prompt (Prompt design) ការកំណត់ផ្លូវម៉ូដែល (model routing) ឬការគ្រប់គ្រង agentic
+      - ការកំណត់ផ្លូវបណ្តាញកម្រិតទាប (Low-level network routing)
+      - ការចងក្រងកូដកុំព្យូទ័រមូលដ្ឋាន (Compiling local desktop code)
+      - ការតម្រៀបបញ្ជីលេខគត់ (Sorting lists of integers)
+    correctAnswer: 1
+    explanation: Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek) ត្រូវបានប្រើប្រាស់ដើម្បីគ្រប់គ្រង បម្រើ (serve) ឬប្ដូរតាមបំណងនូវលំហូរការងារនៃម៉ូដែល generative។
+  - question: តើឧបករណ៍ ឬប្រព័ន្ធអេកូឡូស៊ីមួយណាដែលលេចធ្លោជាងគេសម្រាប់ការដំណើរការ Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek) នៅក្នុង Python?
+    options:
+      - Hugging Face, OpenAI API, LangChain ឬ Ollama
+      - Django ORM
+      - React Native
+      - Unix shell scripts
+    correctAnswer: 1
+    explanation: ប្រព័ន្ធអេកូឡូស៊ី AI ទំនើបរបស់ Python (Hugging Face, LangChain, OpenAI, ។ល។) ផ្តល់នូវឧបករណ៍ដែលមានស្រាប់សម្រាប់កិច្ចការនេះ។
+---
+
+## 🌐 ទិដ្ឋភាពទូទៅ
+
+Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek) គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+នៅក្នុង Generative AI យើងត្រូវការវិធីសាស្រ្តជាប្រព័ន្ធដើម្បីគ្រប់គ្រង និងបង្កើនប្រសិទ្ធភាពនៃលទ្ធផលម៉ូដែល។ ដោយការយល់ច្បាស់ពី Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek) អ្នកនឹងទទួលបានការគ្រប់គ្រងដោយផ្ទាល់ទៅលើការបង្កើតតាមបរិបទ (contextual generation) ភាពត្រឹមត្រូវនៃការទាញយកទិន្នន័យម៉ូដែល និងការរួមបញ្ចូលប្រព័ន្ធ។
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+នៅពេលសិក្សាអំពី **Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek)** សូមផ្តោតលើចំណុចខាងក្រោម៖
+
+1. **ស្ថាបត្យកម្ម (Architecture)**៖ របៀបគ្រប់គ្រងលំហូរបរិបទ (ឧទាហរណ៍ RAG, function call)។
+2. **ប៉ារ៉ាម៉ែត្រ (Parameters)**៖ ការកែប្រែសីតុណ្ហភាព (temperature), top_p, ទំហំ chunk ឬទំហំ embedding។
+3. **សុវត្ថិភាព និងការចំណាយ (Safety & Cost)**៖ ការធានាសុវត្ថិភាពនៃ prompts វាយតម្លៃភាពត្រឹមត្រូវ និងការពង្រីកការដាក់ឱ្យប្រើប្រាស់ (scaling deployment)។
+
+---
+
+## 💻 កូដ
+
+ខាងក្រោមនេះគឺជាទម្រង់កូដស្តង់ដារដែលបង្ហាញពីរបៀបសរសេរវានៅក្នុង Python៖
+
+```python
+# Implementing Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek)
+import os
+
+print("Initializing Generative AI Component: Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek)")
+
+# Example placeholder showing typical structure
+api_key = os.getenv("OPENAI_API_KEY", "mock-key")
+print("API configuration completed.")
+```
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+ការយល់ដឹងពី Popular LLMs (GPT, Llama, Qwen, Mistral, Gemma, DeepSeek) គឺជារឿងចាំបាច់សម្រាប់ការកសាងឧបករណ៍ agentic និង retrieval-augmented។ សូមធ្វើការពិសោធន៍ជាមួយ prompts ស្វែងយល់ពី local model weights និងធ្វើ quiz ដើម្បីសាកល្បងការសិក្សារបស់អ្នក!

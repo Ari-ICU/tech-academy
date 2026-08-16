@@ -1,0 +1,61 @@
+---
+title: ការបែងចែកប្រូបាប (Probability Distributions)
+description: ស្វែងយល់ពី Normal Distribution (របាយកណ្តឹង) និងរបៀបដែលទិន្នន័យក្នុងធម្មជាតិត្រូវបានបែងចែក។
+objectives:
+  - ស្គាល់ពី Normal Distribution (របាយកណ្តឹង) និងលក្ខណៈសម្បត្តិរបស់វា
+  - យល់ពីវិធាន 68-95-99.7 (Empirical Rule)
+  - គូរក្រាហ្វិករបាយទិន្នន័យដោយប្រើ SciPy និង Matplotlib
+module: math-module-8-probability
+order: 4
+quiz:
+  - question: នៅក្នុង Normal Distribution ភាគរយនៃទិន្នន័យដែលស្ថិតនៅក្នុងចន្លោះមធ្យមភាគ (Mean) ដក/បូក ១ គម្លាតស្តង់ដារ (Standard Deviation) គឺមានប្រមាណប៉ុន្មាន?
+    options:
+      - 50%
+      - 68%
+      - 95%
+      - 99%
+    correctAnswer: 2
+    explanation: 'នេះហៅថា Empirical Rule។ 68% នៃទិន្នន័យទាំងអស់ (ឧ. កម្ពស់មនុស្ស) គឺស្ថិតនៅក្បែរមធ្យមភាគក្នុងគម្លាត ១ ស្តង់ដារ។ 95% ស្ថិតក្នុងគម្លាត ២ ស្តង់ដារ។ ការដឹងពីច្បាប់នេះ ជួយអោយយើងកំណត់អ្នកដែលមានតម្លៃខុសប្រក្រតី (Outliers - ដូចជាមនុស្សខ្ពស់ហួសហេតុ)។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+ហេតុអ្វីបានជាកម្ពស់របស់មនុស្ស ឫពិន្ទុប្រឡង តែងតែមានអ្នកពិន្ទុកណ្តាលៗច្រើនជាងគេ ហើយអ្នកខ្សោយខ្លាំង ឫពូកែខ្លាំងមានតិចតួច? នេះមិនមែនជារឿងចៃដន្យទេ វាគឺជាច្បាប់ធម្មជាតិមួយដែលគេហៅថា **Normal Distribution (របាយកណ្តឹង)**។
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+យើងអាចប្រើប្រាស់ `scipy.stats` ដើម្បីបង្កើត និងគូររូបរបាយកណ្តឹងដ៏ស្រស់ស្អាត។
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+
+# កំណត់កម្ពស់មធ្យម (Mean) គឺ 165cm និងគម្លាតស្តង់ដារ (Std) គឺ 5cm
+mean = 165
+std_dev = 5
+
+# បង្កើតចំណុច x ពី 145 ដល់ 185 ដើម្បីគូរក្រាហ្វិក
+x = np.linspace(145, 185, 100)
+
+# គណនា PDF (Probability Density Function) ដើម្បីចេញជារាងកណ្តឹង
+y = norm.pdf(x, loc=mean, scale=std_dev)
+
+# គូរក្រាហ្វិក
+plt.plot(x, y, color='blue', linewidth=2)
+
+# បំពេញពណ៌ដើម្បីបង្ហាញពីច្បាប់ 68% (1 Std Deviation)
+x_fill = np.linspace(mean - std_dev, mean + std_dev, 50)
+y_fill = norm.pdf(x_fill, loc=mean, scale=std_dev)
+plt.fill_between(x_fill, y_fill, color='lightblue', alpha=0.5, label='68% នៃទិន្នន័យ')
+
+plt.title("របាយកណ្តឹង (Normal Distribution) នៃកម្ពស់មនុស្ស")
+plt.xlabel("កម្ពស់ (cm)")
+plt.ylabel("ដង់ស៊ីតេ (Probability Density)")
+plt.legend()
+plt.show()
+```
+
+អ្នកនឹងឃើញក្រាហ្វិកមានរាងដូចជួង (Bell-curve) ដោយកំពូលរបស់វាស្ថិតនៅចំកណ្តាល (១៦៥ cm)។ ម៉ូដែល AI ជាច្រើនត្រូវបានសាងសង់ឡើងដោយសន្មតថាទិន្នន័យរបស់អ្នកមានរូបរាងបែបនេះ!

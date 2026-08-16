@@ -1,0 +1,63 @@
+---
+title: ការគណនាចម្ងាយក្នុង AI (Distance Mathematics)
+description: យល់ពីរបៀបដែល AI ដូចជា K-Nearest Neighbors (KNN) ប្រើប្រាស់ Euclidean និង Manhattan Distance ដើម្បីប្រៀបធៀបភាពស្រដៀងគ្នានៃទិន្នន័យ។
+objectives:
+  - គណនាចម្ងាយ Euclidean (ចម្ងាយផ្លូវកាត់) ដោយប្រើ NumPy
+  - គណនាចម្ងាយ Manhattan (ចម្ងាយបត់តាមប្លុក)
+  - យល់ពីការអនុវត្តរបស់វាក្នុងប្រព័ន្ធផ្តល់អនុសាសន៍ (Recommendation Systems)
+module: math-module-10-math-for-ai
+order: 2
+quiz:
+  - question: នៅក្នុងទីក្រុងដែលមានផ្លូវកាត់ខ្វែងគ្នាជាប្លុកៗ (ក្រឡាចត្រង្គ) តើការគណនាចម្ងាយមួយណាដែលឆ្លុះបញ្ចាំងពីចម្ងាយពិតប្រាកដដែលឡានតាក់ស៊ីត្រូវជិះ?
+    options:
+      - Euclidean Distance (ចម្ងាយផ្លូវកាត់ជាបន្ទាត់ត្រង់)
+      - Manhattan Distance (ចម្ងាយផ្លូវកែង)
+      - Cosine Similarity
+      - គ្មានចម្លើយត្រឹមត្រូវ
+    correctAnswer: 2
+    explanation: 'Manhattan (L1 Norm) យកឈ្មោះតាមទីក្រុង Manhattan ដែលមានផ្លូវជាក្រឡាៗ។ ឡានមិនអាចជិះទម្លុះផ្ទះអ្នកដទៃ (បន្ទាត់ត្រង់ / Euclidean) បានទេ វាត្រូវជិះបត់កែង។ ក្នុង AI វាល្អសម្រាប់ទិន្នន័យដែលចែកដាច់ៗពីគ្នា។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+តើ Netflix ដឹងបានយ៉ាងម៉េចថាអ្នកប្រហែលជាចូលចិត្តមើលរឿងនេះ? ចម្លើយគឺវាបានគណនា "ចម្ងាយ (Distance)" ពីចំណង់ចំណូលចិត្តរបស់អ្នក ទៅកាន់ចំណង់ចំណូលចិត្តរបស់អ្នកផ្សេងទៀត! បើចម្ងាយកាន់តែជិត មានន័យថាអ្នកទាំងពីរមានរសជាតិស្រដៀងគ្នា (Similarity)!
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+ឧបមាថាយើងមាន User ២ នាក់ ដោយវាស់លើ "ចំនួនរឿង Action ដែលពួកគេមើល" ($x$) និង "ចំនួនរឿង Romantic ដែលពួកគេមើល" ($y$)។
+- User 1: $A = (5, 1)$ (ចូលចិត្ត Action ណាស់)
+- User 2: $B = (1, 4)$ (ចូលចិត្ត Romantic ណាស់)
+
+### ១. Euclidean Distance (ចម្ងាយកាត់ត្រង់ L2 Norm)
+
+នេះគឺជារូបមន្តពីតាក័រ ដែលយើងបានរៀនក្នុងម៉ូឌុលទី ៥។
+
+```python
+import numpy as np
+
+user_A = np.array([5, 1])
+user_B = np.array([1, 4])
+
+# គណនា Euclidean Distance: sqrt((x2-x1)^2 + (y2-y1)^2)
+euclidean = np.linalg.norm(user_A - user_B)
+# ឬសរសេរ np.sqrt(np.sum((user_A - user_B)**2))
+
+print(f"ចម្ងាយកាត់ត្រង់ (Euclidean): {euclidean:.2f}") 
+# លទ្ធផល: 5.00
+```
+
+### ២. Manhattan Distance (ចម្ងាយបត់កែង L1 Norm)
+
+ជួនកាល ទិន្នន័យមិនអនុញ្ញាតអោយយើងគណនាបន្ទាត់ត្រង់ទេ (ដូចជាផ្លូវឡាន)។ រូបមន្តគឺយកតម្លៃដាច់ខាតនៃភាពខុសគ្នា៖ $|x_2-x_1| + |y_2-y_1|$
+
+```python
+# គណនា Manhattan Distance (បូកតម្លៃដាច់ខាត (abs) នៃផលដក)
+manhattan = np.sum(np.abs(user_A - user_B))
+
+print(f"ចម្ងាយបត់កែង (Manhattan): {manhattan}") 
+# លទ្ធផល: |1-5| + |4-1| = 4 + 3 = 7
+```
+
+ក្បួន **KNN (K-Nearest Neighbors)** របស់ Machine Learning ពឹងផ្អែកទាំងស្រុងទៅលើការវាស់ចម្ងាយទាំងនេះ ដើម្បីចាត់ថ្នាក់ទិន្នន័យ (Classification)!

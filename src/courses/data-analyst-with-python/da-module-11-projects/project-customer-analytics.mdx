@@ -1,0 +1,89 @@
+---
+title: Project 3 - ការវិភាគអតិថិជន (Customer Analytics)
+description: ប្រើប្រាស់បច្ចេកទេសបែងចែកក្រុមអតិថិជន (Customer Segmentation) ដើម្បីជួយអោយក្រុមហ៊ុនយល់ពីប្រភេទអតិថិជនរបស់ខ្លួន និងធ្វើការផ្សព្វផ្សាយបានចំគោលដៅ។
+objectives:
+  - ស្គាល់ពីគំរូ RFM (Recency, Frequency, Monetary) សម្រាប់វាស់តម្លៃអតិថិជន
+  - បែងចែកអតិថិជនជាក្រុមៗ (VIP, ធម្មតា, អ្នកជិតបាត់បង់)
+  - ផ្តល់យុទ្ធសាស្ត្រ Marketing តាមក្រុមនីមួយៗ
+module: da-module-11-projects
+order: 3
+quiz:
+  - question: នៅក្នុងវិស័យទីផ្សារ (Marketing) ហេតុអ្វីបានជាការ "ថែរក្សាអតិថិជនចាស់" តែងតែត្រូវបានគេចាត់ទុកថាសំខាន់ជាងការ "ស្វែងរកអតិថិជនថ្មី"?
+    options:
+      - ព្រោះអតិថិជនចាស់មានលុយច្រើន
+      - ព្រោះការចំណាយលុយផ្សាយពាណិជ្ជកម្មរកអតិថិជនថ្មី ថ្លៃជាងការថែរក្សាអ្នកចាស់ពី ៥ ទៅ ២៥ ដង។ អតិថិជនចាស់ស្គាល់និងទុកចិត្តយើងស្រាប់ហើយ ការលក់អោយពួកគេម្តងទៀតគឺងាយស្រួលបំផុត!
+      - ព្រោះអតិថិជនថ្មីពិបាកនិយាយគ្នា
+      - មិនពិតទេ អតិថិជនថ្មីសំខាន់ជាង
+    correctAnswer: 2
+    explanation: 'នេះគឺជាច្បាប់មាសនៃធុរកិច្ច (Customer Retention over Acquisition)! Data Analyst មានតួនាទីសំខាន់ក្នុងការកំណត់អត្តសញ្ញាណអតិថិជនចាស់ដែលល្អបំផុត (VIP) ដើម្បីថែរក្សាពួកគេ និងរកអតិថិជនដែលរៀបនឹងឈប់ទិញ (Churn) ដើម្បីទាក់ទាញពួកគេមកវិញ។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+ក្រុមហ៊ុនមួយមិនអាចផ្ញើសារ (SMS) លក់ទំនិញដូចគ្នាទៅកាន់មនុស្សគ្រប់គ្នាបានទេ! 
+- អ្នកទើបតែទិញម្សិលមិញ អាចនឹងធុញបើយើងផ្ញើសារទៅគាត់ថ្ងៃនេះទៀត។
+- អ្នកអត់ទិញ ១ ឆ្នាំហើយ យើងគួរផ្ញើគូប៉ុង Discount ធំៗទៅអោយគាត់។
+ដើម្បីធ្វើបែបនេះបាន យើងត្រូវប្រើបច្ចេកទេស **Customer Segmentation (ការបែងចែកក្រុមអតិថិជន)**។
+
+---
+
+## 💻 គម្រោង៖ ការបែងចែកអតិថិជន (RFM Analysis)
+
+**RFM** មកពីពាក្យ៖
+- **R (Recency):** តើគាត់ទិញចុងក្រោយបំផុតពេលណា? (ទើបទិញថ្មីៗ គឺល្អ)
+- **F (Frequency):** តើគាត់ទិញញឹកញាប់ប៉ុណ្ណា? (ទិញច្រើនដង គឺល្អ)
+- **M (Monetary):** តើគាត់ចំណាយលុយសរុបប៉ុន្មាន? (ចំណាយច្រើន គឺល្អ)
+
+```python
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# ១. ទិន្នន័យប្រវត្តិទិញរបស់អតិថិជន ៥ នាក់
+data = {
+    'CustomerID': ['C001', 'C002', 'C003', 'C004', 'C005'],
+    'Days_Since_Last_Purchase': [5, 120, 2, 300, 15], # Recency (តូចកាន់តែល្អ)
+    'Total_Purchases': [20, 2, 50, 1, 10],            # Frequency
+    'Total_Spent': [1500, 50, 5000, 10, 400]          # Monetary
+}
+df = pd.DataFrame(data)
+
+# ២. ការបែងចែកក្រុម (Segmentation Logic)
+def get_segment(row):
+    if row['Days_Since_Last_Purchase'] < 30 and row['Total_Spent'] > 1000:
+        return 'VIP Customers'
+    elif row['Days_Since_Last_Purchase'] > 100 and row['Total_Purchases'] <= 2:
+        return 'Lost Customers'
+    else:
+        return 'Regular Customers'
+
+# អនុវត្តលក្ខខណ្ឌទៅកាន់ DataFrame (ប្រើ .apply())
+df['Segment'] = df.apply(get_segment, axis=1)
+
+print("--- បញ្ជីក្រុមអតិថិជន ---")
+print(df[['CustomerID', 'Segment']])
+
+# ៣. គូរក្រាហ្វិកមើលចំនួនអតិថិជនតាមក្រុម
+plt.figure(figsize=(8, 5))
+sns.countplot(data=df, x='Segment', palette='pastel')
+plt.title('Customer Segmentation (ការបែងចែកអតិថិជន)')
+plt.ylabel('ចំនួនអតិថិជន')
+plt.show()
+
+# ៤. មើលចំណូលពីក្រុមនីមួយៗ
+revenue_by_segment = df.groupby('Segment')['Total_Spent'].sum().reset_index()
+plt.figure(figsize=(8, 5))
+plt.pie(revenue_by_segment['Total_Spent'], labels=revenue_by_segment['Segment'], 
+        autopct='%1.1f%%', colors=['#ff9999','#66b3ff','#99ff99'])
+plt.title('ចំណែកនៃចំណូល (Revenue by Segment)')
+plt.show()
+```
+
+### 📝 អនុសាសន៍ផ្នែកទីផ្សារ (Marketing Strategy)
+
+ផ្អែកលើការបែងចែកនេះ អ្នកអាចរៀបចំយុទ្ធសាស្ត្របានយ៉ាងច្បាស់លាស់៖
+1. **VIP Customers (អ្នកចំណាយច្រើន ហើយទើបទិញថ្មីៗ):** ផ្តល់កាដូ (Gift) ឫ កាតសមាជិក (Loyalty Program) ដើម្បីអោយពួកគេមានអារម្មណ៍ថាជាមនុស្សសំខាន់។ កុំទាន់អោយ Discount ធំៗ ព្រោះពួកគេមានលុយទិញពេញថ្លៃស្រាប់ហើយ។
+2. **Regular Customers:** ផ្ញើសារណែនាំផលិតផលថ្មីៗ (Cross-selling) ដើម្បីអោយពួកគេទិញញឹកញាប់ជាងមុន។
+3. **Lost Customers (បាត់មុខយូរ):** ផ្ញើគូប៉ុងបញ្ចុះតម្លៃពិសេស (Win-back Coupon 50%) តាមអ៊ីមែល ដើម្បីហៅពួកគេអោយត្រលប់មកទិញម្តងទៀត។
+
+អបអរសាទរ! អ្នកបានឆ្លងកាត់គម្រោងខ្នាតតូចទាំង ៣ នេះដោយជោគជ័យ។ ឥឡូវនេះគឺដល់ពេលដ៏រំភើបបំផុតហើយ នោះគឺ **Module 12: Final Capstone Project** ដែលជាគម្រោងបញ្ចប់វគ្គដ៏ធំ!

@@ -1,0 +1,69 @@
+---
+title: អនុគមន៍ត្រីកោណមាត្រមូលដ្ឋាន (Basic Trigonometric Functions)
+description: ស្វែងយល់ពីអនុគមន៍ស៊ីនុស (Sine), កូស៊ីនុស (Cosine) និង តង់សង់ (Tangent) ដែលជាគ្រឹះនៃការសិក្សារលកសញ្ញា។
+objectives:
+  - ស្គាល់ពីអនុគមន៍ `math.sin()`, `math.cos()`, និង `math.tan()`
+  - រំលឹកពីការបំប្លែងដឺក្រេទៅជារ៉ាដ្យង់មុនពេលគណនា
+  - យល់ពីទំនាក់ទំនងរវាងមុំ និងប្រវែងជ្រុងនៃត្រីកោណកែង
+module: math-module-5-trigonometry
+order: 2
+quiz:
+  - question: នៅក្នុងកូដ "math.sin(math.radians(30))" តើលទ្ធផលដែលទទួលបាននឹងប្រហាក់ប្រហែលនឹងប៉ុន្មាន?
+    options:
+      - 1.0
+      - 0.5
+      - 0.866
+      - 0
+    correctAnswer: 2
+    explanation: 'ស៊ីនុសនៃមុំ ៣០ ដឺក្រេ (sin 30°) គឺស្មើនឹង 1/2 ឬ 0.5។ នេះជាតម្លៃស្តង់ដារដែលយើងរៀនទន្ទេញនៅវិទ្យាល័យ!'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+SOH CAH TOA! នេះគឺជារូបមន្តដែលយើងតែងតែទន្ទេញ។ 
+- **S**in = **O**pposite / **H**ypotenuse (ឈម / អ៊ីប៉ូតេនុស)
+- **C**os = **A**djacent / **H**ypotenuse (ជាប់ / អ៊ីប៉ូតេនុស)
+- **T**an = **O**pposite / **A**djacent (ឈម / ជាប់)
+
+អនុគមន៍ទាំងនេះជួយយើងរកប្រវែងជ្រុង បើយើងស្គាល់មុំ។
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ការប្រើប្រាស់ Sine, Cosine, និង Tangent
+
+ដើម្បីប្រើប្រាស់វា យើងត្រូវហៅបណ្ណាល័យ `math` ហើយចងចាំថា **ត្រូវបំប្លែងមុំទៅជារ៉ាដ្យង់ជានិច្ច**!
+
+```python
+import math
+
+# កំណត់មុំជាដឺក្រេ រួចបំប្លែងទៅរ៉ាដ្យង់
+angle = 30
+rad = math.radians(angle)
+
+# គណនា Sine (ស៊ីនុស)
+sin_val = math.sin(rad)
+print(f"Sin(30°) = {sin_val:.2f}") # ចេញ 0.50
+
+# គណនា Cosine (កូស៊ីនុស)
+cos_val = math.cos(rad)
+print(f"Cos(30°) = {cos_val:.3f}") # ចេញ 0.866 (ឫស ៣ លើ ២)
+
+# គណនា Tangent (តង់សង់)
+tan_val = math.tan(rad)
+print(f"Tan(30°) = {tan_val:.3f}") # ចេញ 0.577 (ឫស ៣ លើ ៣)
+```
+
+### ឧទាហរណ៍ជាក់ស្តែង៖ ការរកកម្ពស់ដើមឈើ
+អ្នកឈរឃ្លាតពីដើមឈើ ១០ ម៉ែត្រ (Adjacent) ហើយអ្នកសម្លឹងមើលចុងដើមឈើក្នុងមុំ ៤៥ ដឺក្រេ។ តើដើមឈើនោះខ្ពស់ប៉ុន្មាន (Opposite)?
+រូបមន្ត: $Tan(\theta) = \frac{Opp}{Adj} \Rightarrow Opp = Adj \times Tan(\theta)$
+
+```python
+distance = 10
+angle = 45
+
+height = distance * math.tan(math.radians(angle))
+print(f"ដើមឈើមានកម្ពស់: {height:.2f} ម៉ែត្រ") 
+# ចេញ ១០ ម៉ែត្រ (ព្រោះ Tan 45 = 1)
+```

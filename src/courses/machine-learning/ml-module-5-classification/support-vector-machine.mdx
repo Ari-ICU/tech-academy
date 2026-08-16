@@ -1,0 +1,145 @@
+---
+title: Support Vector Machines (SVMs)
+description: Understand SVMs from first principles — the maximum-margin hyperplane, support vectors, the kernel trick for non-linear classification, and SVR for regression.
+objectives:
+  - Explain the maximum-margin principle and what support vectors are
+  - Apply the kernel trick to classify non-linearly separable data
+  - Tune SVM hyperparameters C and gamma effectively
+module: ml-module-5-classification
+order: 5
+quiz:
+  - question: What are support vectors in an SVM?
+    options:
+      - All training examples
+      - The subset of training examples closest to the decision boundary that define the margin
+      - The features with the highest importance
+      - The misclassified examples
+    correctAnswer: 1
+    explanation: Support vectors are the training examples that lie closest to the decision boundary (on the margin boundaries). They are the only examples that influence where the decision boundary is placed — all other examples could be removed without changing the model.
+  - question: What does the kernel trick allow an SVM to do?
+    options:
+      - Train faster on large datasets
+      - Implicitly map data to a higher-dimensional space to find a linear boundary there — solving non-linear problems
+      - Remove the need for feature scaling
+      - Output probabilities directly
+    correctAnswer: 1
+    explanation: The kernel trick computes dot products in a high-dimensional (even infinite-dimensional) feature space without explicitly transforming the data. This lets SVMs find non-linear decision boundaries efficiently.
+---
+
+## �� Overview
+
+SVMs find the decision boundary that maximises the margin — the gap between the two classes. A wider margin means the model generalises better to unseen data. The kernel trick extends this to non-linear boundaries.
+
+
+Support Vector Machines (SVMs) គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+Imagine two groups of points on a table. You want to place a ruler (decision boundary) between them so that both groups are as far from the ruler as possible. SVMs find the optimal ruler position. If the points cannot be separated by a straight line, the kernel trick "lifts" them into 3-D space where they can be.
+
+## 🔢 The Math
+
+**Primal objective** (hard-margin SVM):
+
+$$\min_{\mathbf{w}, b} \frac{1}{2}\|\mathbf{w}\|^2 \quad \text{subject to} \quad y_i(\mathbf{w}^T\mathbf{x}_i + b) \geq 1 \; \forall i$$
+
+**Soft-margin** adds slack variables $\xi_i \geq 0$:
+
+$$\min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i}\xi_i$$
+
+**Kernel functions:**
+
+$$k(\mathbf{x}, \mathbf{z}) = \phi(\mathbf{x})^T\phi(\mathbf{z})$$
+
+Common kernels: Linear $k = \mathbf{x}^T\mathbf{z}$, RBF $k = \exp(-\gamma\|\mathbf{x}-\mathbf{z}\|^2)$, Polynomial $k = (\mathbf{x}^T\mathbf{z}+c)^d$
+
+## 💻 កូដ
+
+```python
+import numpy as np
+from sklearn.svm import SVC, SVR
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report, r2_score
+from sklearn.datasets import make_classification, make_circles
+
+# ── LINEAR SVM ────────────────────────────────────────
+X, y = make_classification(n_samples=500, n_features=20,
+                            random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s  = scaler.transform(X_test)
+
+# Linear SVM — good for high-dimensional, linearly separable data
+svm_linear = SVC(kernel="linear", C=1.0, probability=True)
+svm_linear.fit(X_train_s, y_train)
+print(f"Linear SVM accuracy: {svm_linear.score(X_test_s, y_test):.3f}")
+print(f"Support vectors: {svm_linear.n_support_}")
+
+# ── NON-LINEAR: RBF KERNEL ────────────────────────────
+# Make data that is NOT linearly separable
+X_circles, y_circles = make_circles(n_samples=400,
+                                     noise=0.1, factor=0.4,
+                                     random_state=42)
+Xc_train, Xc_test, yc_train, yc_test = train_test_split(
+    X_circles, y_circles, test_size=0.2
+)
+
+Xc_train_s = scaler.fit_transform(Xc_train)
+Xc_test_s  = scaler.transform(Xc_test)
+
+# Linear SVM fails on circles
+svm_lin = SVC(kernel="linear")
+svm_lin.fit(Xc_train_s, yc_train)
+print(f"\nCircles — Linear:  {svm_lin.score(Xc_test_s, yc_test):.3f}")
+
+# RBF kernel handles it easily
+svm_rbf = SVC(kernel="rbf", C=1.0, gamma="scale")
+svm_rbf.fit(Xc_train_s, yc_train)
+print(f"Circles — RBF:     {svm_rbf.score(Xc_test_s, yc_test):.3f}")
+
+# ── HYPERPARAMETER TUNING ─────────────────────────────
+param_grid = {
+    "C":     [0.1, 1, 10, 100],
+    "gamma": ["scale", "auto", 0.01, 0.001],
+}
+grid = GridSearchCV(SVC(kernel="rbf"), param_grid,
+                    cv=5, scoring="accuracy", n_jobs=-1)
+grid.fit(X_train_s, y_train)
+print(f"\nBest params: {grid.best_params_}")
+print(f"Best CV accuracy: {grid.best_score_:.4f}")
+best_model = grid.best_estimator_
+print(classification_report(y_test, best_model.predict(X_test_s)))
+
+# ── SVR (regression) ──────────────────────────────────
+np.random.seed(42)
+X_reg = np.sort(np.random.randn(100, 1), axis=0)
+y_reg = np.sin(X_reg).ravel() + np.random.randn(100) * 0.1
+
+svr = SVR(kernel="rbf", C=100, epsilon=0.1)
+svr.fit(X_reg, y_reg)
+print(f"\nSVR R²: {r2_score(y_reg, svr.predict(X_reg)):.4f}")
+```
+
+## ⚠️ Watch Out For
+
+```python
+# SVM scales poorly with n — use LinearSVC for large datasets
+from sklearn.svm import LinearSVC
+from sklearn.calibration import CalibratedClassifierCV
+
+# LinearSVC is much faster (O(n) vs O(n^2/n^3) for SVC)
+fast_svm = LinearSVC(C=1.0, max_iter=2000)
+# Wrap for probability estimates (LinearSVC doesn't have predict_proba)
+calibrated = CalibratedClassifierCV(fast_svm, cv=3)
+calibrated.fit(X_train_s, y_train)
+print(f"LinearSVC accuracy: {calibrated.score(X_test_s, y_test):.3f}")
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+SVMs find the maximum-margin hyperplane between classes, using only support vectors. The **C** parameter controls the soft-margin trade-off: low C allows more misclassifications for a wider margin; high C fits training data tightly. The **RBF kernel** with parameter **gamma** handles non-linear boundaries by implicitly lifting data into higher dimensions. Always scale features — SVMs are very sensitive to feature magnitude. For datasets larger than ~10,000 samples, prefer `LinearSVC` which scales linearly.

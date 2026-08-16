@@ -1,0 +1,89 @@
+---
+title: Mini Project - បង្កើតផ្ទាំងរបាយការណ៍ប្រតិបត្តិការ (Performance Dashboard)
+description: អនុវត្តគោលការណ៍រចនា Dashboard និង Data Storytelling ដោយប្រើប្រាស់ Python (Seaborn + Matplotlib) ដើម្បីបង្កើតជាផ្ទាំងរបាយការណ៍តែមួយដែលសង្ខេបពីស្ថានភាពអាជីវកម្ម។
+objectives:
+  - អនុវត្តច្បាប់ F-Pattern ក្នុងការរៀបចំក្រាហ្វិក
+  - ប្រើប្រាស់មុខងារ `plt.subplots()` កម្រិតខ្ពស់
+  - រំលេច (Highlight) ទិន្នន័យសំខាន់ៗ ដើម្បីប្រាប់សាច់រឿង
+module: da-module-10-bi-reporting
+order: 6
+quiz:
+  - question: នៅក្នុងកូដ `fig, axes = plt.subplots(2, 2, figsize=(15, 10))` តើផ្ទាំង Dashboard នេះនឹងមានប៉ុន្មានប្រអប់សម្រាប់ដាក់ក្រាហ្វិក?
+    options:
+      - ២ ប្រអប់
+      - ៣ ប្រអប់
+      - ៤ ប្រអប់ (២ ជួរដេក និង ២ ជួរឈរ)
+      - ១៥ ប្រអប់
+    correctAnswer: 3
+    explanation: 'ប៉ារ៉ាម៉ែត្រ `(2, 2)` បញ្ជាក់ពីចំនួនជួរដេកនិងជួរឈរ (Rows x Columns)។ ដូច្នេះវាបង្កើតបានជាក្រឡាចត្រង្គចំនួន ៤ ប្រអប់។ ឯ `figsize=(15, 10)` គឺជាទំហំទទឹង និងកម្ពស់សរុបនៃផ្ទាំងនោះ។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+សូមស្វាគមន៍មកកាន់ Mini Project! ថៅកែរបស់អ្នកស្នើសុំ **"របាយការណ៍ត្រីមាស"** ដែលបង្ហាញពីស្ថានភាពលក់សរុប។ ជំនួសអោយការផ្ញើក្រាហ្វិក ៣ ផ្សេងគ្នា អ្នកនឹងរៀបចំវាទៅជា Dashboard តែមួយផ្ទាំង ដោយប្រកាន់ខ្ជាប់នូវគោលការណ៍ "Less is More" និង "F-Pattern" ដែលបានរៀន។
+
+---
+
+## 💻 គម្រោង៖ របាយការណ៍ត្រីមាសទី១ (Q1 Dashboard)
+
+យើងនឹងរៀបចំក្រាហ្វិក ៣ នៅលើផ្ទាំងតែមួយ៖
+1. **Top-Left (សំខាន់បំផុត):** ចំណូលសរុបតាមខែ (Line Chart)
+2. **Top-Right:** ការលក់តាមប្រភេទទំនិញ (Bar Chart)
+3. **Bottom:** ការប្រៀបធៀបតាមតំបន់ (Horizontal Bar Chart)
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# ១. កំណត់រចនាប័ទ្ម (Minimalist)
+sns.set_theme(style="white", palette="muted")
+
+# ២. ទិន្នន័យគំរូ
+months = ['Jan', 'Feb', 'Mar']
+revenue = [12000, 15000, 11000] # ធ្លាក់ចុះនៅខែ ៣
+categories = ['Electronics', 'Clothing', 'Food']
+cat_sales = [8000, 5000, 2000]
+regions = ['North', 'South', 'East', 'West']
+reg_sales = [4000, 7000, 2500, 1500]
+
+# ៣. បង្កើតស៊ុម Dashboard (២ ជួរដេក, ២ ជួរឈរ)
+# កំណត់ទំហំអោយធំ (14x8) អោយងាយមើល
+fig, axes = plt.subplots(2, 2, figsize=(14, 8))
+fig.suptitle('របាយការណ៍ប្រតិបត្តិការ ត្រីមាសទី១ (Q1 Performance)', fontsize=20, fontweight='bold', y=1.05)
+
+# --- ក្រាហ្វិកទី១ (Top-Left): និន្នាការចំណូល ---
+# រំលេចពណ៌ក្រហមនៅខែ ៣ (Mar) ព្រោះវាធ្លាក់ចុះ!
+axes[0, 0].plot(months, revenue, marker='o', linewidth=3, color='grey')
+axes[0, 0].plot(months[2], revenue[2], marker='o', markersize=10, color='red') # គូសពណ៌ក្រហមពីលើខែ ៣
+axes[0, 0].set_title('និន្នាការចំណូល: ធ្លាក់ចុះនៅខែមីនា!', color='red')
+axes[0, 0].set_ylabel('ចំណូល ($)')
+
+# --- ក្រាហ្វិកទី២ (Top-Right): ការលក់តាមប្រភេទទំនិញ ---
+sns.barplot(x=categories, y=cat_sales, ax=axes[0, 1], color='skyblue')
+axes[0, 1].set_title('Electronics ជាប្រភពចំណូលចម្បង')
+
+# --- ក្រាហ្វិកទី៣ (Bottom): បញ្ចូលប្រអប់ខាងក្រោមទាំង២ចូលគ្នា ---
+# យើងលុបប្រអប់ខាងក្រោមទី២ចោល ហើយអោយប្រអប់ខាងក្រោមទី១ លាតសន្ធឹងពេញ
+axes[1, 1].remove()
+ax_bottom = plt.subplot(2, 1, 2) # បង្កើតប្រអប់ថ្មីស៊ីទំហំ១ជួរពេញ
+sns.barplot(x=reg_sales, y=regions, ax=ax_bottom, color='lightgreen')
+ax_bottom.set_title('ការលក់តាមតំបន់: South នាំមុខគេដាច់')
+ax_bottom.set_xlabel('ចំណូល ($)')
+
+# ៤. សំអាត (Clean up) - លុបស៊ុមគែម (Spines) អោយស្រឡះភ្នែក
+for ax in [axes[0,0], axes[0,1], ax_bottom]:
+    sns.despine(ax=ax)
+    
+plt.tight_layout()
+# ៥. រក្សាទុកជារូបភាពគុណភាពខ្ពស់
+plt.savefig('q1_dashboard.png', dpi=300, bbox_inches='tight')
+plt.show()
+```
+
+### 📝 សាច់រឿង (The Story)
+
+នៅពេលអ្នកផ្ញើ Dashboard នេះទៅ CEO អ្នកគួរតែសរសេរអមជាមួយថា៖
+> "ជម្រាបសួរមេ, នេះគឺជារបាយការណ៍ត្រីមាសទី១។ **ចំណុចគួរអោយព្រួយបារម្ភ គឺការធ្លាក់ចុះចំណូលនៅក្នុងខែមីនា (រំលេចពណ៌ក្រហម)**។ ទោះបីជាតំបន់ South និងទំនិញប្រភេទ Electronics កំពុងលក់ដាច់ខ្លាំងក៏ដោយ ក៏យើងគួរតែសិក្សាពីមូលហេតុនៃការធ្លាក់ចុះកាលពីខែមុនដែរ។"
+
+អស្ចារ្យណាស់! អ្នកមិនត្រឹមតែចេះកូដទេ តែអ្នកចេះប្រាស្រ័យទាក់ទងបែបជំនួញថែមទៀត។ ឥឡូវនេះ អ្នកមានអាវុធគ្រប់គ្រាន់ហើយ។ នៅក្នុង **Module 11 និង 12** ចុងក្រោយ យើងនឹងយកចំណេះដឹងទាំងអស់នេះ ទៅវាយលុក **គម្រោងធំៗជាក់ស្តែង (Real-World Projects)** តែម្តង!

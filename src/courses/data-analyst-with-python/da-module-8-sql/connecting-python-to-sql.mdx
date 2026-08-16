@@ -1,0 +1,53 @@
+---
+title: តភ្ជាប់ Python ទៅកាន់ SQL (Connecting Python to SQL)
+description: របៀបប្រើប្រាស់ sqlite3 និង pandas ដើម្បីទាញយកទិន្នន័យដោយផ្ទាល់ពីមូលដ្ឋានទិន្នន័យ (Database) មកវិភាគ។
+objectives:
+  - យល់ពីទំនាក់ទំនងរវាង Python និង SQL Databases
+  - ប្រើប្រាស់ sqlite3 ដើម្បីតភ្ជាប់ទៅកាន់ Database
+  - ប្រើប្រាស់ pd.read_sql() ដើម្បីទាញទិន្នន័យមកដាក់ក្នុង DataFrame
+module: da-module-8-sql
+order: 1
+quiz:
+  - question: ហេតុអ្វីបានជា Data Analyst ត្រូវចេះភ្ជាប់ Python ទៅកាន់ SQL?
+    options:
+      - ព្រោះវាជាលក្ខខណ្ឌតម្រូវរបស់ការដំឡើង Python
+      - ព្រោះក្រុមហ៊ុនភាគច្រើនរក្សាទុកទិន្នន័យរាប់លានជួររបស់ពួកគេនៅក្នុង SQL Databases ជាជាងឯកសារ Excel
+      - ដើម្បីអោយកុំព្យូទ័រដើរលឿនជាងមុន
+      - ព្រោះ Pandas មិនអាចអានឯកសារ CSV បានទេ
+    correctAnswer: 2
+    explanation: 'ទិន្នន័យអាជីវកម្មពិតប្រាកដ (អតិថិជន ការលក់) ត្រូវបានរក្សាទុកក្នុង Database (ដូចជា MySQL, PostgreSQL)។ ដូច្នេះ Data Analyst ត្រូវចេះទាញវាចេញមកវិភាគ។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+ទោះបីជាអ្នករៀនជាមួយឯកសារ CSV ច្រើនក៏ដោយ ប៉ុន្តែនៅក្នុងក្រុមហ៊ុនពិតប្រាកដ ទិន្នន័យត្រូវបានរក្សាទុកយ៉ាងសុវត្ថិភាពនៅក្នុង **SQL Databases** ។ មេរៀននេះនឹងបង្ហាញពីរបៀបក្លាយជា "អ្នកបកប្រែ" រវាង Database និង Pandas DataFrame ដើម្បីអ្នកអាចវិភាគទិន្នន័យបាន។
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការតភ្ជាប់ និងអានទិន្នន័យ (Using `sqlite3` and `pandas`)
+
+```python
+import sqlite3
+import pandas as pd
+
+# ១. បង្កើតការតភ្ជាប់ទៅកាន់ Database (Connection)
+conn = sqlite3.connect("company_data.db")
+
+# ២. សរសេរកូដ SQL (Query)
+query = """
+SELECT customer_id, name, total_spent
+FROM customers
+WHERE total_spent > 1000
+"""
+
+# ៣. ទាញទិន្នន័យចូលមក Pandas DataFrame តែម្តង!
+df = pd.read_sql(query, conn)
+
+print(df.head())
+
+# ៤. បិទការតភ្ជាប់ពេលប្រើរួច
+conn.close()
+```
+ជាមួយកូដប៉ុន្មានបន្ទាត់នេះ អ្នកអាចទាញយកទិន្នន័យរាប់លានជួរមកវិភាគដោយប្រើថាមពលរបស់ Pandas បានយ៉ាងងាយស្រួល!

@@ -1,0 +1,60 @@
+---
+title: ការដោះស្រាយទិន្នន័យបាត់បង់ (Handling Missing Values)
+description: រៀនពីរបៀបស្វែងរក និងដោះស្រាយបញ្ហាទិន្នន័យដែលបាត់បង់ (Missing Data) ដោយប្រើប្រាស់ dropna() និង fillna() ក្នុង Pandas។
+objectives:
+  - ស្វែងរកទិន្នន័យដែលបាត់បង់ក្នុង DataFrame
+  - យល់ពីពេលណាគួរលុប (Drop) និងពេលណាគួរជំនួស (Impute)
+  - ប្រើប្រាស់អនុគមន៍ fillna() ដើម្បីជំនួសទិន្នន័យ
+module: da-module-4-data-cleaning
+order: 1
+quiz:
+  - question: តើ Method មួយណាដែលប្រើសម្រាប់ជំនួសទិន្នន័យដែលបាត់ (NaN) ជាមួយនឹងតម្លៃថ្មី?
+    options:
+      - dropna()
+      - fillna()
+      - replace_null()
+      - isnull()
+    correctAnswer: 2
+    explanation: 'fillna() ត្រូវបានប្រើសម្រាប់បញ្ចូលតម្លៃថ្មី (ដូចជាមធ្យមភាគ ឫ លេខ ០) ទៅក្នុងប្រអប់ដែលគ្មានទិន្នន័យ (NaN)។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងពិភពពិត ទិន្នន័យមិនដែលល្អឥតខ្ចោះនោះទេ។ ជារឿយៗ អ្នកប្រើប្រាស់មិនបានបំពេញព័ត៌មានគ្រប់ជ្រុងជ្រោយ ធ្វើឱ្យទិន្នន័យមានតម្លៃទទេ (NaN ឫ Null)។ ប្រសិនបើអ្នកមិនដោះស្រាយវាទេ ការវិភាគ និងការគណនាស្ថិតិរបស់អ្នកនឹងខុសឆ្គងទាំងស្រុង។
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការស្វែងរកទិន្នន័យបាត់បង់
+
+```python
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+    'Name': ['Sok', 'Sao', 'Bopha', 'Minea'],
+    'Age': [25, np.nan, 22, 30],
+    'Salary': [500, 600, np.nan, 800]
+})
+
+# រាប់ចំនួន NaN ក្នុងជួរឈរនីមួយៗ
+print(df.isnull().sum())
+```
+
+### ២. ការដោះស្រាយដោយលុបចោល (`dropna`)
+
+```python
+# លុបជួរដេកណាដែលមាន NaN
+clean_df = df.dropna()
+print(clean_df)
+```
+
+### ៣. ការដោះស្រាយដោយជំនួស (`fillna`)
+
+```python
+# ជំនួសអាយុដែលបាត់ ដោយអាយុមធ្យមភាគ
+mean_age = df['Age'].mean()
+df['Age'] = df['Age'].fillna(mean_age)
+print(df)
+```

@@ -1,0 +1,57 @@
+---
+title: អនុគមន៍គណិតវិទ្យា (Mathematical Functions)
+description: យល់ពីនិយមន័យនៃអនុគមន៍ (Functions) ក្នុងគណិតវិទ្យា និងរបៀបសរសេរវានៅក្នុង Python (Domain, Range)។
+objectives:
+  - យល់ពីគំនិតនៃ Input (Domain) និង Output (Range) នៃអនុគមន៍
+  - 'បំប្លែងអនុគមន៍គណិតវិទ្យា y = f(x) ទៅជា Python Function def f(x):'
+  - រំលឹកពីអនុគមន៍លីនេអ៊ែរ និងអនុគមន៍ដឺក្រេទី២ (Quadratic)
+module: math-module-4-functions-viz
+order: 1
+quiz:
+  - question: នៅក្នុងអនុគមន៍គណិតវិទ្យា y = f(x) ពេលយើងសរសេរវាក្នុង Python តើ "x" និង "y" តំណាងអោយអ្វី?
+    options:
+      - x គឺជា Function Name, y គឺជា Parameter
+      - x គឺជា Input Argument, y គឺជា Return Value
+      - x គឺជា Library, y គឺជា Output
+      - x និង y គ្រាន់តែជាអក្សរគ្មានន័យ
+    correctAnswer: 2
+    explanation: 'នៅក្នុងការសរសេរកូដ x គឺជាទិន្នន័យបញ្ចុល (Input Argument) ទៅក្នុងអនុគមន៍ ហើយ y គឺជាលទ្ធផលដែលអនុគមន៍នោះបញ្ជូនត្រលប់មកវិញ (Return Value)។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+អនុគមន៍ (Function) ប្រៀបបាននឹង "ម៉ាស៊ីនផលិតទឹកក្រឡុក" អញ្ចឹង។ អ្នកដាក់ផ្លែឈើចូល (Input) ម៉ាស៊ីនដំណើរការ ហើយវានឹងបញ្ចេញទឹកក្រឡុកមកវិញ (Output)។ នៅក្នុងគណិតវិទ្យាយើងហៅវាថា $y = f(x)$។ នេះគឺជាមូលដ្ឋានគ្រឹះនៃការសរសេរ Functions នៅក្នុង Programming (def)!
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. អនុគមន៍លីនេអ៊ែរ (Linear Function)
+
+អនុគមន៍បន្ទាត់ត្រង់ $y = 2x + 5$។
+
+```python
+# បង្កើតអនុគមន៍ក្នុង Python
+def linear_function(x):
+    y = 2*x + 5
+    return y
+
+# សាកល្បងបញ្ចូលតម្លៃ (Input)
+print("បើ x=0, នោះ y=", linear_function(0)) # 5
+print("បើ x=10, នោះ y=", linear_function(10)) # 25
+```
+
+### ២. អនុគមន៍ដឺក្រេទី២ (Quadratic Function)
+
+អនុគមន៍ប៉ារ៉ាបូល $y = x^2$ ដែលមានរាងជាអក្សរ U។
+
+```python
+def quadratic_function(x):
+    return x ** 2
+
+# តោះសាកល្បង
+print("បើ x=3, នោះ f(x)=", quadratic_function(3)) # 9
+print("បើ x=-3, នោះ f(x)=", quadratic_function(-3)) # 9 (ព្រោះដកគុណដកចេញបូក)
+```
+
+នៅក្នុងមេរៀនបន្ទាប់ យើងនឹងរៀនពីរបៀបគូររូប (Plot) អនុគមន៍ទាំងនេះ ដើម្បីឱ្យយើងអាចមើលឃើញរាងពិតប្រាកដរបស់វា!

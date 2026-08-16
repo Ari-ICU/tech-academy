@@ -1,0 +1,85 @@
+---
+title: ការតុបតែង Seaborn Themes (Customizing Themes)
+description: ផ្លាស់ប្តូរទម្រង់ (Style) និងកញ្ចប់ពណ៌ (Palette) របស់ Seaborn អោយស៊ីគ្នានឹងម៉ាកយីហោ (Branding) របស់ក្រុមហ៊ុនអ្នក។
+objectives:
+  - ប្រើប្រាស់មុខងារ `sns.set_style()` ដើម្បីប្តូរផ្ទៃខាងក្រោយ
+  - ប្រើប្រាស់ `sns.set_palette()` ដើម្បីប្តូរកញ្ចប់ពណ៌
+  - ស្វែងយល់ពីរបៀបធ្វើអោយក្រាហ្វិកមើលទៅដូចជា Professional Report
+module: da-module-7-seaborn
+order: 4
+quiz:
+  - question: ប្រសិនបើក្រុមហ៊ុនរបស់អ្នកមាន Brand ពណ៌ទឹកក្រូច និងខ្មៅ តើអ្នកគួរប្រើប្រាស់កូដមួយណាដើម្បីប្តូរពណ៌ក្រាហ្វិកអោយស៊ីនឹងក្រុមហ៊ុន?
+    options:
+      - sns.set_style("darkgrid")
+      - sns.set_palette(["orange", "black"])
+      - plt.figure(color="orange")
+      - មិនអាចធ្វើបានទេ
+    correctAnswer: 2
+    explanation: '`set_palette` អនុញ្ញាតអោយអ្នកកំណត់បញ្ជីពណ៌ផ្ទាល់ខ្លួន (Custom List)។ ពេលអ្នកគូរក្រាហ្វិកមានសសរច្រើន Seaborn នឹងទាញយកពណ៌ "orange" មកគូរសសរទី១ និងពណ៌ "black" មកគូរសសរទី២ ដោយស្វ័យប្រវត្តិ!'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+Seaborn ស្អាតពីកំណើតទៅហើយ ប៉ុន្តែពេលខ្លះ ថៅកែចង់អោយរបាយការណ៍មាន "ពណ៌របស់ក្រុមហ៊ុន" ឫចង់ដកបន្ទាត់ Grid ចេញដើម្បីអោយមើលទៅស្រឡះភ្នែកដូចជាទំព័រទស្សនាវដ្តី។ Seaborn អនុញ្ញាតអោយយើងប្តូរវាបានយ៉ាងងាយ!
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការប្តូររចនាប័ទ្ម (Style)
+
+Seaborn មាន Styles ចំនួន ៥ ភ្ជាប់មកជាមួយស្រាប់៖ `darkgrid`, `whitegrid`, `dark`, `white`, និង `ticks`។
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# ប្តូរផ្ទៃខាងក្រោយទៅជា ពណ៌ស ហើយមានបន្ទាត់ Grid ស្តើងៗ (ពេញនិយមបំផុតសម្រាប់ការងារ)
+sns.set_style("whitegrid")
+
+# ឥឡូវសាកគូរក្រាហ្វិកមួយមើល
+tips = sns.load_dataset("tips") # ទាញទិន្នន័យគំរូរបស់ Seaborn
+sns.boxplot(x="day", y="total_bill", data=tips)
+
+plt.show()
+```
+
+### ២. ការប្តូរកញ្ចប់ពណ៌ (Palette)
+
+Palette គឺជាបណ្តុំពណ៌ដែល Seaborn នឹងយកមកប្រើបន្តបន្ទាប់គ្នាពេលមានទិន្នន័យច្រើនក្រុម (ឧ. hue='ភេទ')។
+
+Seaborn មាន Palettes ស្អាតៗជាច្រើនដូចជា៖ `deep`, `muted`, `pastel`, `bright`, `dark`, និង `colorblind`។
+
+```python
+# ប្រើប្រាស់កញ្ចប់ពណ៌ pastel ដែលស្រទន់ គួរអោយចង់មើល
+sns.set_palette("pastel")
+
+sns.barplot(x="day", y="total_bill", hue="sex", data=tips)
+plt.show()
+```
+
+### ៣. ការកំណត់ពណ៌ផ្ទាល់ខ្លួន (Custom Branding)
+
+ប្រសិនបើក្រុមហ៊ុនរបស់អ្នក (ឧ. Smart) ចង់បានក្រាហ្វិកពណ៌បៃតង និងស!
+
+```python
+# កំណត់ពណ៌ផ្ទាល់ខ្លួនដោយប្រើឈ្មោះអង់គ្លេស ឫ លេខកូដពណ៌ (Hex code)
+custom_colors = ["#00B14F", "#D3D3D3"] # ពណ៌បៃតង Smart និង ប្រផេះ
+
+sns.set_palette(custom_colors)
+
+sns.barplot(x="day", y="total_bill", hue="sex", data=tips)
+plt.show()
+```
+
+### ៤. កែសម្រួលទំហំអក្សរ (Context)
+
+បើអ្នកចង់យកក្រាហ្វិកទៅដាក់ក្នុង Slide បទបង្ហាញ (PowerPoint) អ្នកប្រាកដជាចង់អោយអក្សរវារាងធំបន្តិចដើម្បីអោយអ្នកអង្គុយក្រោយមើលឃើញ។
+
+```python
+# 'talk' នឹងពង្រីកអក្សរ និងកម្រាស់បន្ទាត់អោយស័ក្តិសមសម្រាប់ធ្វើការបង្ហាញ (Presentation)
+# ជម្រើសផ្សេងទៀតមាន: 'paper', 'notebook', 'poster'
+sns.set_context("talk")
+```
+
+ជាមួយនឹងការចេះកែសម្រួល (Customization) ទាំងនេះ របាយការណ៍ EDA របស់អ្នកនឹងមើលទៅមានលក្ខណៈអាជីព និងមានតម្លៃខ្ពស់បំផុត! ត្រៀមខ្លួនសម្រាប់ Mini Project ចុងក្រោយផ្នែក Visualization ហើយឬនៅ?

@@ -1,0 +1,160 @@
+---
+title: Decision Trees and Random Forests
+description: Understand how decision trees partition feature space using impurity measures, and how Random Forests use bagging and feature randomness to build powerful ensembles.
+objectives:
+  - Explain how a decision tree makes splits using Gini impurity or entropy
+  - Control tree depth and complexity to prevent overfitting
+  - Train a Random Forest and interpret feature importances
+module: ml-module-5-classification
+order: 6
+quiz:
+  - question: What is the main problem with a deep, unpruned decision tree?
+    options:
+      - It trains too slowly
+      - It overfits — it memorises the training data but generalises poorly to new data
+      - It cannot handle numerical features
+      - It requires feature scaling
+    correctAnswer: 1
+    explanation: A deep tree can create a unique path for every training example, perfectly fitting the training data (100% accuracy) but performing poorly on unseen data. This is overfitting. Control it with max_depth, min_samples_split, or pruning.
+  - question: Why does a Random Forest perform better than a single decision tree?
+    options:
+      - Random Forests use a more complex splitting criterion
+      - By averaging many diverse trees (trained on different data subsets and feature subsets), errors cancel out
+      - Random Forests train on more data
+      - Random Forests use gradient descent
+    correctAnswer: 1
+    explanation: The key insight of ensemble methods is that the errors of individual trees are uncorrelated. When you average many diverse trees, their random errors cancel out, leaving only the signal. This is called variance reduction through bagging.
+---
+
+## �� Overview
+
+Decision trees are the most interpretable non-linear model. Random Forests extend them into one of the most powerful and practical algorithms in machine learning — often beating deep learning on tabular data.
+
+
+Decision Trees and Random Forests គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+A decision tree asks a series of yes/no questions about the features. "Is the age > 35?" → "Is the income > 60k?" → "Predict: will buy." Each question splits the data to make the resulting groups as pure as possible (all one class, or similar values).
+
+A Random Forest builds hundreds of trees, each trained on a random subset of data and features. When predicting, it averages all the trees' outputs. Individual trees are wrong in random, uncorrelated ways — averaging cancels those errors.
+
+## 🔢 The Math
+
+**Gini Impurity** (how mixed is a node?):
+
+$$G = 1 - \sum_{k=1}^{K} p_k^2$$
+
+where $p_k$ is the fraction of class $k$ in the node. $G=0$ means perfectly pure; $G=0.5$ is maximally impure (50/50 split).
+
+**Information Gain** (how much does a split reduce impurity?):
+
+$$IG = G_{parent} - \frac{n_{left}}{n}G_{left} - \frac{n_{right}}{n}G_{right}$$
+
+The tree chooses the split that maximises information gain at each node.
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+A decision tree recursively splits the data by choosing the feature and threshold that maximises **information gain**:
+
+$$IG = G_{parent} - \frac{n_{left}}{n}G_{left} - \frac{n_{right}}{n}G_{right}$$
+
+**Gini Impurity** (how mixed is a node?):
+
+$$G = 1 - \sum_{k=1}^{K} p_k^2$$
+
+where $p_k$ is the fraction of class $k$. $G=0$ = perfectly pure, $G=0.5$ = maximally mixed.
+
+**Random Forest** reduces variance through ensemble averaging:
+
+| Parameter | Effect |
+|---|---|
+| `n_estimators` | More trees = more stable, diminishing returns after ~200 |
+| `max_depth` | Limits tree depth — controls overfitting |
+| `max_features` | Random feature subset per split — creates diversity |
+| `min_samples_leaf` | Minimum samples in leaf — smooths the model |
+
+## 💻 កូដ
+
+```python
+import numpy as np
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.tree import DecisionTreeClassifier, export_text
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+import pandas as pd
+
+# Load dataset
+data = load_breast_cancer()
+X, y = data.data, data.target
+feature_names = data.feature_names
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# ── DECISION TREE ─────────────────────────────────────
+# Unconstrained tree (overfits)
+deep_tree = DecisionTreeClassifier(random_state=42)
+deep_tree.fit(X_train, y_train)
+print(f"Deep tree — Train: {deep_tree.score(X_train, y_train):.3f}, "
+      f"Test: {deep_tree.score(X_test, y_test):.3f}")
+# Train: 1.000 (memorised), Test: ~0.91 (overfit)
+
+# Pruned tree (generalises better)
+pruned = DecisionTreeClassifier(max_depth=4, min_samples_leaf=10, random_state=42)
+pruned.fit(X_train, y_train)
+print(f"Pruned tree — Train: {pruned.score(X_train, y_train):.3f}, "
+      f"Test: {pruned.score(X_test, y_test):.3f}")
+
+# Print the tree structure (text)
+print(export_text(pruned, feature_names=list(feature_names), max_depth=3))
+
+# ── RANDOM FOREST ─────────────────────────────────────
+rf = RandomForestClassifier(
+    n_estimators=200,
+    max_depth=None,
+    min_samples_leaf=2,
+    max_features="sqrt",   # each tree uses sqrt(n_features)
+    random_state=42,
+    n_jobs=-1
+)
+rf.fit(X_train, y_train)
+print(f"\nRandom Forest — Train: {rf.score(X_train, y_train):.3f}, "
+      f"Test: {rf.score(X_test, y_test):.3f}")
+
+# Classification report
+y_pred = rf.predict(X_test)
+print(classification_report(y_test, y_pred,
+      target_names=data.target_names))
+
+# ── FEATURE IMPORTANCE ────────────────────────────────
+importances = pd.Series(rf.feature_importances_, index=feature_names)
+print("\nTop 5 features:")
+print(importances.sort_values(ascending=False).head())
+
+# ── CROSS-VALIDATION ──────────────────────────────────
+cv_scores = cross_val_score(rf, X, y, cv=5, scoring="accuracy")
+print(f"\n5-fold CV: {cv_scores.mean():.3f} ± {cv_scores.std():.3f}")
+
+# ── HYPERPARAMETER TUNING PREVIEW ────────────────────
+from sklearn.model_selection import GridSearchCV
+
+param_grid = {
+    "n_estimators": [100, 200],
+    "max_depth": [None, 10, 20],
+    "min_samples_leaf": [1, 2, 5],
+}
+grid_search = GridSearchCV(
+    RandomForestClassifier(random_state=42),
+    param_grid, cv=3, scoring="accuracy", n_jobs=-1
+)
+grid_search.fit(X_train, y_train)
+print(f"\nBest params: {grid_search.best_params_}")
+print(f"Best CV score: {grid_search.best_score_:.3f}")
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+Decision trees split data recursively by choosing the feature and threshold that maximises information gain (reduction in Gini impurity). Without constraints, they overfit badly. Control complexity with `max_depth` and `min_samples_leaf`. **Random Forests** aggregate many diverse trees trained on bootstrap samples — variance reduction makes them far more robust. Use `feature_importances_` to understand which variables drive predictions. Always evaluate with cross-validation, not just a single train/test split.

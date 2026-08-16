@@ -1,0 +1,176 @@
+---
+title: Model Evaluation and Validation
+description: Learn to properly evaluate ML models — confusion matrices, precision/recall/F1, ROC curves for classification, and cross-validation to get reliable performance estimates.
+objectives:
+  - Interpret a confusion matrix and compute precision, recall, and F1
+  - Understand the precision-recall trade-off and when each metric matters
+  - Use cross-validation to get unbiased performance estimates
+module: ml-module-6-evaluation
+order: 1
+quiz:
+  - question: In medical cancer screening, which metric should you prioritise?
+    options:
+      - Precision — minimise false positives
+      - Recall — minimise false negatives (missed cancers)
+      - Accuracy — overall correct predictions
+      - F1 — harmonic mean of precision and recall
+    correctAnswer: 1
+    explanation: In cancer screening, a false negative (missing a real cancer) is far more costly than a false positive (unnecessary follow-up). Recall (sensitivity) measures the fraction of actual positives correctly identified, so it should be the primary metric.
+  - question: Why is accuracy a poor metric for imbalanced datasets?
+    options:
+      - Accuracy is always unreliable
+      - A model that predicts the majority class for all examples achieves high accuracy but is useless
+      - Accuracy cannot be computed for multi-class problems
+      - Accuracy requires feature scaling
+    correctAnswer: 1
+    explanation: If 95% of examples are negative, a model that always predicts "negative" achieves 95% accuracy but has 0% recall for the positive class. Use precision, recall, F1, or AUC-ROC instead.
+---
+
+
+Model Evaluation and Validation គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+Think of model evaluation as the difference between a student's practice test score and their final exam score. A student who memorises practice answers may score 99% on practice but fail the exam. A model that memorises training data (overfitting) behaves the same way. Evaluation on a held-out test set tells you the real performance.
+
+The choice of metric is equally critical: a fraud detector that flags nothing achieves 99.9% accuracy (fraud is rare) but catches zero fraud. Accuracy is the wrong metric — recall is what matters.
+
+## �� Overview
+
+Choosing the wrong evaluation metric can make a bad model look excellent. Evaluation is not just a formality — it's how you know whether your model is actually solving the business problem.
+
+## 🔢 The Math
+
+Given a confusion matrix with TP (True Positives), TN, FP, FN:
+
+$$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}$$
+
+$$\text{Precision} = \frac{TP}{TP + FP}$$
+
+> Of all predicted positives, how many are real?
+
+$$\text{Recall} = \frac{TP}{TP + FN}$$
+
+> Of all real positives, how many did we find?
+
+$$F_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$$
+
+**ROC-AUC** measures the area under the Receiver Operating Characteristic curve — the trade-off between true positive rate (recall) and false positive rate across all thresholds. AUC = 1.0 is perfect; AUC = 0.5 is random.
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+### Confusion Matrix
+
+|  | Predicted Positive | Predicted Negative |
+|---|---|---|
+| **Actual Positive** | TP (True Positive) | FN (False Negative) |
+| **Actual Negative** | FP (False Positive) | TN (True Negative) |
+
+### Metrics
+
+$$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}$$
+
+$$\text{Precision} = \frac{TP}{TP + FP}$$
+
+$$\text{Recall} = \frac{TP}{TP + FN}$$
+
+$$F_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$$
+
+**When to prioritise each:**
+
+| Metric | Prioritise when | Example |
+|---|---|---|
+| Precision | False positives are costly | Spam filter (don't block good email) |
+| Recall | False negatives are costly | Cancer screening (don't miss cancer) |
+| F1 | Balance both | Most classification problems |
+| AUC-ROC | Overall ranking quality | Model comparison |
+
+## 💻 កូដ
+
+```python
+import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (
+    confusion_matrix, classification_report,
+    roc_auc_score, precision_recall_curve,
+    average_precision_score
+)
+import pandas as pd
+
+# Imbalanced dataset (90% negative, 10% positive)
+X, y = make_classification(
+    n_samples=2000, n_features=20, weights=[0.9, 0.1],
+    random_state=42
+)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42
+)
+
+clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf.fit(X_train, y_train)
+y_pred      = clf.predict(X_test)
+y_proba     = clf.predict_proba(X_test)[:, 1]
+
+# ── CONFUSION MATRIX ─────────────────────────────────
+cm = confusion_matrix(y_test, y_pred)
+tn, fp, fn, tp = cm.ravel()
+print("Confusion Matrix:")
+print(f"  TN={tn}  FP={fp}")
+print(f"  FN={fn}  TP={tp}")
+
+# ── CLASSIFICATION REPORT ─────────────────────────────
+print("\n", classification_report(y_test, y_pred))
+
+# ── ROC-AUC ───────────────────────────────────────────
+auc = roc_auc_score(y_test, y_proba)
+print(f"ROC-AUC: {auc:.4f}")
+
+# ── PRECISION-RECALL TRADE-OFF ────────────────────────
+# Adjust threshold to favour recall (medical use case)
+threshold = 0.3  # lower threshold → more positives predicted → higher recall
+y_pred_low_threshold = (y_proba >= threshold).astype(int)
+print("\nLow threshold (0.3):")
+print(classification_report(y_test, y_pred_low_threshold))
+
+# ── CROSS-VALIDATION ──────────────────────────────────
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+cv_scores = cross_val_score(clf, X, y, cv=cv, scoring="roc_auc")
+print(f"\n5-fold CV ROC-AUC: {cv_scores.mean():.4f} ± {cv_scores.std():.4f}")
+
+# ── COMPARING MODELS ──────────────────────────────────
+models = {
+    "Logistic Regression": LogisticRegression(max_iter=500),
+    "Random Forest":       RandomForestClassifier(n_estimators=100, random_state=42),
+}
+results = []
+for name, model in models.items():
+    scores = cross_val_score(model, X, y, cv=cv, scoring="roc_auc")
+    results.append({"Model": name, "AUC Mean": scores.mean(),
+                    "AUC Std": scores.std()})
+
+print("\nModel Comparison:")
+print(pd.DataFrame(results).round(4).to_string(index=False))
+
+# ── BIAS-VARIANCE TRADE-OFF ───────────────────────────
+# Learning curves show whether a model has high bias or high variance
+from sklearn.model_selection import learning_curve
+
+train_sizes, train_scores, val_scores = learning_curve(
+    clf, X, y, cv=5, scoring="roc_auc",
+    train_sizes=np.linspace(0.1, 1.0, 8), n_jobs=-1
+)
+
+print("\nLearning Curve (AUC):")
+for size, t, v in zip(train_sizes,
+                       train_scores.mean(axis=1),
+                       val_scores.mean(axis=1)):
+    gap = t - v
+    print(f"  n={size:4d}: train={t:.3f}, val={v:.3f}, gap={gap:.3f}")
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+Never evaluate on the training set — always use a held-out test set or, better, **cross-validation**. For imbalanced classification, use **precision**, **recall**, **F1**, and **ROC-AUC** instead of accuracy. The precision-recall trade-off is controlled by the classification threshold — lower it to increase recall at the cost of precision. Use `StratifiedKFold` to preserve class ratios across folds. Learning curves diagnose **bias** (model too simple — both train and val scores are low) vs **variance** (model too complex — train is high, val is low).

@@ -1,0 +1,77 @@
+---
+title: ការបំលែងអនុគមន៍ (Function Transformations)
+description: របៀបរំកិល ពង្រីក និងត្រឡប់ក្រាហ្វិក (Translation, Scaling, Reflection) ដោយការផ្លាស់ប្តូរតួលេខនៅក្នុងរូបមន្ត។
+objectives:
+  - "យល់ពីការរំកិលក្រាហ្វិកឡើងលើចុះក្រោម (Vertical Translation: y = f(x) + c)"
+  - "យល់ពីការរំកិលទៅឆ្វេងស្តាំ (Horizontal Translation: y = f(x + c))"
+  - សង្កេតមើលបម្រែបម្រួលក្រាហ្វិកតាមរយៈ Matplotlib
+module: math-module-4-functions-viz
+order: 4
+quiz:
+  - question: ប្រសិនបើអ្នកមានក្រាហ្វិក y = x^2 តើក្រាហ្វិក y = (x - 2)^2 នឹងមានរាងដូចម្តេចធៀបនឹងក្រាហ្វិកដើម?
+    options:
+      - រំកិលចុះក្រោម ២ ឯកតា
+      - រំកិលឡើងលើ ២ ឯកតា
+      - រំកិលទៅស្តាំ ២ ឯកតា
+      - រំកិលទៅឆ្វេង ២ ឯកតា
+    correctAnswer: 3
+    explanation: 'ការដកលេខចេញពី x នៅខាងក្នុងវង់ក្រចក (ឧ. x - 2) ធ្វើអោយក្រាហ្វិករំកិលទៅខាងស្តាំ (ផ្ទុយពីការគិតទូទៅ)។ បើចង់រំកិលទៅឆ្វេង ត្រូវបូក (x + 2)។ បើចង់រំកិលឡើងលើចុះក្រោម ត្រូវធ្វើនៅក្រៅវង់ក្រចក (x^2 + 2)។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងផ្នែក Computer Vision (AI មើលរូបភាព) ការយល់ដឹងពីរបៀបរំកិល (Translation) និងពង្រីក (Scaling) រូបរាង គឺជារឿងចាំបាច់បំផុត។ រូបភាពនីមួយៗអាចប្រៀបបានទៅនឹងអនុគមន៍ដែលយើងអាចកែច្នៃបាន!
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការរំកិលឡើងលើ និងចុះក្រោម (Vertical Shift)
+
+ការបូកលេខនៅ **ខាងក្រៅ** អនុគមន៍ ធ្វើអោយក្រាហ្វិករំកិលតាមអ័ក្ស Y។
+- $y = x^2 + 3$ (រំកិលឡើងលើ ៣)
+- $y = x^2 - 3$ (រំកិលចុះក្រោម ៣)
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(-5, 5, 100)
+y_original = x**2
+y_up = x**2 + 3
+
+plt.plot(x, y_original, label="y = x^2 (ដើម)", linestyle="--")
+plt.plot(x, y_up, label="y = x^2 + 3 (ឡើងលើ)")
+plt.legend()
+plt.show()
+```
+
+### ២. ការរំកិលទៅឆ្វេង និងស្តាំ (Horizontal Shift)
+
+ការបូកដកលេខនៅ **ខាងក្នុង** វង់ក្រចក ធ្វើអោយក្រាហ្វិករំកិលតាមអ័ក្ស X (ច្រាសទិស)។
+- $y = (x - 2)^2$ (រំកិលទៅស្តាំ ២)
+- $y = (x + 2)^2$ (រំកិលទៅឆ្វេង ២)
+
+```python
+y_right = (x - 2)**2
+
+plt.plot(x, y_original, label="y = x^2 (ដើម)", linestyle="--")
+plt.plot(x, y_right, label="y = (x - 2)^2 (ស្តាំ)")
+plt.legend()
+plt.show()
+```
+
+<FunctionTransformationChart />
+
+### ៣. ភាពចំណាំងផ្លាត (Reflection)
+
+ការគុណនឹងសញ្ញាដក ($-$) ធ្វើអោយក្រាហ្វិកក្រឡាប់ចាក់!
+- $y = -x^2$ (ក្រឡាប់ចុះក្រោម ដូចចានផ្កាប់)
+
+```python
+y_reflect = -(x**2)
+plt.plot(x, y_original, label="y = x^2")
+plt.plot(x, y_reflect, label="y = -x^2 (ក្រឡាប់)")
+plt.legend()
+plt.show()
+```

@@ -1,0 +1,183 @@
+---
+title: Backpropagation and Gradient Descent
+description: ស្វែងយល់ពីរបៀបដែល neural networks រៀន — ក្បួនដោះស្រាយ backpropagation, chain rule, និង optimisers ដែលពង្រីក gradient descent។
+objectives:
+  - ពន្យល់ពី forward pass និង backward pass នៅក្នុង neural network
+  - អនុវត្ត chain rule ដើម្បីគណនា gradients តាមរយៈស្រទាប់ជាច្រើន
+  - ប្រៀបធៀប optimisers SGD, Momentum, RMSProp, និង Adam
+module: dl-module-4-fundamentals
+order: 10
+quiz:
+  - question: តើ backpropagation គណនាអ្វី?
+    options:
+      - ការទស្សន៍ទាយ (predictions) នៃ forward pass
+      - gradient នៃការបាត់បង់ (loss) ធៀបនឹង weight នីមួយៗនៅក្នុងបណ្តាញ
+      - អត្រារៀន (learning rate) ដ៏ល្អបំផុត
+      - ចំនួន neurons ដែលត្រូវការក្នុងមួយស្រទាប់
+    correctAnswer: 1
+    explanation: Backpropagation efficiently computes the gradient of the loss function with respect to every weight by applying the chain rule backwards through the network. These gradients are then used by gradient descent to update the weights.
+  - question: តើ Adam optimiser ដោះស្រាយបញ្ហាអ្វីខ្លះបើប្រៀបធៀបទៅនឹង vanilla SGD?
+    options:
+      - Adam ប្រើប្រាស់អង្គចងចាំតិចជាង
+      - Adam សម្របអត្រារៀនសម្រាប់ប៉ារ៉ាម៉ែត្រនីមួយៗដាច់ដោយឡែក ដែលនាំឱ្យ convergence លឿន និងមានស្ថិរភាពជាងមុន
+      - Adam លុបបំបាត់តម្រូវការសម្រាប់ backpropagation
+      - Adam ដំណើរការដោយគ្មាន gradients
+    correctAnswer: 1
+    explanation: Adam combines momentum (accumulated gradient direction) and RMSProp (per-parameter adaptive learning rate), making it much less sensitive to the initial learning rate and generally faster to converge than vanilla SGD.
+---
+
+
+Backpropagation and Gradient Descent គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+Training a neural network is like finding the lowest point in a hilly landscape while blindfolded. You can't see the whole landscape (the loss surface), but you can feel which direction is downhill at your current position (the gradient). Backpropagation tells you the exact downhill direction for every single weight in the network — in one efficient pass.
+
+## �� Overview
+
+Backpropagation is the algorithm that makes training deep neural networks computationally feasible. Without it, computing gradients would require $O(n)$ forward passes per weight. Backpropagation does it in a single backward pass, regardless of network size.
+
+## 🔢 គណិតវិទ្យា
+
+### Forward Pass
+
+For layer $l$: $\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}$, $\quad \mathbf{a}^{(l)} = \sigma(\mathbf{z}^{(l)})$
+
+### Backward Pass (Chain Rule)
+
+Output layer error: $\boldsymbol{\delta}^{(L)} = \nabla_{\mathbf{a}} \mathcal{L} \odot \sigma'(\mathbf{z}^{(L)})$
+
+Hidden layer error: $\boldsymbol{\delta}^{(l)} = \left(\mathbf{W}^{(l+1)T}\boldsymbol{\delta}^{(l+1)}\right) \odot \sigma'(\mathbf{z}^{(l)})$
+
+Weight gradients: $\dfrac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)} \mathbf{a}^{(l-1)T}$
+
+### Adam Optimiser
+
+$$m_t = \beta_1 m_{t-1} + (1-\beta_1)g_t \qquad \text{1st moment (mean)}$$
+
+$$v_t = \beta_2 v_{t-1} + (1-\beta_2)g_t^2 \qquad \text{2nd moment (variance)}$$
+
+$$\theta_t = \theta_{t-1} - \frac{\alpha}{\sqrt{\hat{v}_t} + \epsilon}\hat{m}_t$$
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+Backpropagation applies the **chain rule** of calculus to compute the gradient of the loss with respect to every weight in the network in a single backward pass.
+
+### Forward Pass
+
+For layer $l$: $\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}$, $\quad \mathbf{a}^{(l)} = \sigma(\mathbf{z}^{(l)})$
+
+### Backward Pass
+
+Output error: $\boldsymbol{\delta}^{(L)} = \nabla_{\mathbf{a}}\mathcal{L} \odot \sigma'(\mathbf{z}^{(L)})$
+
+Hidden layer error: $\boldsymbol{\delta}^{(l)} = (\mathbf{W}^{(l+1)T}\boldsymbol{\delta}^{(l+1)}) \odot \sigma'(\mathbf{z}^{(l)})$
+
+Weight gradient: $\dfrac{\partial\mathcal{L}}{\partial\mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)}\mathbf{a}^{(l-1)T}$
+
+### Optimiser Comparison
+
+| Optimiser | Update rule | Characteristic |
+|---|---|---|
+| **SGD** | $\theta \leftarrow \theta - \eta g$ | Simple, sensitive to lr |
+| **Momentum** | Accumulates gradient history | Faster convergence, less oscillation |
+| **RMSProp** | Divides by running RMS of gradients | Adapts per-parameter lr |
+| **Adam** | Momentum + RMSProp | Default choice for most tasks |
+
+## 💻 កូដ
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
+import numpy as np
+
+torch.manual_seed(42)
+
+# ── MANUAL BACKPROP (2-layer network) ─────────────────
+# Demonstrates the math directly
+np.random.seed(42)
+X = np.random.randn(100, 3)
+y = (X[:, 0] + X[:, 1] > 0).astype(float).reshape(-1, 1)
+
+# Initialise weights
+W1 = np.random.randn(3, 4) * 0.1
+b1 = np.zeros((1, 4))
+W2 = np.random.randn(4, 1) * 0.1
+b2 = np.zeros((1, 1))
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+lr = 0.1
+for epoch in range(200):
+    # Forward pass
+    z1 = X @ W1 + b1
+    a1 = np.tanh(z1)
+    z2 = a1 @ W2 + b2
+    a2 = sigmoid(z2)
+
+    # Loss (binary cross-entropy)
+    loss = -np.mean(y * np.log(a2 + 1e-8) + (1-y) * np.log(1-a2 + 1e-8))
+
+    # Backward pass
+    dL_da2 = (a2 - y) / len(X)
+    dL_dz2 = dL_da2 * a2 * (1 - a2)
+    dL_dW2 = a1.T @ dL_dz2
+    dL_db2 = dL_dz2.sum(axis=0, keepdims=True)
+    dL_da1 = dL_dz2 @ W2.T
+    dL_dz1 = dL_da1 * (1 - a1**2)   # tanh derivative
+    dL_dW1 = X.T @ dL_dz1
+    dL_db1 = dL_dz1.sum(axis=0, keepdims=True)
+
+    # Update
+    W2 -= lr * dL_dW2;  b2 -= lr * dL_db2
+    W1 -= lr * dL_dW1;  b1 -= lr * dL_db1
+
+    if epoch % 50 == 0:
+        print(f"Epoch {epoch}: loss={loss:.4f}")
+
+# ── PYTORCH (automatic differentiation) ───────────────
+X_t = torch.FloatTensor(X)
+y_t = torch.FloatTensor(y)
+
+model = nn.Sequential(
+    nn.Linear(3, 16),
+    nn.ReLU(),
+    nn.Linear(16, 8),
+    nn.ReLU(),
+    nn.Linear(8, 1),
+    nn.Sigmoid()
+)
+
+criterion = nn.BCELoss()
+
+# Compare optimisers
+optimisers = {
+    "SGD":      optim.SGD(model.parameters(), lr=0.01),
+    "Momentum": optim.SGD(model.parameters(), lr=0.01, momentum=0.9),
+    "Adam":     optim.Adam(model.parameters(), lr=0.001),
+}
+
+for opt_name, optimiser in optimisers.items():
+    # Reset model
+    for layer in model.children():
+        if hasattr(layer, 'reset_parameters'):
+            layer.reset_parameters()
+
+    losses = []
+    for epoch in range(300):
+        optimiser.zero_grad()
+        output = model(X_t)
+        loss   = criterion(output, y_t)
+        loss.backward()   # automatic backpropagation!
+        optimiser.step()
+        losses.append(loss.item())
+
+    print(f"{opt_name:12s}: final loss={losses[-1]:.4f}")
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+**Backpropagation** applies the chain rule backwards through the network to compute all weight gradients in a single pass. **SGD** steps in the negative gradient direction. **Momentum** accumulates gradient history to smooth updates. **RMSProp** adapts the learning rate per parameter by dividing by the running RMS of gradients. **Adam** combines both, making it the default choice for most deep learning tasks. PyTorch's autograd engine performs backpropagation automatically — you only need to call `loss.backward()`.

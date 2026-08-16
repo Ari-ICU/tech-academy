@@ -1,0 +1,74 @@
+---
+title: អនុគមន៍ស្ថិតិក្នុង SQL (SQL Aggregations)
+description: រៀនពីរបៀបធ្វើការបូកសរុប (Sum), រកមធ្យមភាគ (Avg) និងរាប់ចំនួន (Count) ដោយផ្ទាល់នៅក្នុង Database មុននឹងទាញយកមកវិភាគ។
+objectives:
+  - ប្រើប្រាស់ `COUNT()`, `SUM()`, `AVG()` ដើម្បីសរុបទិន្នន័យ
+  - ប្រើប្រាស់ `MIN()` និង `MAX()` ដើម្បីរកតម្លៃចុងសងខាង
+  - ប្តូរឈ្មោះជួរឈរលទ្ធផលដោយប្រើ `AS` (Aliasing)
+module: da-module-8-sql
+order: 4
+quiz:
+  - question: ប្រសិនបើអ្នកចង់រាប់ចំនួនអតិថិជនសរុបនៅក្នុងតារាង `Customers` តើអ្នកគួរប្រើប្រាស់កូដមួយណា?
+    options:
+      - SELECT SUM(id) FROM Customers;
+      - SELECT COUNT(*) FROM Customers;
+      - SELECT TOTAL(Customers);
+      - SELECT * FROM Customers LIMIT COUNT;
+    correctAnswer: 2
+    explanation: '`COUNT(*)` គឺជាមុខងារសម្រាប់រាប់ "ចំនួនជួរដេក (Rows)" សរុបនៅក្នុងតារាង។ ចំណែក `SUM()` ប្រើសម្រាប់បូក "តម្លៃលេខ" នៅក្នុងជួរឈរ (ឧ. បូកលុយបញ្ចូលគ្នា) ដែលមិនស័ក្តិសមសម្រាប់ការរាប់ចំនួនមនុស្សទេ។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុង Pandas យើងប្រើ `df['ជួរឈរ'].sum()`។ នៅក្នុង SQL យើងក៏អាចធ្វើបែបនេះបានដែរ! ការអោយ Database អ្នកបូកលេខអោយ វាលឿនជាងការដែលអ្នកទាញលេខទាំង ១ លានជួរមកបូកនៅក្នុង Python ឆ្ងាយណាស់! នេះហៅថា **Aggregation**។
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+ឧបមាថាយើងមានតារាង `Orders` (បញ្ជាទិញ) ដែលមានជួរឈរ `order_id`, `customer_id`, និង `total_price`។
+
+### ១. ការប្រើប្រាស់អនុគមន៍ទាំង ៥
+
+មុខងារទាំងនេះ ត្រូវសរសេរនៅខាងក្រោយពាក្យ `SELECT`។
+
+```sql
+/* ១. តើមានការបញ្ជាទិញសរុបប៉ុន្មានដង? (រាប់ជួរ) */
+SELECT COUNT(*) FROM Orders;
+
+/* ២. តើលក់បានលុយសរុបប៉ុន្មាន? (បូកបញ្ចូលគ្នា) */
+SELECT SUM(total_price) FROM Orders;
+
+/* ៣. តើវិក្កយបត្រមធ្យមមានតម្លៃប៉ុន្មាន? (មធ្យមភាគ) */
+SELECT AVG(total_price) FROM Orders;
+
+/* ៤. តើការកុម្ម៉ង់ថ្លៃជាងគេ និងថោកជាងគេមានតម្លៃប៉ុន្មាន? */
+SELECT MAX(total_price), MIN(total_price) FROM Orders;
+```
+
+### ២. ការប្តូរឈ្មោះជួរឈរលទ្ធផល (Aliasing)
+
+នៅពេលអ្នក Run កូដ `SELECT SUM(total_price)` លទ្ធផលដែលចេញមកនឹងមានឈ្មោះជួរឈរថា `SUM(total_price)` ដែរ ដែលមើលទៅមិនស្អាត។ អ្នកអាចប្តូរឈ្មោះវាបានដោយប្រើពាក្យ **`AS`**។
+
+```sql
+SELECT 
+    COUNT(*) AS total_transactions,
+    SUM(total_price) AS total_revenue
+FROM Orders;
+```
+**លទ្ធផលដែល Database បញ្ចេញមក:**
+| total_transactions | total_revenue |
+| :--- | :--- |
+| 5420 | 150450.50 |
+
+### ៣. ផ្សំជាមួយ WHERE
+
+តើយើងចង់បូកសរុបចំណូល **តែនៅក្នុងឆ្នាំ ២០២៣** ឫអត់?
+
+```sql
+SELECT SUM(total_price) AS revenue_2023
+FROM Orders
+WHERE order_date >= '2023-01-01' AND order_date <= '2023-12-31';
+```
+
+ដូចដែលអ្នកឃើញស្រាប់ អ្នកកំពុងតែសួរសំណួរអាជីវកម្ម ទៅកាន់ Database ដោយផ្ទាល់! ប៉ុន្តែចុះបើថៅកែចង់ដឹងថា "តើអតិថិជនម្នាក់ៗចំណាយលុយប៉ុន្មាន?" នោះយើងត្រូវចេះចែកក្រុម (Group By) ដែលជាប្រធានបទបន្ទាប់!

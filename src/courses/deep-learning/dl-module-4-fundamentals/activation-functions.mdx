@@ -1,0 +1,149 @@
+---
+title: Activation Functions
+description: ស្វែងយល់ពីមូលហេតុដែលអនុគមន៍សកម្មភាពមិនមែនលីនេអ៊ែរមានសារៈសំខាន់ ប្រៀបធៀប ReLU, sigmoid, tanh, Leaky ReLU និង GELU ព្រមទាំងដឹងថាពេលណាត្រូវប្រើពួកវានីមួយៗ។
+objectives:
+  - ពន្យល់ពីមូលហេតុដែលអនុគមន៍សកម្មភាព (activation functions) ចាំបាច់នៅក្នុង neural networks
+  - ប្រៀបធៀបលក្ខណៈសម្បត្តិ និងឥរិយាបថ gradient នៃអនុគមន៍សកម្មភាពទូទៅ
+  - ជ្រើសរើសអនុគមន៍សកម្មភាពដែលត្រឹមត្រូវសម្រាប់ hidden layers និង output layers
+module: dl-module-4-fundamentals
+order: 6
+quiz:
+  - question: ហេតុអ្វីបានជា neural networks ត្រូវការអនុគមន៍សកម្មភាពមិនមែនលីនេអ៊ែរ (non-linear activation functions)?
+    options:
+      - ដើម្បីពន្លឿនការបណ្តុះបណ្តាល
+      - ប្រសិនបើគ្មានភាពមិនមែនលីនេអ៊ែរទេ បណ្តាញជ្រៅមួយ (deep network) នឹងដួលរលំទៅជាបំប្លែងលីនេអ៊ែរតែមួយ ដោយមិនគិតពីជម្រៅរបស់វាឡើយ
+      - ដើម្បីធ្វើឱ្យលទ្ធផលត្រលប់មកចន្លោះពី 0 ទៅ 1
+      - ដើម្បីកាត់បន្ថយចំនួនប៉ារ៉ាម៉ែត្រ
+    correctAnswer: 1
+    explanation: ប្រសិនបើគ្មានសកម្មភាពមិនមែនលីនេអ៊ែរទេ ការរៀបស្រទាប់ជាច្រើនគឺស្មើនឹងការបំប្លែងលីនេអ៊ែរតែមួយប៉ុណ្ណោះ (W1·W2·...·Wn គ្រាន់តែជាម៉ាទ្រីសមួយផ្សេងទៀត)។ ភាពមិនមែនលីនេអ៊ែរគឺជាអ្វីដែលផ្តល់ឱ្យបណ្តាញជ្រៅនូវសមត្ថភាពក្នុងការរៀនពីរចនាសម្ព័ន្ធស្មុគស្មាញ និងមានឋានានុក្រម។
+  - question: តើអ្វីទៅជាបញ្ហា vanishing gradient ជាមួយនឹងសកម្មភាព sigmoid/tanh?
+    options:
+      - Gradients ក្លាយជាធំពេក ហើយបណ្តាលឱ្យមានអស្ថិរភាព
+      - សម្រាប់ធាតុបញ្ចូលដែលឆ្អែត (ធំពេក ឬតូចពេក) ដេរីវេគឺជិតសូន្យ — gradients បាត់ទៅវិញនៅពេលដែលពួកវាសាយភាយត្រលប់មកវិញតាមរយៈស្រទាប់ជាច្រើន
+      - អនុគមន៍មិនអាចធ្វើដេរីវេបានទេ
+      - លទ្ធផលមិនត្រូវបានដាក់នៅចំកណ្តាលត្រង់ចំណុចសូន្យទេ
+    correctAnswer: 1
+    explanation: Sigmoid និង tanh ឆ្អែត (លទ្ធផលជិត 0 ឬ 1 ឬ -1 ឬ 1) សម្រាប់ទំហំបញ្ចូលធំៗ។ នៅក្នុងតំបន់ទាំងនេះ ដេរីវេខិតជិត 0 ដូច្នេះ gradients ដែលគុណតាមរយៈស្រទាប់ជាច្រើនរួមតូចជាអិចស្ប៉ូណង់ស្យែល — ធ្វើឱ្យបណ្តាញជ្រៅ (deep networks) ពិបាកហ្វឹកហាត់យ៉ាងខ្លាំង។
+---
+
+## �� Overview
+
+Activation functions are what give neural networks their power. Without them, deep networks are equivalent to linear models regardless of how many layers they have. The choice of activation function directly impacts training speed, gradient flow, and final model performance.
+
+
+Activation Functions គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+Think of an activation function as a gate that decides how much signal passes through each neuron. A linear gate lets everything through proportionally — stacking linear gates is pointless. A non-linear gate can selectively amplify, suppress, or reshape the signal — stacking these gates creates complex, hierarchical representations.
+
+## 🔢 គណិតវិទ្យា
+
+| Function | Formula | Range | Key property |
+|---|---|---|---|
+| **Sigmoid** | $\sigma(z) = \frac{1}{1+e^{-z}}$ | $(0, 1)$ | Smooth, saturates |
+| **Tanh** | $\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$ | $(-1, 1)$ | Zero-centred, saturates |
+| **ReLU** | $\max(0, z)$ | $[0, \infty)$ | Fast, sparse, dead neurons |
+| **Leaky ReLU** | $\max(0.01z, z)$ | $(-\infty, \infty)$ | Fixes dead ReLU |
+| **GELU** | $z \cdot \Phi(z)$ | $(-\infty, \infty)$ | Used in Transformers |
+| **Softmax** | $\frac{e^{z_k}}{\sum_j e^{z_j}}$ | $(0,1)$, sums to 1 | Multi-class output |
+
+**Derivative of ReLU:**
+
+$$\frac{d}{dz}\text{ReLU}(z) = \begin{cases} 1 & z > 0 \\ 0 & z \leq 0 \end{cases}$$
+
+## 💻 កូដ
+
+```python
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+# ── NUMPY IMPLEMENTATIONS ─────────────────────────────
+def sigmoid(z):    return 1 / (1 + np.exp(-z))
+def tanh(z):       return np.tanh(z)
+def relu(z):       return np.maximum(0, z)
+def leaky_relu(z, alpha=0.01): return np.where(z > 0, z, alpha * z)
+def gelu(z):
+    return 0.5 * z * (1 + np.tanh(np.sqrt(2/np.pi) * (z + 0.044715*z**3)))
+
+z = np.linspace(-5, 5, 100)
+
+# Derivatives
+def sigmoid_deriv(z): s = sigmoid(z); return s * (1 - s)
+def tanh_deriv(z):    return 1 - np.tanh(z)**2
+def relu_deriv(z):    return (z > 0).astype(float)
+
+print("Activation values at z=2:")
+for name, fn in [("Sigmoid", sigmoid), ("Tanh", tanh),
+                  ("ReLU", relu), ("Leaky ReLU", leaky_relu),
+                  ("GELU", gelu)]:
+    print(f"  {name:12s}: {fn(np.array([2.0]))[0]:.4f}")
+
+print("\nDerivatives at z=2 (gradient magnitude):")
+for name, fn in [("Sigmoid", sigmoid_deriv), ("Tanh", tanh_deriv),
+                  ("ReLU", relu_deriv)]:
+    print(f"  {name:12s}: {fn(np.array([2.0]))[0]:.4f}")
+
+# Saturation region — where gradients vanish
+print("\nGradient at z=10 (saturation):")
+print(f"  Sigmoid: {sigmoid_deriv(np.array([10.0]))[0]:.8f}")  # ~0.0000454
+print(f"  Tanh:    {tanh_deriv(np.array([10.0]))[0]:.8f}")     # ~0.0000000
+
+# ── PYTORCH — PRACTICAL USAGE ─────────────────────────
+torch.manual_seed(42)
+
+# For hidden layers: ReLU is default
+model_relu = nn.Sequential(
+    nn.Linear(10, 64), nn.ReLU(),
+    nn.Linear(64, 64), nn.ReLU(),
+    nn.Linear(64, 1),
+)
+
+# For hidden layers: GELU (used in BERT, GPT)
+model_gelu = nn.Sequential(
+    nn.Linear(10, 64), nn.GELU(),
+    nn.Linear(64, 64), nn.GELU(),
+    nn.Linear(64, 1),
+)
+
+# For output layer:
+# — Binary classification → Sigmoid
+# — Multi-class classification → Softmax (inside CrossEntropyLoss)
+# — Regression → no activation (or ReLU if output must be positive)
+
+# Softmax for multi-class output
+logits = torch.tensor([2.0, 1.0, 0.1])
+probs  = F.softmax(logits, dim=0)
+print(f"\nSoftmax probabilities: {probs}")
+print(f"Sum: {probs.sum():.4f}")   # always 1.0
+
+# ── DEAD RELU DEMONSTRATION ───────────────────────────
+# Neurons stuck at 0 if they always receive negative input
+dead_input = torch.full((100,), -5.0)
+dead_output = F.relu(dead_input)
+print(f"\nDead ReLU: all zeros? {(dead_output == 0).all()}")
+
+# Fix with Leaky ReLU
+alive_output = F.leaky_relu(dead_input, negative_slope=0.01)
+print(f"Leaky ReLU: all zeros? {(alive_output == 0).all()}")
+print(f"Leaky ReLU output: {alive_output[:3]}")  # small negative values
+
+# ── PRACTICAL GUIDELINES ──────────────────────────────
+guidelines = {
+    "Hidden layers (CNN/MLP)":     "ReLU — fast, simple, default choice",
+    "Hidden layers (Transformers)":"GELU — smoother, better for attention",
+    "Hidden layers (deep)":        "Leaky ReLU / ELU — avoids dead neurons",
+    "Output (binary classif.)":    "Sigmoid — outputs probability 0-1",
+    "Output (multi-class classif)":"No activation (use CrossEntropyLoss)",
+    "Output (regression)":         "No activation (linear output)",
+}
+print("\nPractical guidelines:")
+for layer, rec in guidelines.items():
+    print(f"  {layer:35s}: {rec}")
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+Non-linear activation functions are what make deep networks powerful. **Sigmoid** and **Tanh** suffer from vanishing gradients in deep networks. **ReLU** is the workhorse of modern deep learning — fast and sparse, but can produce dead neurons. **Leaky ReLU** and **ELU** fix dead neurons. **GELU** is the default in Transformers. For the output layer: sigmoid for binary classification, no activation (raw logits into CrossEntropyLoss) for multi-class, no activation for regression.

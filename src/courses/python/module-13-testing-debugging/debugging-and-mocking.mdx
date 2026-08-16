@@ -1,0 +1,192 @@
+---
+title: Debugging និង Mocking
+description: រៀនពីរបៀបស្វែងរកកំហុសក្នុងកូដ (Bugs) ដោយប្រើប្រាស់ PDB និងរបៀបក្លែងបន្លំ (Mocking) API ឬ Database ក្នុងពេលធ្វើតេស្ត។
+objectives:
+  - ប្រើប្រាស់ Python Debugger (PDB) ដើម្បីបញ្ឈប់កូដ និងឆែកមើលតម្លៃអថេរ
+  - យល់ដឹងពីបច្ចេកទេស Mocking ដើម្បីធ្វើតេស្តកូដដែលពឹងផ្អែកលើអុីនធឺណិត ឬ Database
+  - ប្រើប្រាស់ unittest.mock ដើម្បីបង្កើតក្លែងបន្លំ (Fake Objects) ក្នុង Pytest
+module: module-13-testing-debugging
+order: 2
+quiz:
+  - question: ហេតុអ្វីបានជាអ្នកជំនាញប្រើប្រាស់ 'pdb' (Python Debugger) ជំនួសឱ្យការប្រើ print() ដើម្បីស្វែងរកកំហុស?
+    options:
+      - ព្រោះ print() ប្រើប្រាស់ Memory ច្រើនជាង pdb
+      - ព្រោះ pdb អាចជួសជុលកូដដោយស្វ័យប្រវត្តិ
+      - ព្រោះ pdb អនុញ្ញាតឱ្យអ្នកបញ្ឈប់កូដនៅបន្ទាត់ណាមួយ ឆែកមើលអថេរ និងដំណើរការកូដម្តងមួយបន្ទាត់ៗ ដើម្បីរកមើលដើមចមនៃកំហុស
+      - ព្រោះ print() មិនដើរនៅលើម៉ាស៊ីនមេ (Servers)
+    correctAnswer: 3
+    explanation: 'ការប្រើ print() រាប់សិបកន្លែង ធ្វើឱ្យកូដរញ៉េរញ៉ៃ។ pdb អនុញ្ញាតឱ្យអ្នក "ផ្អាក" ពេលវេលា រួចដើរពិនិត្យមើលគ្រប់យ៉ាងនៅក្នុងកម្មវិធីដែលកំពុងរត់។'
+  - question: តើការប្រើប្រាស់ 'Mocking' មានប្រយោជន៍អ្វីខ្លះក្នុងការសរសេរ Unit Tests?
+    options:
+      - ជួយបង្កើនល្បឿនអុីនធឺណិត ពេលកំពុងធ្វើតេស្ត
+      - ជួយឱ្យយើងអាចតេស្តកូដរបស់យើងបាន ដោយមិនចាំបាច់ហៅ API ពិតប្រាកដ ឬសរសេរចូល Database ពិតប្រាកដ (សន្សំលុយ និងលឿន)
+      - វាជួយលាក់កូដសម្ងាត់ (Passwords) មិនឱ្យគេឃើញ
+      - វាបង្កើតទិន្នន័យពិតៗរាប់លានជួរដោយស្វ័យប្រវត្តិ
+    correctAnswer: 2
+    explanation: 'បើអ្នកមានអនុគមន៍សម្រាប់កាត់លុយពីកាតធនាគារ អ្នកប្រាកដជាមិនចង់កាត់លុយពិតៗរាល់ពេលរត់ Pytest នោះទេ។ Mocking អនុញ្ញាតឱ្យអ្នក "ធ្វើពុត" ថាធនាគារបានកាត់លុយជោគជ័យ ដើម្បីតេស្តកូដបន្ទាប់របស់អ្នក។'
+---
+
+## 🌐 Overview
+
+ទោះបីជាអ្នកពូកែយ៉ាងណាក៏ដោយ ក៏អ្នកនឹងបង្កើតកំហុស (Bugs) ដែរ! ពេលដែលកម្មវិធីគាំង ឬបញ្ចេញលទ្ធផលខុស វិធីសាស្ត្រធម្មតាគឺការសរសេរ `print()` ច្រើនកន្លែងដើម្បីរកមើលថាតើទិន្នន័យខុសនៅបន្ទាត់ណា។ វិធីនេះគឺហត់ និងយឺតណាស់។ 
+នៅក្នុងមេរៀននេះ យើងនឹងរៀនប្រើ **`pdb` (Python Debugger)** ដែលជាឧបករណ៍ស្តង់ដារសម្រាប់ស្វែងរកកំហុស។ បន្ថែមពីនេះ យើងនឹងរៀនពី **Mocking** ដែលជាវេទមន្តសម្រាប់តេស្តកូដដោយ "ក្លែងបន្លំ" ពិភពខាងក្រៅ (ដូចជា API ឬ Database) ដើម្បីឱ្យការតេស្តរបស់យើងលឿន និងមានសុវត្ថិភាព។
+
+---
+
+## 📚 Definitions
+
+- **Debugging (ការកម្ចាត់កំហុស):** ដំណើរការនៃការស្វែងរក និងជួសជុលកំហុសនៅក្នុងកូដ។
+- **`pdb` (Python Debugger):** បណ្ណាល័យរបស់ Python សម្រាប់បញ្ឈប់កម្មវិធីដែលកំពុងរត់ (Pause) និងអនុញ្ញាតឱ្យអ្នកពិនិត្យមើលវា។
+- **Breakpoint (ចំណុចបញ្ឈប់):** បន្ទាត់កូដដែលអ្នកកំណត់ឱ្យ Debugger ផ្អាកដំណើរការនៅទីនោះ (ប្រើ `breakpoint()` ក្នុង Python 3.7+)។
+- **Mocking (ការក្លែងបន្លំ):** ការបង្កើតវត្ថុក្លែងក្លាយ (Fake Object) ដើម្បីជំនួសវត្ថុពិតប្រាកដ (ដូចជា Database ឬ API) ក្នុងអំឡុងពេលធ្វើ Unit Testing។
+- **`unittest.mock.patch`:** អនុគមន៍សម្រាប់យកវត្ថុក្លែងក្លាយ ទៅ "ប៉ះគ្រប" (Patch) ពីលើវត្ថុពិត ជាបណ្តោះអាសន្នពេលកំពុងរត់តេស្ត។
+
+---
+
+## 💡 The Core Idea
+
+ស្រមៃថា **អ្នកជាអ្នកស៊ើបអង្កេតកំពុងតាមដានចោរ**។
+- **ការប្រើ `print()`:** គឺដូចជាការដំឡើងកាមេរ៉ាសុវត្ថិភាពតាមផ្លូវ។ អ្នកត្រូវអង្គុយមើលវីដេអូឡើងវិញដើម្បីរកមុខចោរ (ស៊ីពេល និងអាចមើលរំលង)។
+- **ការប្រើ `pdb` (Debugger):** គឺដូចជាអ្នកមានតេឡេបញ្ជា "បញ្ឈប់ពេលវេលា" (`breakpoint()`)។ ពេលចោររត់មកដល់ផ្លូវបំបែក អ្នកបញ្ឈប់ពេលវេលា ដើរទៅមើលមុខចោរ ឆែកមើលកាបូបរបស់វា (មើលតម្លៃអថេរ) ហើយថែមទាំងអាចដើរតាមវាម្តងមួយជំហាន (Step-by-step) ទៀតផង!
+
+---
+
+## 📖 In Depth
+
+**ពាក្យបញ្ជាសំខាន់ៗពេលស្ថិតក្នុង PDB Terminal:**
+នៅពេលកូដរត់មកដល់ `breakpoint()` វានឹងលោតផ្ទាំង Terminal ឱ្យអ្នកវាយពាក្យបញ្ជា (Pdb):
+- `n` (next): ឱ្យកូដរត់ទៅបន្ទាត់បន្ទាប់
+- `s` (step): បើបន្ទាត់នេះជាអនុគមន៍ ចូរលោតចូលទៅក្នុងអនុគមន៍នោះ
+- `c` (continue): ឱ្យកូដរត់ជាធម្មតាវិញរហូតដល់ចប់ ឬដល់ Breakpoint មួយទៀត
+- `q` (quit): បញ្ឈប់កម្មវិធីទាំងស្រុង
+- វាយឈ្មោះអថេរណាមួយ (ឧ. `x` ឬ `user_data`) ដើម្បីមើលតម្លៃរបស់វានៅពេលនោះ។
+
+---
+
+## 💻 Code Breakdown
+
+### ១. ការប្រើប្រាស់ PDB សម្រាប់ការស្វែងរកកំហុស
+
+```python
+# ឯកសារ: bug_hunter.py
+
+def calculate_discount(price, discount_rate):
+    # មានកំហុសនៅទីនេះ! (គួរតែ 1 - discount_rate)
+    final_price = price * discount_rate 
+    return final_price
+
+def process_order(cart):
+    total = sum(cart)
+    print(f"តម្លៃសរុបដើម: ${total}")
+    
+    # យើងសង្ស័យថាកូដគណនាបញ្ចុះតម្លៃមានបញ្ហា
+    # ដាក់ breakpoint() នៅទីនេះ ដើម្បីបញ្ឈប់ពេលវេលា!
+    breakpoint() 
+    
+    # ពេលកូដឈប់នៅទីនេះ អ្នកអាចវាយ 'total' ដើម្បីមើលតម្លៃរបស់វា
+    # ឬវាយ 'n' ដើម្បីឱ្យកូដរត់បន្ទាត់បន្ទាប់
+    discounted_total = calculate_discount(total, 0.20) # បញ្ចុះ 20%
+    
+    print(f"តម្លៃត្រូវបង់: ${discounted_total}")
+    return discounted_total
+
+cart = [10, 20, 30] # សរុប 60
+# តាមពិតបញ្ចុះ 20% ត្រូវនៅសល់ $48 តែកម្មវិធីចេញមក $12
+process_order(cart) 
+```
+*ចំណាំ: កុំភ្លេចលុប `breakpoint()` ចេញវិញ មុននឹងដាក់កូដឱ្យគេប្រើពិតប្រាកដ (Production)!*
+
+### ២. ការប្រើប្រាស់ Mocking សម្រាប់ការធ្វើតេស្ត
+
+ឧបមាថាអ្នកមានអនុគមន៍មួយដែលត្រូវហៅទៅកាន់ API ធនាគារ។ អ្នកមិនចង់ហៅ API នេះពិតៗទេ ពេលកំពុងរត់ Pytest។ នេះជារបៀប Mock វា៖
+
+```python
+# ឯកសារទី១: payment.py (កូដពិត)
+import requests
+
+def charge_credit_card(user_id, amount):
+    # ហៅ API ពិតប្រាកដ (អាចកាត់លុយពិតៗ ឬស៊ីពេលយូរ)
+    response = requests.post(f"https://bank.com/api/charge", json={
+        "user": user_id,
+        "amount": amount
+    })
+    
+    if response.status_code == 200:
+        return "ជោគជ័យ"
+    return "បរាជ័យ"
+```
+
+```python
+# ឯកសារទី២: test_payment.py (កូដសម្រាប់តេស្ត)
+import pytest
+from unittest.mock import patch
+from payment import charge_credit_card
+
+# ប្រើ @patch ដើម្បីប្រាប់ថា "សូមយក Mock ទៅគ្របពីលើ requests.post"
+@patch('payment.requests.post')
+def test_charge_credit_card_success(mock_post):
+    # ១. រៀបចំ (Arrange): កំណត់ឱ្យ Mock របស់យើងឆ្លើយតបដូច API ពិត
+    # បង្កើតសំបក Object ដែលមាន status_code = 200
+    mock_post.return_value.status_code = 200
+    
+    # ២. អនុវត្ត (Act): ហៅអនុគមន៍របស់យើង
+    # ពេលនេះ charge_credit_card នឹងមិនហៅ API ពិតទេ វានឹងហៅ mock_post ជំនួស!
+    result = charge_credit_card("user_123", 50.0)
+    
+    # ៣. អះអាង (Assert)
+    assert result == "ជោគជ័យ"
+    # យើងថែមទាំងអាចឆែកមើលថា តើអនុគមន៍របស់យើងពិតជាបានហៅ API ត្រឹមត្រូវឬអត់
+    mock_post.assert_called_once()
+```
+
+---
+
+## 🌐 ការអនុវត្តជាក់ស្តែង (Real-world Application)
+
+**ការ Mock Database ក្នុង Data Pipeline**
+
+ក្នុង Data Science បើអ្នកចង់តេស្តកូដដែលទាញទិន្នន័យពី Database (SQL) អ្នកមិនគួរតភ្ជាប់ទៅ Database ពិត (Production DB) ទេ។ យើងប្រើ Mock ដើម្បីត្រឡប់ទិន្នន័យ (DataFrame) ក្លែងក្លាយវិញ៖
+
+```python
+import pandas as pd
+from unittest.mock import patch
+import pytest
+
+# កូដពិតដែលអានពី Database
+def get_average_salary(db_connection_string):
+    import sqlalchemy
+    engine = sqlalchemy.create_engine(db_connection_string)
+    df = pd.read_sql("SELECT salary FROM employees", engine)
+    return df['salary'].mean()
+
+# កូដតេស្តដែលមិនត្រូវការ Database ពិត
+@patch('pandas.read_sql')
+@patch('sqlalchemy.create_engine')
+def test_get_average_salary(mock_engine, mock_read_sql):
+    # បង្កើត DataFrame ក្លែងក្លាយឱ្យដូចទិន្នន័យចេញពី DB
+    fake_data = pd.DataFrame({'salary': [200, 300, 400]})
+    mock_read_sql.return_value = fake_data
+    
+    # តេស្ត
+    result = get_average_salary("fake_connection_string")
+    
+    assert result == 300.0 # (200+300+400)/3
+    mock_read_sql.assert_called_once()
+```
+
+---
+
+## ❌ Common Mistakes
+
+- **ទុក `breakpoint()` ចោលក្នុង Production:** នេះជាកំហុសដ៏ធ្ងន់ធ្ងរបំផុត! ពេលកូដរត់ដល់ `breakpoint()` វានឹងគាំងរង់ចាំអ្នកវាយបញ្ជាក្នុង Terminal។ បើវាកើតឡើងលើ Server កម្មវិធីរបស់អ្នកនឹងគាំងទាំងស្រុង។ ត្រូវប្រាកដថាអ្នកបានលុបវាចេញមុននឹង Commit កូដ (ប្រើ `git diff` ឆែកមើល)។
+- **Mock ខុសកន្លែង (Patching the wrong path):**
+  បើក្នុងឯកសារ `my_module.py` អ្នកសរសេរ `from requests import get`។ ពេលតេស្ត អ្នកត្រូវ patch `'my_module.get'` មិនមែន patch `'requests.get'` ទេ។ អ្នកត្រូវ Mock វានៅកន្លែងដែលវា **ត្រូវគេយកទៅប្រើ** មិនមែនកន្លែងដែលវា **កើតមក** ទេ។
+
+---
+
+## ✅ Key Takeaways
+
+- ប្រើ **`breakpoint()` (PDB)** ដើម្បីបញ្ឈប់កូដ និងតាមដានតម្លៃអថេរម្តងមួយជំហានៗ ជំនួសឱ្យការសរសេរ `print()` ច្រើនកន្លែងដែលធ្វើឱ្យខាតពេល និងកូដរញ៉េរញ៉ៃ។
+- **Mocking (`@patch`)** អនុញ្ញាតឱ្យអ្នកបង្កើត "រូបភាពបន្លំ" (Fake Objects) ជំនួសឱ្យសេវាកម្មពិតៗដូចជា Internet, Database, ឬ API។
+- Mocking ជួយឱ្យកូដតេស្តរបស់អ្នក (Unit Tests) ដើរលឿន មិនពឹងផ្អែកលើអុីនធឺណិត និងមិនធ្វើឱ្យមានទិន្នន័យរញ៉េរញ៉ៃក្នុង Database ពិត។
+- តែងតែឆែកមើល និងលុប `breakpoint()` មុននឹងបញ្ជូនកូដទៅឱ្យអ្នកប្រើប្រាស់ (Production)!

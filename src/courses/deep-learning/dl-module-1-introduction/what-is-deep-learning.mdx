@@ -1,0 +1,95 @@
+---
+title: What is Deep Learning?
+description: ស្វែងយល់អំពី deep learning ដែលជាផ្នែកមួយនៃ machine learning ដែលប្រើប្រាស់ neural networks មានច្រើនស្រទាប់ ដើម្បីរៀនពីឋានានុក្រមទិន្នន័យ។
+objectives:
+  - ពន្យល់ពីភាពខុសគ្នារវាង deep learning និង classical machine learning
+  - ពណ៌នាពីតួនាទីរបស់ស្រទាប់ (layers) និងការតំណាង (representations) នៅក្នុង neural network
+  - កំណត់ពេលដែល deep learning គឺជាឧបករណ៍ត្រឹមត្រូវ
+module: dl-module-1-introduction
+order: 1
+quiz:
+  - question: តើអ្វីដែលធ្វើឱ្យ deep learning ខុសពី classical machine learning?
+    options:
+      - Deep learning មិនត្រូវការទិន្នន័យទេ
+      - Deep learning រៀនពីឋានានុក្រមលក្ខណៈពិសេស (hierarchical feature representations) ដោយស្វ័យប្រវត្តិ
+      - Deep learning តែងតែដំណើរការលឿនជាង
+      - Deep learning អាចចាត់ចែងបានតែរូបភាពប៉ុណ្ណោះ
+    correctAnswer: 1
+    explanation: ភាពខុសគ្នាសំខាន់គឺ ម៉ូដែល deep learning រៀនបង្កើត feature representations ដោយខ្លួនឯងតាមរយៈស្រទាប់ជាច្រើន ជាជាងការពឹងផ្អែកលើ features ដែលបង្កើតដោយមនុស្ស។
+---
+
+## �� Overview
+
+Deep learning គឺជាបច្ចេកវិទ្យានៅពីក្រោយការសម្គាល់រូបភាព ការសំយោគសំឡេង ម៉ូដែលភាសាធំៗ និងការទស្សន៍ទាយរចនាសម្ព័ន្ធប្រូតេអ៊ីន។ វាសម្រេចបាននូវចំណុចនេះដោយការរៀបចំស្រទាប់នៃការបំប្លែងជាច្រើនដែលទាញយកតំណាងអរូបីកាន់តែច្រើនឡើងៗពីទិន្នន័យដើម។
+
+
+What is Deep Learning? គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+នៅក្នុង classical ML អ្នកអនុវត្តបង្កើត features ដោយដៃ៖ សម្រាប់ការចាប់យកសារឥតបានការនៃរូបភាព អ្នកប្រហែលជាសរសេរច្បាប់ដូចជា "ដាក់ទង់រូបភាពដែលមានផ្ទៃខាងក្រោយពណ៌ក្រហម និងលំនាំអត្ថបទជាក់លាក់"។ នៅក្នុង deep learning អ្នកបញ្ចូលភីកសែលដើម (raw pixels) ហើយបណ្តាញរកឃើញដោយខ្លួនឯងថាតើលំនាំភីកសែលមួយណាដែលសំខាន់ — ពីគែម, ទៅជារាង, ទៅជាវត្ថុ, ទៅជាបរិបទ។
+
+ស្រទាប់នីមួយៗរៀនពីកំណែអរូបីបន្ថែមទៀតនៃធាតុបញ្ចូល។ CNN ដែលដំណើរការរូបភាពមុខអាចរៀន៖
+- **ស្រទាប់ទី 1**: គែម និង gradients ពណ៌
+- **ស្រទាប់ទី 2**: ជ្រុង និងវាយនភាព
+- **ស្រទាប់ទី 3**: លក្ខណៈផ្ទៃមុខ (ភ្នែក, ច្រមុះ)
+- **ស្រទាប់ទី 4**: មុខ vs មិនមែនមុខ
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+បណ្តាញ deep neural network គឺជាសមាសធាតុនៃអនុគមន៍ parameterised៖
+
+$$f(x) = f_L(f_{L-1}(\ldots f_1(x)))$$
+
+ស្រទាប់នីមួយៗ $f_l$ គណនា៖
+
+$$h_l = \sigma(W_l h_{l-1} + b_l)$$
+
+ដែល $W_l$ គឺជា weight matrix, $b_l$ គឺជា bias vector, និង $\sigma$ គឺជាអនុគមន៍សកម្មភាពមិនមែនលីនេអ៊ែរ (ReLU, sigmoid, ។ល។)។
+
+## 🔢 គណិតវិទ្យា
+
+ជម្រៅនៃបណ្តាញគឺជាអ្វីដែលផ្តល់ឱ្យវា **representational power**។ ទ្រឹស្តីបទ universal approximation ចែងថាបណ្តាញដែលមានស្រទាប់តែមួយអាចប៉ាន់ប្រមាណមុខងារជាបន្តបន្ទាប់ — ប៉ុន្តែនៅក្នុងការអនុវត្ត ជម្រៅអនុញ្ញាតឱ្យមានការតំណាងឱ្យកាន់តែមានប្រសិទ្ធភាព៖
+
+មុខងារដែលត្រូវការប៉ារ៉ាម៉ែត្រ $2^n$ នៅក្នុងបណ្តាញរាក់ អាចត្រូវការប៉ារ៉ាម៉ែត្រតែ $O(n)$ ប៉ុណ្ណោះនៅក្នុងបណ្តាញជ្រៅ។
+
+ការបណ្តុះបណ្តាលកាត់បន្ថយការបាត់បង់ (loss) $\mathcal{L}$ តាមរយៈ **gradient descent** ដោយប្រើ **backpropagation**៖
+
+$$W_l \leftarrow W_l - \eta \frac{\partial \mathcal{L}}{\partial W_l}$$
+
+ដែល $\eta$ គឺជាអត្រានៃការរៀន (learning rate)។
+
+## 💻 កូដ
+
+```python
+import torch
+import torch.nn as nn
+
+# Define a simple feedforward neural network
+class SimpleNet(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim):
+        super().__init__()
+        self.network = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, output_dim)
+        )
+
+    def forward(self, x):
+        return self.network(x)
+
+# Instantiate with 784 inputs (28x28 image), 256 hidden, 10 outputs
+model = SimpleNet(784, 256, 10)
+print(model)
+
+# Forward pass with a random batch
+x = torch.randn(32, 784)   # batch of 32 samples
+logits = model(x)
+print(logits.shape)         # torch.Size([32, 10])
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+Deep learning ប្រើប្រាស់ស្រទាប់នៃការបំប្លែងដែលបានជង់គ្នា ដើម្បីរៀនពីឋានានុក្រមដោយស្វ័យប្រវត្តិ។ វាលុបបំបាត់តម្រូវការសម្រាប់ការរៀបចំ features ដោយដៃ ហើយវាដំណើរការយ៉ាងមានអានុភាពជាមួយទិន្នន័យ និងការគណនា។ យន្តការស្នូលគឺការបណ្តុះបណ្តាល end-to-end ជាមួយ backpropagation ដោយកាត់បន្ថយអនុគមន៍ loss លើទិន្នន័យបណ្តុះបណ្តាល។

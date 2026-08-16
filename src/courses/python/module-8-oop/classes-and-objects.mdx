@@ -1,0 +1,279 @@
+---
+title: Classes និង Objects
+description: រៀនមូលដ្ឋាននៃ object-oriented programming ក្នុង Python — ការកំណត់ classes, បង្កើត instances, និងការប្រើ attributes និង methods។
+objectives:
+  - កំណត់ class ជាមួយ __init__ និង instance methods
+  - បង្កើត និងប្រើ objects (instances) របស់ class
+  - សម្គាល់រវាង instance attributes, class attributes, និង methods
+module: module-5-oop
+order: 1
+quiz:
+  - question: What is __init__ in a Python class?
+    options:
+      - A method that destroys the object
+      - The constructor method called when a new instance is created
+      - A special variable that holds the class name
+      - A method that compares two instances
+    correctAnswer: 1
+    explanation: __init__ is the initialiser called automatically when a new instance is created, allowing you to set up instance attributes.
+  - question: What does self refer to inside a method?
+    options:
+      - The class itself
+      - The specific instance the method is called on
+      - The parent class
+      - The module containing the class
+    correctAnswer: 1
+    explanation: self is a reference to the instance the method is being called on.
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+តើអ្នកធ្លាប់ឆ្ងល់ទេថាហេតុអ្វីបានជា Python អាចឱ្យយើងសរសេរ `[1, 2].append(3)` បាន? នោះក៏ព្រោះតែនៅក្នុង Python អ្វីៗទាំងអស់សុទ្ធតែត្រូវបានបង្កើតឡើងដោយប្រើ **Object-Oriented Programming (OOP)**។ ការយល់ដឹងពី Classes និង Objects នឹងបំប្លែងអ្នកពីអ្នកសរសេរកូដធម្មតា ទៅជាអ្នករចនាប្រព័ន្ធ (System Designer) ដ៏ចំណានម្នាក់។
+
+---
+
+## 🧠 អ្វីៗគ្រប់យ៉ាងសុទ្ធតែជា Object (Everything is an Object)
+
+Python គឺជាភាសា Object-Oriented ដ៏ពិតប្រាកដ។ ស្ទើរតែគ្រប់យ៉ាងនៅក្នុង Python សុទ្ធតែជា Object៖
+
+```python
+x = 10
+name = "Sok"
+numbers = [1, 2, 3]
+```
+
+ទោះបីជា `int`, `float`, `str`, `bool`, `list`, `tuple`, `dict`, ឬសូម្បីតែ `function` ក៏សុទ្ធតែជា Objects ទាំងអស់។
+
+**ឧទាហរណ៍៖**
+```python
+print(type(10))       # <class 'int'>
+print(type("Hello"))  # <class 'str'>
+print(type([1,2]))    # <class 'list'>
+```
+ដូច្នេះ នៅពេលអ្នករៀនបង្កើត Class ផ្ទាល់ខ្លួន អ្នកកំពុងតែបង្កើត **"Object ប្រភេទថ្មីមួយ"** សម្រាប់ប្រព័ន្ធរបស់អ្នក!
+
+---
+
+## 📚 រៀនពាក្យបច្ចេកទេស (Definitions)
+
+- **Class (ប្លង់/គំរូ):** ប្លង់ដែលកំណត់ថាតើ Object មួយមានរាងរៅយ៉ាងណា និងអាចធ្វើអ្វីបានខ្លះ (ឧ. ប្លង់ផ្ទះ)។
+- **Object / Instance (វត្ថុពិត):** វត្ថុដែលត្រូវបានបង្កើតចេញពី Class នោះ (ឧ. ផ្ទះដែលសាងសង់រួចរាល់)។
+- **Attribute (លក្ខណៈ):** អថេរ (Variables) ដែលនៅក្នុង Class (ឧ. ពណ៌របស់ផ្ទះ, ចំនួនបន្ទប់)។
+- **Method (សកម្មភាព):** អនុគមន៍ (Functions) ដែលនៅក្នុង Class (ឧ. ចាក់សោទ្វារ, បើកភ្លើង)។
+- **Instantiation:** ដំណើរការនៃការបង្កើត Object ថ្មីចេញពី Class មួយ។
+
+---
+
+## 💡 គំនិតគោល (The Core Idea)
+
+### ១. គំនូសតាង (Visual Diagram)
+
+សូមក្រឡេកមើលពីរបៀបដែល Class បង្កើត Objects ជាច្រើនដាច់ដោយឡែកពីគ្នា៖
+
+```text
+       Class (ប្លង់)
+       BankAccount
+            │
+   ┌────────┴────────┐
+   │                 │
+Object (acc1)     Object (acc2)
+Owner="Sok"       Owner="Sao"
+Balance=100       Balance=500
+```
+
+### ២. ការបំបែក Memory របស់ Object
+
+Class គឺជាប្លង់។ ពេលយើងបង្កើត Object `acc1` និង `acc2` ពួកវាមាន Memory ផ្ទាល់ខ្លួនរៀងៗខ្លួននៅក្នុងកុំព្យូទ័រ។ ដូច្នេះ បើយើងកែប្រែ `acc1.balance` វានឹង **មិនប៉ះពាល់** ដល់ `acc2.balance` ឡើយ!
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ (In Depth)
+
+### ១. ដំណើរការរបស់ Constructor (`__init__`)
+
+ពាក្យថា Constructor (`__init__`) គឺជាអ្នករៀបចំទិន្នន័យដំបូងគេបង្អស់។ តើមានអ្វីកើតឡើងពេលអ្នកសរសេរ `BankAccount("Sok", 100)` ?
+
+```text
+BankAccount("Sok", 100)
+       ↓
+បង្កើត Object ទទេស្អាតមួយ
+       ↓
+រត់កូដក្នុង __init__()
+       ↓
+រក្សាទុកឈ្មោះ "Sok" ចូលក្នុង Owner
+       ↓
+រក្សាទុកលុយ 100 ចូលក្នុង Balance
+       ↓
+បញ្ជូន Object សម្រេចទៅអោយអថេររបស់អ្នក
+```
+
+### ២. អាថ៌កំបាំងរបស់ពាក្យ `self` 
+
+សិស្សថ្មីភាគច្រើនស្អប់ពាក្យ `self` ណាស់។ ប៉ុន្តែវាសាមញ្ញបំផុត!
+
+នៅពេលអ្នកបញ្ជាឱ្យ Object ធ្វើអ្វីមួយ៖
+```python
+acc1.deposit(100)
+```
+នៅពីក្រោយខ្នង, Python បានបំប្លែងវាទៅជា៖
+```python
+BankAccount.deposit(acc1, 100)
+```
+នោះមានន័យថា **`self` គឺជា `acc1` ហ្នឹងឯង!** វាគ្រាន់តែជាពាក្យតំណាងឱ្យខ្លួនឯងប៉ុណ្ណោះ។ បើអ្នកហៅ `acc2.deposit(100)` នោះ `self` នឹងក្លាយជា `acc2`។ ងាយៗ!
+
+### ៣. វដ្តជីវិតរបស់ Object (Object Lifecycle)
+
+```text
+បង្កើត Object ថ្មី (Create)
+       ↓
+បញ្ចូលទិន្នន័យដំបូងតាមរយៈ __init__ (Initialize)
+       ↓
+ប្រើប្រាស់ Object នោះ (Use)
+       ↓
+នៅពេលឈប់ប្រើ, Python Garbage Collector នឹងសម្អាតវាចេញពី Memory (Destroy)
+```
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការបង្កើត Class ពេញលេញ និង ការអាន Attribute (Dot Notation)
+
+```python
+class BankAccount:
+    
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.balance = balance
+
+acc1 = BankAccount("Sok", 100)
+
+# Dot Notation គឺប្រើសញ្ញា (.) 
+print(acc1.owner)   # អាន Attribute
+print(acc1.balance)
+
+# កែប្រែ Attribute
+acc1.balance = 500  
+print(acc1.balance)
+```
+
+### ២. ការបន្ថែម Dunder Method ដ៏អស្ចារ្យ (`__str__`)
+
+បើអ្នកប្រើ `print(acc1)` វាចេញរាងអាក្រក់មើលណាស់ `<__main__.BankAccount object at ...>`។ យើងអាចដោះស្រាយវាបានដោយ `__str__` ៖
+
+```python
+class BankAccount:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.balance = balance
+
+    def __str__(self):
+        return f"គណនីរបស់ {self.owner}: ${self.balance}"
+
+acc1 = BankAccount("Sok", 100)
+print(acc1) # ចេញរាងស្អាត: "គណនីរបស់ Sok: $100"
+```
+
+### ៣. ភាពខុសគ្នារវាង `type()` និង `isinstance()`
+
+```python
+print(type(acc1)) # ប្រាប់តែពី Class ជាក់លាក់ប៉ុណ្ណោះ
+
+# ប៉ុន្តែ isinstance ឆ្លាតជាង វានឹងពិនិត្យមើលខ្សែស្រឡាយ (Inheritance) ផងដែរ
+print(isinstance(acc1, BankAccount)) # True
+```
+
+---
+
+## 🛒 ការអនុវត្តក្នុងពិភពពិត (Real-world Example)
+
+### កម្មវិធីលក់ទំនិញ (E-Commerce Product)
+
+```python
+class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    def __str__(self):
+        return f"{self.name} - ${self.price:.2f}"
+
+    def discount(self, percent):
+        # គណនាតម្លៃថ្មីបន្ទាប់ពីបញ្ចុះតម្លៃរួច
+        return self.price * (1 - percent / 100)
+
+# ការប្រើប្រាស់
+laptop = Product("MacBook Pro", 2000)
+mouse = Product("Logitech Master", 100)
+
+print(laptop)
+print(f"តម្លៃក្រោយបញ្ចុះ 10%: ${laptop.discount(10):.2f}")
+```
+
+---
+
+## ❌ កំហុសដែលអ្នកតែងតែជួប (Common OOP Traps)
+
+### អន្ទាក់ Mutable Class Attribute!
+
+នេះគឺជាកំហុស OOP ដ៏ពេញនិយមបំផុតរបស់ Python ។ 
+
+```python
+class Student:
+    # កុំប្រកាស List នៅត្រង់នេះ! ព្រោះវាជា Class Attribute (វាចែកគ្នារួម)
+    subjects = [] 
+
+a = Student()
+b = Student()
+
+a.subjects.append("Python")
+
+print(b.subjects) # លទ្ធផល: ['Python'] ស្រាប់តែ b ក៏ចេះរៀន Python ដែរ!
+```
+
+✅ **ដំណោះស្រាយត្រឹមត្រូវ:** ត្រូវតែដាក់វានៅក្នុង `__init__` ដើម្បីអោយសិស្សម្នាក់ៗមាន List ផ្ទាល់ខ្លួន។
+
+```python
+class Student:
+    def __init__(self):
+        self.subjects = [] # ឥឡូវនេះម្នាក់ៗមាន Memory ផ្សេងគ្នាហើយ
+```
+
+---
+
+## ⭐ ការអនុវត្តដ៏ល្អបំផុត (Best Practices)
+
+- **Class Names:** ត្រូវសរសេរជា `PascalCase` (ឧទាហរណ៍ `BankAccount`, `ShoppingCart`, មិនមែន `bankAccount` ទេ)។
+- **Method Names:** ត្រូវសរសេរជា `snake_case` ដូចទៅនឹងអនុគមន៍ធម្មតាដែរ (ឧទាហរណ៍ `deposit_money()`)។
+- **Single Responsibility:** Class មួយគួរតែតំណាងឱ្យរបស់តែមួយមុខប៉ុណ្ណោះ (កុំដាក់មុខងារច្រើនហួសហេតុក្នុង Class តែមួយ)។
+
+---
+
+## 🛠️ លំហាត់អនុវត្តន៍ (Practice Exercises)
+
+### លំហាត់ទី១៖ រថយន្ត
+បង្កើត Class ឈ្មោះ `Car` ដែលមាន Attributes `brand`, `model`, `year`។ បន្ទាប់មកបង្កើត Method `display_info()` ដើម្បីព្រីនព័ត៌មានរថយន្ត។
+
+### លំហាត់ទី២៖ ចតុកោណកែង
+បង្កើត Class ឈ្មោះ `Rectangle` ។ បង្កើត Methods ពីរគឺ `area()` (ក្រឡាផ្ទៃ) និង `perimeter()` (បរិមាត្រ) ។
+
+### លំហាត់ទី៣៖ សិស្សសាលា
+បង្កើត Class ឈ្មោះ `Student` ដែលមាន Method `add_score()` សម្រាប់បញ្ចូលពិន្ទុ និង `average()` ដើម្បីគណនាមធ្យមភាគពិន្ទុ។
+
+### លំហាត់ទី៤៖ សៀវភៅ
+បង្កើត Class ឈ្មោះ `Book` ដោយមាន Class Attribute ឈ្មោះ `library_name` និងមាន Instance Attributes ឈ្មោះ `title` ព្រមទាំង `author` ។
+
+### លំហាត់ទី៥៖ គណនីធនាគារ (រួមបញ្ជូល Exception)
+បង្កើត Class ឈ្មោះ `BankAccount` ។ បង្កើត Methods ឈ្មោះ `deposit()`, `withdraw()`, និង `show_balance()` ។
+* លក្ខខណ្ឌពិសេស៖ ប្រសិនបើដកប្រាក់រហូតដល់សល់លុយអវិជ្ជមាន សូមធ្វើឱ្យកម្មវិធីគាំងដោយ `raise ValueError("ទឹកប្រាក់មិនគ្រប់គ្រាន់")`!
+
+---
+
+## ➡️ Preview សម្រាប់មេរៀនបន្ទាប់
+
+នៅមេរៀនបន្ទាប់ យើងនឹងរៀនអំពីសសរស្តម្ភដ៏មានឥទ្ធិពលទាំង ៤ នៃ Object-Oriented Programming (OOP)៖
+
+- **Inheritance** (ការទទួលមរតក)
+- **Encapsulation** (ការលាក់បាំងទិន្នន័យ)
+- **Polymorphism** (ការផ្លាស់ប្តូររូបរាងកូដ)
+- **Abstraction** (ការបំបាំងភាពស្មុគស្មាញ)

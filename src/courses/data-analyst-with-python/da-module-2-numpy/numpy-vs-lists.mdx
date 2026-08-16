@@ -1,0 +1,59 @@
+---
+title: ការប្រៀបធៀប NumPy Array នឹង Python List
+description: ហេតុអ្វីបានជាយើងត្រូវប្រើ NumPy Array ជំនួសអោយ List ធម្មតា? តោះស្វែងយល់ពីល្បឿន និងការប្រើប្រាស់អង្គចងចាំ (Memory)។
+objectives:
+  - យល់ពីភាពខុសគ្នារវាង NumPy Array និង Python List
+  - ដឹងពីមូលហេតុដែល NumPy ដើរលឿនជាងរាប់សិបដង
+  - សរសេរកូដប្រៀបធៀបល្បឿនរវាងរចនាសម្ព័ន្ធទាំងពីរ
+module: da-module-2-numpy
+order: 2
+quiz:
+  - question: ហេតុអ្វីបានជា NumPy Array ដើរលឿនជាង Python List ធម្មតានៅពេលធ្វើការគណនាទិន្នន័យធំៗ?
+    options:
+      - ព្រោះវាត្រូវបានសរសេរដោយភាសា C ពីក្រោយខ្នង និងផ្ទុកទិន្នន័យប្រភេទដូចគ្នាជាប់ៗគ្នាក្នុង Memory
+      - ព្រោះ Python ធម្មតាមានមេរោគ
+      - ព្រោះវាប្រើអ៊ីនធឺណិតដើម្បីគណនាលើ Cloud
+      - ព្រោះ NumPy ជាផលិតផលរបស់ Apple
+    correctAnswer: 1
+    explanation: 'Python List អាចផ្ទុកអក្សរផង លេខផងលាយឡំគ្នា ដែលធ្វើអោយកុំព្យូទ័រពិបាកអាន។ ចំណែក NumPy Array តម្រូវអោយផ្ទុកទិន្នន័យប្រភេទតែមួយ (ឧ. លេខសុទ្ធ) ហើយវាដាក់ជាប់ៗគ្នាក្នុង Memory ដែលធ្វើអោយស៊ីភីយូ (CPU) អានវាបានលឿនដូចផ្លេកបន្ទោរ (C-Language Backend)។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+អ្នកប្រហែលជាឆ្ងល់ថា "Python មាន `list` ស្រាប់ទៅហើយ ហេតុអ្វីត្រូវរៀន `array` ថ្មីទៀត?"។ ចម្លើយគឺ **ល្បឿន (Speed)**! នៅក្នុង Data Science ដែលមានទិន្នន័យរាប់លានជួរ ការប្រើ List អាចធ្វើអោយកុំព្យូទ័រគាំង ឫប្រើពេលរាប់ម៉ោងដើម្បីគណនា។
+
+---
+
+## 💻 ការប្រៀបធៀបដោយផ្ទាល់ដៃ
+
+តោះសាកល្បងសរសេរកូដដើម្បីប្រៀបធៀបល្បឿននៃការគណនាលេខ ១ លានគ្រាប់!
+
+```python
+import numpy as np
+import time
+
+# បង្កើតទិន្នន័យ 1 លាន (ពីលេខ 0 ដល់ 999,999)
+size = 1000000
+
+# ១. ប្រើប្រាស់ Python List ធម្មតា
+python_list = list(range(size))
+start_time = time.time()
+# គុណគ្រប់លេខនឹង 2 (ត្រូវប្រើ For Loop)
+result_list = [x * 2 for x in python_list]
+list_time = time.time() - start_time
+print(f"ពេលវេលាប្រើ Python List: {list_time:.5f} វិនាទី")
+
+# ២. ប្រើប្រាស់ NumPy Array
+numpy_array = np.arange(size)
+start_time = time.time()
+# គុណគ្រប់លេខនឹង 2 (មិនបាច់មាន For Loop!)
+result_array = numpy_array * 2
+numpy_time = time.time() - start_time
+print(f"ពេលវេលាប្រើ NumPy Array: {numpy_time:.5f} វិនាទី")
+
+# ៣. ប្រៀបធៀបភាពខុសគ្នា
+print(f"NumPy លឿនជាងប្រហែល {list_time/numpy_time:.0f} ដង!")
+```
+
+### សេចក្តីសន្និដ្ឋាន
+នៅពេលអ្នក Run កូដនេះនៅលើកុំព្យូទ័រ អ្នកនឹងឃើញថា NumPy ដើរលឿនជាង Python List ធម្មតាយ៉ាងតិច **២០ ទៅ ៥០ ដង**។ នេះជាមូលហេតុដែលយើងមិនអាចអត់ NumPy បាននៅក្នុងវិស័យ Data Analysis!

@@ -1,0 +1,103 @@
+---
+title: Types of Machine Learning
+description: Understand the three major paradigms — supervised, unsupervised, and reinforcement learning — and know which problems each solves.
+objectives:
+  - Distinguish supervised, unsupervised, and reinforcement learning with examples
+  - Identify whether a problem requires classification or regression
+  - Match a real-world problem to the correct ML paradigm
+module: ml-module-1-introduction
+order: 3
+quiz:
+  - question: Predicting house prices from size and location is an example of which ML type?
+    options:
+      - Classification
+      - Supervised regression
+      - Unsupervised clustering
+      - Reinforcement learning
+    correctAnswer: 1
+    explanation: Predicting a continuous numerical output (price) from labelled training data (known prices) is supervised regression.
+  - question: Grouping customers into segments based on purchase behaviour without pre-defined labels is an example of?
+    options:
+      - Supervised classification
+      - Unsupervised clustering
+      - Reinforcement learning
+      - Semi-supervised learning
+    correctAnswer: 1
+    explanation: When you group data without pre-existing labels, that is unsupervised clustering. No one has told the algorithm what the groups should be — it discovers them from the data structure.
+---
+
+## �� Overview
+
+Before choosing an algorithm, you must identify what type of ML problem you have. Applying a supervised algorithm to an unsupervised problem — or vice versa — is one of the most common mistakes in applied ML.
+
+
+Types of Machine Learning គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+- **Supervised**: you have labelled examples. "Here are 10,000 emails — some are spam, some are not. Learn the pattern."
+- **Unsupervised**: you have data but no labels. "Here are 1 million customers. Find natural groupings."
+- **Reinforcement**: an agent learns by trial and error in an environment. "Play this game. You get +1 for winning and -1 for losing."
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+### Supervised Learning
+
+Training data: $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$
+
+Goal: learn $f: X \rightarrow Y$ such that $f(x_{new}) \approx y_{new}$
+
+| Task | Output type | Examples |
+|---|---|---|
+| **Classification** | Discrete class label | Spam detection, disease diagnosis, image labelling |
+| **Regression** | Continuous number | House price, temperature forecast, stock return |
+
+### Unsupervised Learning
+
+Training data: $x_1, x_2, \ldots, x_n$ (no labels)
+
+Goal: discover structure, patterns, or compact representations
+
+| Task | Examples |
+|---|---|
+| **Clustering** | Customer segmentation, document grouping |
+| **Dimensionality reduction** | PCA, t-SNE for visualisation |
+| **Anomaly detection** | Fraud detection, equipment failure |
+| **Generative modelling** | GANs, VAEs |
+
+### Reinforcement Learning
+
+An **agent** interacts with an **environment**, takes **actions**, and receives **rewards**. Goal: maximise cumulative reward.
+
+Examples: game-playing AI (AlphaGo), robot locomotion, recommendation systems.
+
+## 💻 កូដ
+
+```python
+from sklearn.datasets import load_iris, make_blobs
+from sklearn.linear_model import LogisticRegression
+from sklearn.cluster import KMeans
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# ── SUPERVISED CLASSIFICATION ─────────────────────────
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+clf = LogisticRegression(max_iter=200)
+clf.fit(X_train, y_train)
+preds = clf.predict(X_test)
+print(f"Classification accuracy: {accuracy_score(y_test, preds):.2%}")
+
+# ── UNSUPERVISED CLUSTERING ───────────────────────────
+X_blobs, _ = make_blobs(n_samples=300, centers=4, random_state=42)
+kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
+labels = kmeans.fit_predict(X_blobs)
+print(f"Cluster labels (first 10): {labels[:10]}")
+print(f"Cluster centers:\n{kmeans.cluster_centers_.round(2)}")
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+Choose **supervised learning** when you have labelled training data and want to predict outcomes. Within supervised learning, use **classification** for discrete outputs and **regression** for continuous ones. Choose **unsupervised learning** when you have no labels and want to discover structure. Choose **reinforcement learning** for sequential decision-making with feedback. Most production ML is supervised — getting good labelled data is often the hardest part of the job.

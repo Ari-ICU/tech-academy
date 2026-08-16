@@ -1,0 +1,55 @@
+---
+title: ការរៀបចំបរិស្ថានការងារ (Installing Data Analysis Environment)
+description: របៀបដំឡើង និងប្រើប្រាស់ Jupyter Notebook ឫ Google Colab ដែលជាមជ្ឈមណ្ឌលបញ្ជាការងារ (Workspace) របស់អ្នកវិភាគទិន្នន័យ។
+objectives:
+  - ស្គាល់ឧបករណ៍សរសេរកូដសម្រាប់ Data Science
+  - យល់ពីគុណសម្បត្តិនៃ Jupyter Notebook ធៀបនឹង VS Code ធម្មតា
+  - ចេះបើក Google Colab ដើម្បីសរសេរកូដនៅលើ Cloud ភ្លាមៗ
+module: da-module-1-introduction
+order: 5
+quiz:
+  - question: ហេតុអ្វីបានជា Data Analysts និង Data Scientists ភាគច្រើនចូលចិត្តប្រើប្រាស់ "Jupyter Notebook ឫ Google Colab" ជាងការសរសេរកូដក្នុងឯកសារ .py ធម្មតា (ដូចជាក្នុង VS Code ឫ PyCharm)?
+    options:
+      - ព្រោះវាឥតគិតថ្លៃ
+      - ព្រោះវាអនុញ្ញាតឱ្យយើងសរសេរកូដជាក្រឡាៗ (Cells) អាចមើលឃើញលទ្ធផល/ក្រាហ្វិកភ្លាមៗនៅខាងក្រោមកូដនីមួយៗ និងមានអត្ថបទពន្យល់ (Markdown) ក្នុងឯកសារតែមួយ
+      - ព្រោះកូដដើរលឿនជាង
+      - ព្រោះវាអត់មាន Bug
+    correctAnswer: 2
+    explanation: 'លក្ខណៈពិសេសបំផុតរបស់ Notebook (រចនាសម្ព័ន្ធ .ipynb) គឺ Interactive ឫការសន្ទនាឆ្លើយឆ្លង។ អ្នកអាច Run កូដ ១ បន្ទាត់ រួចមើលក្រាហ្វិក រួចសរសេរពន្យល់ (Markdown)។ នេះគឺស័ក្តិសមបំផុតសម្រាប់ការធ្វើ Data Storytelling និងរបាយការណ៍។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+ទោះបីជាអ្នកអាចសរសេរកូដ Data Analysis នៅក្នុង VS Code ក៏ដោយ ប៉ុន្តែវាមិនមែនជាឧបករណ៍ដែលស័ក្តិសមបំផុតទេ។ អ្នកវិភាគទិន្នន័យត្រូវការឧបករណ៍ដែលអាច Run កូដម្តងមួយដុំៗ ហើយមើលតារាង ឫក្រាហ្វិកលោតចេញមក "ភ្លាមៗ" ដោយមិនបាច់ Run កម្មវិធីទាំងមូលពីដើមដល់ចប់។
+
+---
+
+## 💻 ជម្រើសឧបករណ៍ (The Tools)
+
+មានឧបករណ៍ធំៗ ៣ ដែលអ្នកអាចជ្រើសរើសបាន៖
+
+### ១. Google Colab (ងាយស្រួលបំផុត មិនបាច់ដំឡើងអ្វីទាំងអស់)
+Google Colab គឺជា Jupyter Notebook ដែលដំណើរការនៅលើ Cloud របស់ Google។ អ្នកគ្រាន់តែមាន Google Account នោះអ្នកអាចចាប់ផ្តើមសរសេរកូដបានភ្លាមៗ!
+- **របៀបប្រើ:**
+  1. ចូលទៅកាន់ [colab.research.google.com](https://colab.research.google.com/)
+  2. ចូលគណនី (Sign in) ជាមួយ Gmail របស់អ្នក
+  3. ចុច "New Notebook" រួចចាប់ផ្តើមសរសេរកូដ Python!
+- **អត្ថប្រយោជន៍:** មិនបាច់ឈឺក្បាលដំឡើង Python ឬ បណ្ណាល័យ (NumPy, Pandas) ទេ។ ពួកវាត្រូវបានដំឡើងរួចជាស្រេច!
+
+### ២. Jupyter Notebook (ដំឡើងតាមរយៈ Anaconda)
+ប្រសិនបើអ្នកចង់ធ្វើការដោយមិនប្រើអ៊ីនធឺណិត (Offline) ការដំឡើង **Anaconda** គឺជាជម្រើសដ៏ល្អបំផុត។ Anaconda គឺជាកញ្ចប់កម្មវិធីដែលផ្ទុកទៅដោយ Python និងបណ្ណាល័យ Data Science ទាំងអស់។
+- **របៀបប្រើ:**
+  1. ទាញយក [Anaconda Distribution](https://www.anaconda.com/download)
+  2. ដំឡើងវាដូចកម្មវិធីធម្មតា
+  3. បើកកម្មវិធី `Anaconda Navigator` រួចចុច Launch លើ `Jupyter Notebook`
+  4. វានឹងបើកផ្ទាំង Browser ថ្មី ដែលជាកន្លែងអ្នកសរសេរកូដ (ដំណើរការលើម៉ាស៊ីនអ្នកផ្ទាល់)។
+
+### ៣. VS Code ជាមួយ Jupyter Extension
+ប្រសិនបើអ្នកជាអ្នកអភិវឌ្ឍន៍ (Software Developer) ស្រាប់ ហើយមិនចង់ប្តូរកម្មវិធី អ្នកអាចបន្តប្រើប្រាស់ VS Code បាន!
+- **របៀបប្រើ:**
+  1. បើក VS Code
+  2. ចូលទៅកាន់ Extensions រួចដំឡើង Extension ឈ្មោះ "Jupyter" (របស់ Microsoft)
+  3. បង្កើតឯកសារថ្មី ដោយដាក់ឈ្មោះកន្ទុយ `.ipynb` (ឧទាហរណ៍ `my_analysis.ipynb`)
+  4. ពេលនោះ VS Code របស់អ្នកនឹងប្រែក្លាយទៅជា Notebook!
+
+នៅក្នុងវគ្គសិក្សានេះ យើងណែនាំឱ្យអ្នកប្រើប្រាស់ **Google Colab** ដើម្បីកុំឱ្យស្មុគស្មាញក្នុងការដំឡើងបរិស្ថាន។ គ្រប់កូដទាំងអស់នៅក្នុងមេរៀនបន្ទាប់ អ្នកអាចចម្លងវាទៅដាក់ក្នុង Colab ហើយចុច Run (Shift + Enter) បានភ្លាមៗ!

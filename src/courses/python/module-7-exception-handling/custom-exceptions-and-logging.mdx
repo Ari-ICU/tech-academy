@@ -1,0 +1,272 @@
+---
+title: Custom Exceptions និង Logging
+description: រៀនពីរបៀបបង្កើតកំហុសផ្ទាល់ខ្លួន (Custom Exceptions) ជាមួយពាក្យគន្លឹះ raise និងរបៀបប្រើប្រាស់ logging module ដើម្បីតាមដានសកម្មភាពកម្មវិធី។
+objectives:
+  - ប្រើប្រាស់ពាក្យគន្លឹះ raise ដើម្បីបញ្ឈប់កម្មវិធីនៅពេលទិន្នន័យមិនត្រឹមត្រូវ
+  - បង្កើត Custom Exception Classes ដោយទទួលមរតក (Inherit) ពី Exception class
+  - រៀបចំម៉ូឌុល logging ដើម្បីកត់ត្រាបញ្ហា និងព័ត៌មាន (INFO, WARNING, ERROR) ជាជាងការប្រើ print()
+module: module-7-exception-handling
+order: 2
+quiz:
+  - question: ហេតុអ្វីបានជាយើងគួរប្រើ 'logging' ជាជាងប្រើ 'print()' ដើម្បីបង្ហាញព័ត៌មាននៅក្នុងកម្មវិធីពិតប្រាកដ (Production)?
+    options:
+      - ព្រោះ print() ប្រើប្រាស់ Memory ច្រើនជាង
+      - ព្រោះ logging អាចរក្សាទុកទិន្នន័យចូលទៅក្នុង File និងអាចកំណត់កម្រិតសំខាន់ (Severity levels) ដូចជា WARNING ឬ ERROR បាន
+      - ព្រោះ print() ដើរយឺតជាង
+      - ព្រោះ Python 3 លែងគាំទ្រ print() សម្រាប់ការសរសេរកម្មវិធីធំៗ
+    correctAnswer: 2
+    explanation: 'logging អនុញ្ញាតឱ្យអ្នករក្សាទុកសារនៅក្នុង File, កំណត់ពេលវេលាជាក់លាក់ (Timestamps), និងត្រងយកតែកំហុសធ្ងន់ធ្ងរ (ERROR) ដោយមិនចាំបាច់បង្ហាញរាល់សារធម្មតា (INFO) នោះទេ។ វាមានភាពបត់បែនជាង print() ឆ្ងាយណាស់។'
+  - question: តើពាក្យគន្លឹះអ្វីដែលប្រើសម្រាប់បង្កើតកំហុសដោយខ្លួនឯង (បញ្ឈប់កម្មវិធីដោយចេតនា)?
+    options:
+      - stop
+      - break
+      - throw
+      - raise
+    correctAnswer: 4
+    explanation: 'នៅក្នុង Python យើងប្រើពាក្យ "raise" ដើម្បីគប់ ឬបង្កើត Exception មួយ (ឧទាហរណ៍: raise ValueError("ខុសហើយ!"))។ ចំណែកភាសាផ្សេងដូចជា Java ប្រើពាក្យ "throw"។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+ពេលខ្លះ ក្នុងនាមជាអ្នកសរសេរកម្មវិធី យើងចង់ឱ្យកម្មវិធីរបស់យើង "ស្រែកប្រាប់បញ្ហា" ដោយចេតនានៅពេលដែលអ្នកប្រើប្រាស់បញ្ចូលទិន្នន័យខុសច្បាប់ណាមួយ (ឧទាហរណ៍ បញ្ចូលអាយុជាលេខអវិជ្ជមាន)។ 
+ម្យ៉ាងទៀត នៅពេលកម្មវិធីរបស់អ្នកត្រូវដំណើរការដោយស្វ័យប្រវត្តិនៅលើ Server រាប់ខែឆ្នាំ អ្នកមិនអាចប្រើ `print()` ដើម្បីអង្គុយមើលវាបានទេ។ នេះជាពេលដែលការបង្កើតកំហុសផ្ទាល់ខ្លួន (Custom Exceptions) និងប្រព័ន្ធកត់ត្រាសកម្មភាព (Logging) ក្លាយជាមិត្តសម្លាញ់ដ៏ល្អបំផុតរបស់អ្នក។
+
+ការយល់ដឹងពីពីរចំណុចនេះ គឺជាអ្វីដែលខុសគ្នារវាងអ្នកសរសេរកូដធម្មតា និងវិស្វករផ្នែកទន់អាជីព (Professional Software Engineer)!
+
+---
+
+## 📚 រៀនពាក្យបច្ចេកទេស (Definitions)
+
+- **Exception Chaining:** ការបង្កើតកំហុស (Exception) ថ្មីដោយនៅតែរក្សាទុកមូលហេតុដើមដែលបង្កឱ្យមានបញ្ហា (`raise ... from ...`)។
+- **Logger:** Object សម្រាប់បង្កើត និងគ្រប់គ្រងកំណត់ត្រា (Log Records)។
+- **Handler:** អ្នកកំណត់ថា តើ Log នេះត្រូវបញ្ជូនទៅទីណា? (បង្ហាញលើអេក្រង់ Console, រក្សាទុកក្នុង File, ឫផ្ញើចូល Email...)។
+- **Formatter:** អ្នកកំណត់ទម្រង់ (Format) របស់ Log Message ថាតើគួរមានកាលបរិច្ឆេទ ឫឈ្មោះអថេរឬទេ។
+- **Stack Trace (Traceback):** ព័ត៌មានលម្អិតដែលបង្ហាញពីលំដាប់លំដោយនៃ Function Calls ដែលនាំឱ្យមានកំហុស។
+
+---
+
+## 💡 គំនិតគោល (The Core Idea)
+
+### តារាងកម្រិតនៃការកត់ត្រា (Logging Levels)
+
+ការកត់ត្រា (Logging) ត្រូវបានបែងចែកជា ៥ កម្រិតធំៗ៖
+
+| កម្រិត (Level)    | គោលបំណង (Purpose)                    |
+| -------- | -------------------------- |
+| **DEBUG**    | ព័ត៌មានលម្អិតបំផុតសម្រាប់ Developer ប្រើពេលជួសជុលកូដ        |
+| **INFO**     | ព័ត៌មានទូទៅអំពីព្រឹត្តិការណ៍ធម្មតារបស់កម្មវិធី  |
+| **WARNING**  | រឿងដែលនឹកស្មានមិនដល់ តែកម្មវិធីនៅដើរបានធម្មតា |
+| **ERROR**    | ប្រតិបត្តិការណាមួយបានបរាជ័យ (កម្មវិធីនៅដើរតែមុខងារខ្លះគាំង)           |
+| **CRITICAL** | បញ្ហាធ្ងន់ធ្ងរបំផុត ដែលកម្មវិធីអាចនឹងឈប់ដំណើរការតែម្តង       |
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ (In Depth)
+
+### ១. ការបង្កើតកំហុសដោយខ្លួនឯង (Raising Existing Exceptions)
+
+អ្នកមិនចាំបាច់បង្កើត Class ថ្មីរាល់ដងនោះទេ! អ្នកអាចទាញយក Exception ដែលមានស្រាប់របស់ Python មកប្រើបានយ៉ាងមានប្រសិទ្ធភាព៖
+
+```python
+# បើទិន្នន័យខុស
+raise ValueError("អាយុមិនអាចអវិជ្ជមានទេ!")
+
+# បើប្រភេទខុស
+raise TypeError("អាយុត្រូវតែជាលេខ (Integer)!")
+
+# បើរក File មិនឃើញ
+raise FileNotFoundError("រកមិនឃើញឯកសារទិន្នន័យទេ!")
+
+# បើគ្មានសិទ្ធិ
+raise PermissionError("អ្នកមិនមានសិទ្ធិចូលប្រើប្រាស់ទេ!")
+```
+
+### ២. ការរៀបចំឋានានុក្រមកំហុស (Custom Exception Hierarchy)
+
+បើយើងមានកម្មវិធីធំមួយ គេនិយមរៀបចំកំហុសជាប្រព័ន្ធ ដើម្បីងាយស្រួលគ្រប់គ្រង៖
+
+```python
+# នេះជាមេ (Base class) នៃកំហុសក្នុងប្រព័ន្ធធនាគារ
+class BankingError(Exception):
+    """Base class for banking errors."""
+
+# កូនទី១៖ លុយមិនគ្រប់
+class InsufficientFundsError(BankingError):
+    pass
+
+# កូនទី២៖ គណនីមិនត្រឹមត្រូវ
+class InvalidAccountError(BankingError):
+    pass
+```
+អត្ថប្រយោជន៍គឺ៖ ពេលយើងប្រើ `except BankingError:` វានឹងចាប់បានទាំងកំហុសលុយមិនគ្រប់ និងគណនីខុស ដោយស្វ័យប្រវត្តិ!
+
+### ៣. ការចងកំហុសភ្ជាប់គ្នា (Exception Chaining)
+
+នៅពេលកំហុសមួយកើតឡើង យើងអាចបង្កើតកំហុសថ្មីមួយទៀត តែរក្សាមូលហេតុចាស់ទុកជាភស្តុតាង។
+
+```python
+try:
+    number = int("abc") # នេះបង្កឱ្យមាន ValueError
+except ValueError as e:
+    # បង្កើតកំហុសថ្មី តែចង្អុលទៅកាន់មូលហេតុដើម (e)
+    raise ValueError("អតិថិជនបញ្ចូលលេខខុសទម្រង់") from e
+```
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការប្រើប្រាស់ Logger តាមបែបទំនើប (Modern Logger Object)
+
+អ្នកសរសេរកម្មវិធីអាជីពមិនប្រើ `logging.basicConfig()` សាមញ្ញរហូតនោះទេ។ គេតែងបង្កើត Logger ផ្ទាល់ខ្លួនប្រចាំឯកសារ (File) និមួយៗ៖
+
+```python
+import logging
+
+# បង្កើត Logger ដែលមានឈ្មោះដូចឈ្មោះឯកសារបច្ចុប្បន្ន (__name__)
+logger = logging.getLogger(__name__)
+
+logger.info("កម្មវិធីកំពុងដំណើរការ...")
+logger.warning("ទំហំ Memory កំពុងតែធ្លាក់ចុះទាប!")
+logger.error("បានដាច់ការតភ្ជាប់ជាមួយ Database!")
+```
+
+### ២. ការកត់ត្រាចូលទាំងអេក្រង់ និងឯកសារ (Logging to Console + File)
+
+កម្មវិធីធំៗតែងតែបញ្ចេញ Log មកក្រៅផង និងរក្សាទុកចូលក្នុង File `app.log` ជាកំណត់ហេតុផង៖
+
+```python
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler("app.log"),   # សរសេរចូល File
+        logging.StreamHandler()           # បង្ហាញលើអេក្រង់ Console
+    ]
+)
+
+logging.info("ប្រព័ន្ធចាប់ផ្តើមដំណើរការ")
+```
+
+### ៣. ការកត់ត្រាកំហុសដោយស្វ័យប្រវត្តិ (Logging Exception Automatically)
+
+តើធ្វើដូចម្តេចទើបកត់ត្រា Stack Trace (Traceback) ចូលទៅក្នុង Log បាន? កុំប្រើ `.error()` ត្រូវប្រើ **`.exception()`** !
+
+```python
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    # វានឹងព្រីនទាំងសារនេះ ទាំងកូដដែលគាំងបញ្ហាមកជាមួយគ្នាតែម្តង!
+    logging.exception("មានកំហុសមិននឹកស្មានដល់បានកើតឡើង")
+```
+
+### ៤. ការសរសេរ Custom Exception ឱ្យបានត្រឹមត្រូវ
+
+```python
+class InvalidAgeError(Exception):
+    def __init__(self, age):
+        super().__init__(f"អាយុមិនត្រឹមត្រូវ: {age}")
+        self.age = age # រក្សាទុកតម្លៃអាយុ សម្រាប់យកទៅវិភាគតាមក្រោយ
+```
+
+---
+
+## 🛒 ការអនុវត្តក្នុងពិភពពិត (Real-world Example)
+
+### គម្រោងទី១៖ ប្រព័ន្ធធនាគារ (Banking System)
+
+នេះជារបៀបដែលប្រព័ន្ធធនាគារពិតប្រាកដប្រើប្រាស់ Exception និង Logging៖
+
+```python
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+class InsufficientFundsError(Exception):
+    pass
+
+def withdraw(balance, amount):
+    if amount > balance:
+        raise InsufficientFundsError("ទឹកប្រាក់ក្នុងគណនីមិនគ្រប់គ្រាន់ទេ")
+    return balance - amount
+
+try:
+    money = withdraw(100, 500)
+except InsufficientFundsError:
+    logging.error("ប្រតិបត្តិការដកប្រាក់បរាជ័យ។")
+```
+
+### គម្រោងទី២៖ ការត្រួតពិនិត្យទិន្នន័យ API (API Validation)
+
+បើអ្នកបន្តទៅរៀនការសរសេរ Backend ជាមួយ Django, FastAPI, ឬ Laravel នេះគឺជាអ្វីដែលអ្នកនឹងសរសេររាល់ថ្ងៃ៖
+
+```python
+class InvalidRequestError(Exception):
+    pass
+
+def create_user(data):
+    if "email" not in data:
+        raise InvalidRequestError("Email គឺចាំបាច់ត្រូវតែមាន។")
+    print("បានបង្កើតគណនីអតិថិជនរួចរាល់")
+```
+
+---
+
+## ❌ កំហុសដែលអ្នកតែងតែជួប (Common Mistakes)
+
+### ១. ការចាប់យកគ្រប់កំហុសដោយស្ងៀមស្ងាត់ (Catching Every Exception)
+❌ បែបនេះនឹងលាក់បាំង Bugs ទាំងអស់! កម្មវិធីខូចក៏អ្នកមិនដឹងដែរ។
+```python
+except Exception:
+    pass
+```
+✅ ត្រូវចាប់យកតែកំហុសដែលអ្នកដឹងច្បាស់ថាអាចកើតមាន៖
+```python
+except ValueError:
+```
+
+### ២. ការកត់ត្រាព័ត៌មានសម្ងាត់ (Logging Sensitive Information)
+❌ **ហាមដាច់ខាត!** កុំកត់ត្រាព័ត៌មានដូចខាងក្រោមចូលទៅក្នុង Log Files ព្រោះ Hacker អាចបើកអានវាបាន៖
+* លេខសម្ងាត់ (Passwords)
+* ឯកសារអនុញ្ញាត (Access Tokens / API Keys)
+* លេខកាតឥណទាន (Credit Cards)
+* លេខអត្តសញ្ញាណប័ណ្ណ (Personal ID)
+
+```python
+logging.info(f"User Password is: {password}") # ❌ គ្រោះថ្នាក់បំផុត!
+```
+
+### ៣. ការបង្កើត Custom Exceptions ច្រើនជ្រុល
+មិនមែនរាល់កំហុសសុទ្ធតែត្រូវការ Class ថ្មីនោះទេ។ 
+* បើអ្នកគ្រាន់តែចង់ប្រាប់ថាអាយុខុស ប្រើតែ `raise ValueError("Age required")` គឺគ្រប់គ្រាន់បាត់ទៅហើយ។ 
+* បង្កើត Custom Exception លុះត្រាតែអ្នកមានច្បាប់ជំនួញធំៗ (Business Rules)។
+
+---
+
+## 🏆 ការអនុវត្តដ៏ល្អបំផុត (Best Practices)
+
+* ប្រើ **Built-in Exceptions** (`ValueError`, `TypeError`, `KeyError`) មុនពេលឈានដល់ការបង្កើត Custom Exception។
+* បង្កើត **Custom Exception** នៅពេលកម្មវិធីមានច្បាប់ជាក់លាក់របស់វា (Business Rules) ដែលពិបាកពន្យល់ដោយពាក្យទូទៅ។
+* កុំប្រើ `print()` សម្រាប់ Debug ពេលដាក់កម្មវិធីឱ្យអតិថិជនប្រើពិតប្រាកដ (Production) ត្រូវប្រើ `logging` ជានិច្ច។
+* ប្រើ **`logger.exception()`** នៅក្នុង `except` block ប្រសិនបើអ្នកចង់រក្សាទុក Traceback និងកំហុស។
+* កំណត់ **Logging Level** ឱ្យសមស្របតាមស្ថានការណ៍៖
+  * កំពុងសរសេរកូដ (Development) → `DEBUG`
+  * កំពុងតេស្តកូដ (Testing) → `INFO`
+  * កំពុងឱ្យអតិថិជនប្រើ (Production) → `WARNING` ឬ `ERROR`
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ (Key Takeaways)
+
+- **`raise`** ប្រើសម្រាប់បង្កើតកំហុស (Exception) ដោយចេតនា ដើម្បីបញ្ឈប់កូដកុំឱ្យដើរទៅមុខខុសប្រក្រតី។
+- Custom Exceptions គួរតែទទួលមរតកពី **`Exception`** class ជានិច្ច និងប្រើសម្រាប់ Business Logic ណាដែលមានអត្ថន័យច្បាស់លាស់។
+- **`logging`** គឺជាវិធីស្តង់ដារសម្រាប់តាមដានសកម្មភាពកម្មវិធីក្នុង Production ដែលខ្លាំងជាង `print()` រាប់សិបដង។
+- Logging Levels ទាំង៥ មាន **`DEBUG`**, **`INFO`**, **`WARNING`**, **`ERROR`**, និង **`CRITICAL`** ដែលជួយត្រងសារតាមភាពធ្ងន់ធ្ងរ។
+- ប្រើ **`logger.exception()`** ដើម្បីកត់ត្រា Exception រួមជាមួយខ្សែរឿង (Traceback) លម្អិត។
+- **ហាមកត់ត្រា** ព័ត៌មានសម្ងាត់អតិថិជនទៅក្នុង Log Files ជាដាច់ខាត។
+- ប្រើប្រាស់ **`raise ... from ...`** ដើម្បីរក្សាទុកមូលហេតុដើម (Exception Chaining) នៅពេលបង្កើត Exception ថ្មីពីលើវា។

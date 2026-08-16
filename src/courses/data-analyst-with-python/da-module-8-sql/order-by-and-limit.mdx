@@ -1,0 +1,74 @@
+---
+title: ការតម្រៀប និងការកំណត់ចំនួន (ORDER BY & LIMIT)
+description: របៀបរៀបចំលំដាប់ទិន្នន័យ (Sorting) ពីធំមកតូច ឫពីក្មេងទៅចាស់ និងកាត់យកតែ Top 10 ឫ Top 5 មកវិភាគ។
+objectives:
+  - ប្រើប្រាស់ `ORDER BY` ដើម្បីតម្រៀបទិន្នន័យឡើង (ASC) ឫចុះ (DESC)
+  - ប្រើប្រាស់ `LIMIT` ដើម្បីកាត់យកទិន្នន័យក្បាលៗ (Top N)
+  - ផ្សំគំនិតទាំងពីរដើម្បីរកអ្នកដែលពូកែជាងគេ
+module: da-module-8-sql
+order: 3
+quiz:
+  - question: ប្រសិនបើអ្នកចង់ទាញយក "ទំនិញ ៣ មុខ ដែលថ្លៃជាងគេបំផុត" តើកូដ SQL ខាងក្រោមមួយណាដែលអ្នកគួរប្រើ?
+    options:
+      - SELECT * FROM Products ORDER BY price ASC LIMIT 3;
+      - SELECT * FROM Products WHERE price = MAX LIMIT 3;
+      - SELECT * FROM Products ORDER BY price DESC LIMIT 3;
+      - SELECT TOP 3 FROM Products SORT price;
+    correctAnswer: 3
+    explanation: 'អ្នកត្រូវប្រាប់អោយវា `ORDER BY price DESC` (តម្រៀបពីធំមកតូចសិន ដើម្បីអោយទំនិញថ្លៃបំផុតរត់មកនៅលើគេ)។ បន្ទាប់មកទើបអ្នកប្រាប់វាអោយ `LIMIT 3` ដែលមានន័យថាកាត់យកតែ ៣ ជួរដំបូងគេបង្អស់ (Top 3)។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងរាល់របាយការណ៍ គេតែងតែចង់ឃើញ "Top 10 អ្នកលក់ពូកែជាងគេ" ឫ "អតិថិជន ៥ នាក់ដែលជំពាក់លុយយូរជាងគេ"។ នៅក្នុង Pandas យើងប្រើ `.sort_values()` រួចបន្តដោយ `.head(10)`។ ចំណែកនៅក្នុង SQL យើងមានពាក្យបញ្ជាដែលស្រួលអានជាងនេះទៅទៀត!
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+ឧបមាថាយើងមានតារាង `Sales` ដែលមានជួរឈរ `sales_id`, `employee_name`, និង `amount` (ទំហំទឹកប្រាក់លក់បាន)។
+
+### ១. ការរៀបលំដាប់ (ORDER BY)
+
+តាមលំនាំដើម SQL នឹងបញ្ចេញទិន្នន័យតាមលំដាប់ដែលវាបានបញ្ចូលក្នុង Database (មិនមានសណ្តាប់ធ្នាប់)។
+
+```sql
+/* តម្រៀបចំនួនទឹកប្រាក់ ពីតិចទៅច្រើន (ASC - Ascending) */
+SELECT employee_name, amount
+FROM Sales
+ORDER BY amount ASC;
+```
+
+ចុះបើចង់ដឹងថាអ្នកណាលក់បានច្រើនជាងគេ? យើងត្រូវតម្រៀបពីធំមកតូច។
+
+```sql
+/* តម្រៀបពីធំមកតូច (DESC - Descending) */
+SELECT employee_name, amount
+FROM Sales
+ORDER BY amount DESC;
+```
+
+### ២. ការកំណត់ចំនួន (LIMIT)
+
+បើតារាង Sales នោះមានបុគ្គលិក ១ ម៉ឺននាក់ ការបញ្ចេញលទ្ធផលទាំង ១ ម៉ឺន គឺគ្មានប្រយោជន៍ទេ។ យើងចង់បានតែ ៥ នាក់នៅលើគេប៉ុណ្ណោះ!
+
+```sql
+/* ទាញយក Top 5 អ្នកលក់ឆ្នើមប្រចាំក្រុមហ៊ុន */
+SELECT employee_name, amount
+FROM Sales
+ORDER BY amount DESC
+LIMIT 5;
+```
+
+### ៣. រៀបលំដាប់លើជួរឈរច្រើន
+
+ប្រសិនបើមានបុគ្គលិក ២ នាក់ លក់បាន ១០០០ ដុល្លារស្មើគ្នា តើគួរអោយអ្នកណានៅលើ? យើងអាចបញ្ជាក់លក្ខខណ្ឌទី២!
+
+```sql
+/* តម្រៀបតាមទឹកប្រាក់លក់ (ពីធំមកតូច) បើស្មើគ្នា អោយតម្រៀបតាមឈ្មោះ (អក្សរ A ទៅ Z) */
+SELECT employee_name, amount
+FROM Sales
+ORDER BY amount DESC, employee_name ASC;
+```
+
+**ចំណាំ:** លំដាប់នៃការសរសេរកូដ SQL គឺសំខាន់ណាស់! វាត្រូវតែជា៖ `SELECT` -> `FROM` -> `WHERE` -> `ORDER BY` -> `LIMIT`។ បើអ្នកសរសេរឆ្លាស់គ្នា (ឧ. យក LIMIT ទៅដាក់លើ WHERE) វានឹងលោត Error ភ្លាម!

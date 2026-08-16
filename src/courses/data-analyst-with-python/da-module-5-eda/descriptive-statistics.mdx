@@ -1,0 +1,52 @@
+---
+title: ស្ថិតិពិពណ៌នា (Descriptive Statistics)
+description: ប្រើប្រាស់ Pandas ដើម្បីទាញយកស្ថិតិពិពណ៌នា (Mean, Median, Mode, Standard Deviation) ពីសំណុំទិន្នន័យ។
+objectives:
+  - ប្រើប្រាស់ describe() ដើម្បីមើលទិដ្ឋភាពទូទៅនៃទិន្នន័យ
+  - គណនាមធ្យមភាគ (Mean) មេដ្យាន (Median) និង ម៉ូត (Mode)
+  - យល់ពីការបែកខ្ញែកទិន្នន័យ (Standard Deviation)
+module: da-module-5-eda
+order: 1
+quiz:
+  - question: តើ Method df.describe() ផ្តល់ព័ត៌មានអ្វីខ្លះ?
+    options:
+      - បង្ហាញប្រភេទអថេរនៃជួរឈរនីមួយៗ
+      - លុបទិន្នន័យដែលស្ទួន
+      - បង្ហាញស្ថិតិពិពណ៌នាដូចជា Mean, Min, Max, និង Quartiles សម្រាប់ទិន្នន័យប្រភេទលេខ
+      - គូរក្រាហ្វិកដោយស្វ័យប្រវត្តិ
+    correctAnswer: 3
+    explanation: 'describe() គឺជា Method ដ៏មានអានុភាពដែលសង្ខេបស្ថិតិសំខាន់ៗនៃ Dataframe របស់អ្នកក្នុងមួយប៉ព្រិចភ្នែក។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+មុននឹងធ្វើការសន្និដ្ឋានអ្វីមួយ Data Analyst ត្រូវស្គាល់ទិន្នន័យរបស់ខ្លួនអោយច្បាស់សិន។ **EDA (Exploratory Data Analysis)** គឺជាដំណើរការនៃការស៊ើបអង្កេតទិន្នន័យ ហើយជំហានដំបូងនៃ EDA គឺការមើល **ស្ថិតិពិពណ៌នា (Descriptive Statistics)**។
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការប្រើប្រាស់ `describe()`
+
+```python
+import pandas as pd
+
+df = pd.DataFrame({
+    'Salary': [500, 600, 550, 800, 1200, 500, 650]
+})
+
+print(df.describe())
+```
+**លទ្ធផល:**
+- `count`: ចំនួនជួរ
+- `mean`: មធ្យមភាគ
+- `std`: គម្លាតស្តង់ដារ (ការបែកខ្ញែក)
+- `min`, `max`, `25%`, `50%`, `75%`: តម្លៃអប្បបរមា អតិបរមា និង Quartiles
+
+### ២. គណនាដោយដៃ (Mean, Median, Mode)
+
+```python
+print("Mean:", df['Salary'].mean())
+print("Median:", df['Salary'].median())
+print("Mode:", df['Salary'].mode()[0])
+```

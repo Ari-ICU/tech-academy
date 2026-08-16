@@ -1,0 +1,176 @@
+---
+title: Asyncio Basics
+description: ឈ្វេងយល់ពី Asyncio ដែលជាបច្ចេកវិទ្យាទំនើបបំផុតរបស់ Python សម្រាប់ការសរសេរកូដ Concurrency ដោយប្រើប្រាស់ពាក្យគន្លឹះ async និង await ជំនួសឱ្យការប្រើ Threading ដ៏ស្មុគស្មាញ។
+objectives:
+  - យល់ដឹងពីគោលការណ៍របស់ Event Loop ដែលជាបេះដូងនៃ Asyncio
+  - សរសេរអនុគមន៍ Asynchronous ដោយប្រើប្រាស់ពាក្យគន្លឹះ async និង await
+  - ប្រៀបធៀបភាពខុសគ្នារវាង Asyncio និង Threading ក្នុងការគ្រប់គ្រងការងារ I/O
+module: module-12-concurrency
+order: 2
+quiz:
+  - question: តើអ្វីជាតួនាទីរបស់ 'Event Loop' នៅក្នុងម៉ូឌុល asyncio?
+    options:
+      - វាជា Loop ដែលរត់មិនឈប់ (Infinite Loop) ដើម្បីគាំងកម្មវិធី
+      - វាជាអ្នកចាត់ចែងការងារ ដែលចាំមើលថាតើការងារណាទំនេរ (កំពុងរង់ចាំ) ដើម្បីយកកូដផ្សេងមកវាយលុក (ដំណើរការ) កុំឱ្យខាតពេល
+      - វាជាអ្នកបង្កើត Threads ថ្មីៗដោយស្វ័យប្រវត្តិ
+      - វាជួយពន្លឿនល្បឿនអុីនធឺណិត
+    correctAnswer: 2
+    explanation: 'Event Loop គឺដូចជាចៅហ្វាយនាយដ៏ឆ្លាតវៃម្នាក់។ ពេលអនុគមន៍មួយកំពុងរង់ចាំ (await) ដូចជារង់ចាំទិន្នន័យពី Web នោះ Event Loop នឹងផ្អាកអនុគមន៍នោះសិន ហើយយកការងារផ្សេងមកធ្វើបណ្តើរៗ។'
+  - question: ហេតុអ្វីបានជាគេតែងតែប្រើប្រាស់ 'asyncio' ជាង 'Threading' សម្រាប់ការបង្កើត Web Server ដែលមានអ្នកចូលប្រើច្រើន (High-Traffic)?
+    options:
+      - ព្រោះ Threading ស៊ី Memory ច្រើនណាស់ ពេលមានអ្នកចូលប្រើរាប់ម៉ឺននាក់ (១ Thread សម្រាប់មនុស្សម្នាក់) ចំណែក Asyncio អាចទទួលមនុស្សរាប់ម៉ឺននាក់ដោយប្រើប្រាស់តែ ១ Thread ប៉ុណ្ណោះ
+      - ព្រោះ Asyncio គឺជាភាសាថ្មី
+      - ព្រោះ Asyncio អាចគណនាគណិតវិទ្យាលឿនជាង
+      - ព្រោះ Threading ត្រូវបានលុបចេញពី Python ហើយ
+    correctAnswer: 1
+    explanation: 'ការបង្កើត Thread ថ្មីមួយទាមទារ Memory និងការគ្រប់គ្រង (Overhead) ពីប្រព័ន្ធប្រតិបត្តិការ។ សម្រាប់ Web Server ធំៗ (ឧ. FastAPI, Node.js) គេប្រើប្រាស់ Event Loop តែមួយដើម្បីចាត់ចែងការងាររាប់ម៉ឺននាក់ ដែលសន្សំសំចៃ Memory ខ្លាំងបំផុត (សន្សំប្រាក់លើថ្លៃ Server)។'
+---
+
+## 🌐 Overview
+
+នៅក្នុងមេរៀនមុន យើងបានរៀនពីការប្រើប្រាស់ Threading ដើម្បីធ្វើការងារស្របគ្នា។ ប៉ុន្តែ Threading មានបញ្ហាមួយ គឺការផ្លាស់ប្តូរពី Thread មួយទៅ Thread មួយទៀត (Context Switching) ទាមទារឱ្យប្រព័ន្ធប្រតិបត្តិការ (OS) ជាអ្នកសម្រេចចិត្ត ដែលពេលខ្លះធ្វើឱ្យកុំព្យូទ័រយឺត ហើយអាចមានបញ្ហា "Race Condition" ទនង្គិចគ្នា។
+តើមានវិធីណាដែលអាចឱ្យយើងសរសេរកូដ Concurrency ដោយរត់លើ **Thread តែមួយ** ដែរឬទេ? ចម្លើយគឺ **`asyncio`** ជាមួយនឹងកងទ័ព **`async/await`** របស់វា ដែលបច្ចុប្បន្នជាស្តង់ដារសម្រាប់ Web Frameworks ទំនើបៗដូចជា **FastAPI** និងការសរសេរ Discord Bots។
+
+---
+
+## 📚 Definitions
+
+- **Asynchronous (អសមកាលកម្ម):** វិធីសាស្ត្រដែលយើងមិនចាំបាច់អង្គុយរង់ចាំការងារមួយចប់ ទើបអាចធ្វើការងារមួយទៀត។ យើងអាច "ផ្ញើការងារចោល" រួចទៅធ្វើអ្វីផ្សេង ហើយត្រឡប់មកយកលទ្ធផលវិញពេលវាចប់។
+- **Event Loop (រង្វិលជុំព្រឹត្តិការណ៍):** ជាបេះដូងរបស់ asyncio។ វាគឺជាអ្នកចាត់ចែង (Scheduler) ដែលតាមដានថាតើកិច្ចការមួយណាកំពុងដំណើរការ មួយណាកំពុងរង់ចាំ និងមួយណាត្រូវដំណើរការបន្ទាប់។
+- **Coroutine:** ជាប្រភេទអនុគមន៍ពិសេសនៅក្នុង Python (បង្កើតដោយប្រើពាក្យ `async def`) ដែលមានសមត្ថភាពអាចផ្អាក (Pause) ខ្លួនវា ហើយអនុញ្ញាតឱ្យអនុគមន៍ផ្សេងដំណើរការបាន។
+- **`await` Keyword:** ប្រើសម្រាប់ប្រាប់ Event Loop ថា: *"ខ្ញុំត្រូវការពេលរង់ចាំការងារនេះសិន (ឧ. ទាញយកឯកសារ)។ ក្នុងអំឡុងពេលនេះ អ្នកអាចទៅធ្វើការងារផ្សេងសិនចុះ"*។
+
+---
+
+## 💡 The Core Idea
+
+ស្រមៃថា **អ្នកជាអ្នករត់តុ នៅក្នុងភោជនីយដ្ឋានមួយ**។
+- **Synchronous (ធម្មតា):** អ្នកទៅតុទី១ ទទួលកុម្ម៉ង់ យកទៅឱ្យចុងភៅ រួច**ឈររង់ចាំ**មុខចង្ក្រានទាល់តែម្ហូបឆ្អិន ទើបយកទៅតុទី១វិញ។ បន្ទាប់មកទើបអ្នកទៅតុទី២។ (អតិថិជនរត់ចោលអស់ហើយ!)
+- **Threading (ច្រើននាក់):** ថៅកែជួលអ្នករត់តុ ១០ នាក់។ ម្នាក់ទទួលខុសត្រូវ ១តុ តែអ្នករត់តុទាំង១០ ត្រូវដណ្តើមគ្នាចេញចូលផ្ទះបាយដ៏តូចចង្អៀត ធ្វើឱ្យមានភាពវឹកវរ (Overhead) និងចំណាយលុយជួលបុគ្គលិកច្រើន។
+- **Asyncio (អ្នករត់តុឆ្នើមម្នាក់):** អ្នកនៅតែជាមនុស្សម្នាក់ដដែល (១ Thread)! អ្នកទៅតុទី១ ទទួលកុម្ម៉ង់ រួចប្រគល់ឱ្យចុងភៅ។ ពេលចុងភៅកំពុងធ្វើ អ្នកមិនរង់ចាំទេ! អ្នក **(`await`)** ដើរទៅទទួលកុម្ម៉ង់តុទី២ ទី៣ ទី៤។ ពេលចុងភៅស្រែកប្រាប់ថា "ម្ហូបតុទី១ឆ្អិនហើយ!" ទើបអ្នកត្រឡប់ទៅយកម្ហូបនោះ។ អ្នកអាចបម្រើមនុស្ស១០០នាក់ម្នាក់ឯងយ៉ាងរលូន! នេះហើយគឺជា **Event Loop**។
+
+---
+
+## 📖 In Depth
+
+**តើនៅពេលណាគួរបោះបង់ Threading មកប្រើ Asyncio?**
+បើកម្មវិធីរបស់អ្នកពឹងផ្អែកខ្លាំងទៅលើ Network (ឧទាហរណ៍ ការហៅ API ច្រើន, Web Scraping រាប់ពាន់ទំព័រ, ឬបង្កើត Web Server ដែលមានអ្នកចូលមើលរាប់ម៉ឺននាក់) `asyncio` គឺជាជម្រើសល្អផ្តាច់គេ ព្រោះវាស៊ី Memory តិចជាង Threading ខ្លាំងណាស់ (Threading អាចគាំងប្រសិនបើអ្នកបង្កើតលើសពី ២-៣ពាន់ Threads ព្រោះវាកំពុងស៊ី RAM ប្រព័ន្ធ)។ 
+
+**ច្បាប់មាសនៃ Asyncio:** 
+កូដ Async មិនអាចរត់កូដ Sync ដែលស៊ីពេលយូរបានទេ។ បើអ្នកមានកូដ `time.sleep(10)` នៅក្នុង `async def` វានឹងធ្វើឱ្យ Event Loop ទាំងមូលគាំង (ដូចអ្នករត់តុឈរដេកលក់មុខចង្ក្រានអ៊ីចឹង)។ ត្រូវប្រើ `await asyncio.sleep(10)` ជំនួសវិញ។
+
+---
+
+## 💻 Code Breakdown
+
+```python
+# ឧទាហរណ៍ទី១: ការបង្កើត Coroutine ជាមូលដ្ឋាន
+import asyncio
+import time
+
+# ប្រើពាក្យ 'async def' ដើម្បីបង្កើត Coroutine
+async def my_coroutine():
+    print("កំពុងរង់ចាំ ២ វិនាទី...")
+    # await ប្រាប់ Event Loop ឱ្យទៅធ្វើការផ្សេងសិន
+    # កុំប្រើ time.sleep(2) ព្រោះវានឹងបិទ Event Loop ទាំងមូល!
+    await asyncio.sleep(2) 
+    print("រួចរាល់!")
+
+# អ្នកមិនអាចហៅវាដោយ my_coroutine() ធម្មតាបានទេ វានឹងមិនដើរឡើយ
+# ត្រូវប្រើ asyncio.run() ដើម្បីបង្កើត Event Loop និងដំណើរការវា
+start = time.time()
+asyncio.run(my_coroutine())
+print(f"ចំណាយពេលសរុប: {time.time() - start:.2f} វិនាទី")
+```
+
+```python
+# ឧទាហរណ៍ទី២: ភាពអស្ចារ្យនៃការធ្វើការស្របគ្នាជាមួយ asyncio.gather
+import asyncio
+import time
+
+async def fetch_data(id, delay):
+    print(f"[{id}] ចាប់ផ្តើមទាញយក... រង់ចាំ {delay} វិនាទី")
+    await asyncio.sleep(delay) # កំពុងរង់ចាំទិន្នន័យ (I/O)
+    print(f"[{id}] ទាញយកជោគជ័យ!")
+    return f"ទិន្នន័យពី {id}"
+
+async def main():
+    # គោលដៅ: ទាញយកទិន្នន័យ ៣ កន្លែងក្នុងពេលតែមួយ
+    # បើកូដធម្មតា ត្រូវចំណាយពេល 2 + 3 + 1 = 6 វិនាទី
+    
+    # យើងប្រើ asyncio.gather ដើម្បីរត់វាព្រមគ្នា ដូចនេះវាចំណាយពេលត្រឹមតែ 3 វិនាទីប៉ុណ្ណោះ!
+    results = await asyncio.gather(
+        fetch_data("កន្លែងទី១", 2),
+        fetch_data("កន្លែងទី២", 3),
+        fetch_data("កន្លែងទី៣", 1)
+    )
+    
+    print(f"លទ្ធផលដែលទទួលបាន: {results}")
+
+start_time = time.time()
+asyncio.run(main())
+print(f"ចំណាយពេលសរុប (Async): {time.time() - start_time:.2f} វិនាទី")
+```
+
+---
+
+## 🌐 ការអនុវត្តជាក់ស្តែង (Real-world Application)
+
+**ការទាញយកទិន្នន័យល្បឿនលឿន (High-Speed Web Scraping) ជាមួយ aiohttp**
+
+ដើម្បីទាញយក Web ក្នុង Asyncio យើងមិនអាចប្រើបណ្ណាល័យ `requests` ធម្មតាបានទេ (ព្រោះវាជាកូដ Synchronous ដែលនឹងបិទ Event Loop)។ យើងត្រូវប្រើបណ្ណាល័យជំនួសឈ្មោះថា **`aiohttp`**។
+*(ចំណាំ: ត្រូវដំឡើង `pip install aiohttp` មុននឹងសាកល្បង)*
+
+```python
+import asyncio
+import aiohttp
+import time
+
+async def fetch_pokemon(session, url):
+    """អនុគមន៍សម្រាប់ហៅ API តែមួយ"""
+    # ប្រើប្រាស់ ClientSession របស់ aiohttp (ត្រូវតែមាន await)
+    async with session.get(url) as response:
+        # រង់ចាំទាល់តែទាញទិន្នន័យបានពេញលេញ 
+        data = await response.json()
+        return data['name']
+
+async def get_multiple_pokemons():
+    urls = [
+        "https://pokeapi.co/api/v2/pokemon/1", # Bulbasaur
+        "https://pokeapi.co/api/v2/pokemon/4", # Charmander
+        "https://pokeapi.co/api/v2/pokemon/7"  # Squirtle
+    ]
+    
+    # បើក Session មួយសម្រាប់ប្រើប្រាស់រួមគ្នា
+    async with aiohttp.ClientSession() as session:
+        # បង្កើតបញ្ជីកិច្ចការ (Tasks)
+        tasks = [fetch_pokemon(session, url) for url in urls]
+        
+        # ប្រមូលផ្តុំកិច្ចការទាំងអស់ឱ្យរត់ព្រមគ្នា
+        results = await asyncio.gather(*tasks)
+        
+        print("បានរកឃើញ Pokemons:", results)
+
+start = time.time()
+# ដំណើរការកម្មវិធីធំ
+asyncio.run(get_multiple_pokemons())
+print(f"រួចរាល់ក្នុងរយៈពេល: {time.time() - start:.2f} វិនាទី")
+```
+
+---
+
+## ❌ Common Mistakes
+
+- **ហៅអនុគមន៍ `async` ដោយគ្មានពាក្យ `await`:** 
+  បើអ្នកសរសេរ `fetch_data()` វាមិនព្រមរត់ទេ វាគ្រាន់តែបង្កើត Coroutine Object ប៉ុណ្ណោះ។ អ្នកត្រូវតែសរសេរ `await fetch_data()`។
+- **លាយឡំកូដ Sync និង Async (Blocking the Loop):**
+  បើអ្នកយកកូដគណនាធ្ងន់ៗ (ដូចជារកលេខបឋមរាប់លាន) ឬការអាន File ធំៗ (`with open()`) ទៅដាក់ក្នុង `async def` វាសាហាវជាងការដើរយឺតទៅទៀត ព្រោះវាធ្វើឱ្យ Event Loop ទាំងមូលគាំង (Blocking) ហើយកិច្ចការរាប់ពាន់ផ្សេងទៀតក៏ត្រូវគាំងតាមនោះដែរ។ សម្រាប់កិច្ចការទាំងនោះ អ្នកត្រូវបញ្ជូនវាទៅ ThreadPoolExecutor តាមរយៈកូដ `loop.run_in_executor()`។
+
+---
+
+## ✅ Key Takeaways
+
+- **`asyncio`** គឺជាបច្ចេកវិទ្យាកម្រិតខ្ពស់សម្រាប់សរសេរកូដ Concurrency ដោយប្រើប្រាស់ Thread តែមួយ តាមរយៈ **Event Loop**។
+- ប្រើ **`async def`** ដើម្បីបង្កើតអនុគមន៍ដែលទាមទារការរង់ចាំ ហើយប្រើ **`await`** នៅខាងមុខកិច្ចការដែលត្រូវរង់ចាំនោះ ដើម្បីប្រគល់សិទ្ធិឱ្យអ្នកផ្សេងដំណើរការសិន។
+- ប្រើប្រាស់ **`asyncio.gather()`** សម្រាប់ការដំណើរការកិច្ចការជាច្រើនព្រមៗគ្នាក្នុងវិនាទីតែមួយ។
+- Asyncio គឺជាគ្រឹះដ៏សំខាន់ប្រសិនបើអ្នកចង់អភិវឌ្ឍជំនាញទៅសរសេរប្រព័ន្ធធំៗជាមួយ **FastAPI** ឬ Microservices។

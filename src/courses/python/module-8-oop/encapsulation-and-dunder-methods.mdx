@@ -1,0 +1,244 @@
+---
+title: Encapsulation និង Dunder Methods
+description: គ្រប់គ្រង access ទៅ class internals ជាមួយ encapsulation conventions, ហើយធ្វើឱ្យ objects របស់អ្នកដំណើរការដូច built-in Python types ដោយប្រើ dunder (magic) methods។
+objectives:
+  - អនុវត្ត encapsulation conventions របស់ Python ដោយប្រើ single និង double underscores
+  - Implement dunder methods ដើម្បី support operators, comparisons, និង iteration
+  - ប្រើ __slots__ ដើម្បី optimize memory-intensive classes
+module: module-5-oop
+order: 3
+quiz:
+  - question: What does a double-underscore prefix (__name) do to a class attribute?
+    options:
+      - Makes it completely inaccessible from outside the class
+      - Triggers name mangling — Python renames it to _ClassName__name
+      - Marks it as a constant
+      - Makes it a class attribute rather than an instance attribute
+    correctAnswer: 1
+    explanation: Double underscore triggers name mangling. Python renames __name to _ClassName__name, making accidental subclass overrides much harder.
+  - question: Which dunder method is called when you use the + operator on two objects?
+    options:
+      - __plus__
+      - __sum__
+      - __add__
+      - __combine__
+    correctAnswer: 2
+    explanation: __add__(self, other) is called when the + operator is applied to an object.
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+តើអ្នកធ្លាប់ឆ្ងល់ទេថា ម៉េចបានជាសញ្ញាបូក (`+`) អាចយកទៅបូកលេខបញ្ចូលគ្នាក៏បាន (`1+2=3`) ហើយយកទៅបូកអក្សរចូលគ្នាក៏បាន (`"A"+"B"="AB"`)? នោះគឺដោយសារតែវេទមន្តនៃ **Dunder (Magic) Methods**។ ក្នុងមេរៀននេះ យើងនឹងរៀនពីវិធីការពារទិន្នន័យ (Encapsulation) តាមបែប Pythonic និងរបៀបប្រើវេទមន្តទាំងនេះដើម្បីធ្វើឱ្យ Class របស់អ្នកឆ្លាតដូចទៅនឹង Built-in Types របស់ Python អញ្ចឹង!
+
+---
+
+## 📚 រៀនពាក្យបច្ចេកទេស (Definitions)
+
+- **Getter:** Method សម្រាប់អាន Private Attribute។
+- **Setter:** Method សម្រាប់កែប្រែ Private Attribute ដោយមានការត្រួតពិនិត្យ (Validation)។
+- **Property:** វិធី Pythonic ដ៏ស្រស់ស្អាតក្នុងការបង្កើត Getter និង Setter ដោយប្រើពាក្យ `@property` ។
+- **Name Mangling:** ដំណើរការដែល Python លួចប្តូរឈ្មោះអថេរ `__name` ទៅជា `_ClassName__name` ដើម្បីកុំឱ្យគេហៅវាដោយផ្ទាល់បាន។
+- **Dunder Methods:** Methods ពិសេសៗដែលចាប់ផ្តើម និងបញ្ចប់ដោយ Double Underscores (ឧទាហរណ៍ `__init__`, `__str__`)។
+
+---
+
+## 💡 គំនិតគោល (The Core Idea)
+
+### ការលាក់បាំងទិន្នន័យ (Encapsulation តាមរយៈ `@property`)
+
+នៅក្នុងភាសាផ្សេងដូចជា Java គេតែងតែសរសេរ `account.check_balance()`។ ប៉ុន្តែ Python សម័យថ្មីគេចូលចិត្តប្រើ `@property` ដើម្បីឱ្យវាស្រួលសរសេរជាងមុន៖
+
+```python
+class BankAccount:
+    def __init__(self, balance):
+        self.__balance = balance # Private Variable
+
+    @property # ដើរតួជា Getter
+    def balance(self):
+        return self.__balance
+
+    @balance.setter # ដើរតួជា Setter
+    def balance(self, amount):
+        if amount < 0:
+            raise ValueError("ទឹកប្រាក់មិនអាចអវិជ្ជមានទេ")
+        self.__balance = amount
+
+# ការប្រើប្រាស់ (ស្រួលជាង ការហៅ Method ឆ្ងាយណាស់)
+account = BankAccount(100)
+print(account.balance)  # អាន
+account.balance = 200   # សរសេរ
+```
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ (In Depth)
+
+### ១. ការលាតត្រដាង Name Mangling (តើ Python មាន Private ពិតទេ?)
+
+សិស្សភាគច្រើនគិតថាការប្រើសញ្ញា `__` ពីរគឺធ្វើឱ្យអថេរនោះលាក់បាំង 100% តែការពិត...
+
+```python
+class Student:
+    def __init__(self):
+        self.__age = 20
+
+s = Student()
+# print(s.__age) # AttributeError (រកមិនឃើញទេ)
+```
+
+ប៉ុន្តែបើយើងដឹងពីអាថ៌កំបាំង (Name Mangling)៖
+```python
+print(s._Student__age) # លទ្ធផល: 20
+```
+> **ការសន្និដ្ឋាន:** Python មិនមាន Private ពិតប្រាកដទេ។ វាគ្រាន់តែ Rename អថេរនោះប៉ុណ្ណោះ ដើម្បីការពារកុំឱ្យយើងច្រឡំសរសេរជាន់លើវា។
+
+### ២. តារាង Dunder Methods ដ៏មានឥទ្ធិពល
+
+| Method       | មុខងារ (Purpose)                  | ឧទាហរណ៍ជាក់ស្តែង |
+| ------------ | ------------------------ | ------------------------ |
+| `__init__`     | Constructor (អ្នករៀបចំទិន្នន័យដំបូង) | `obj = MyClass()` |
+| `__str__`      | Human readable (សម្រាប់អ្នកប្រើទូទៅមើល) | `print(obj)` |
+| `__repr__`     | Developer representation (សម្រាប់អ្នកកូដមើល) | `[obj]` ឫ វាយឈ្មោះវាផ្ទាល់ |
+| `__len__`      | កំណត់ប្រវែង | `len(obj)` |
+| `__add__`      | កំណត់ការបូក | `obj1 + obj2` |
+| `__eq__`       | ពិនិត្យភាពស្មើគ្នា | `obj1 == obj2` |
+| `__lt__`       | តូចជាង | `obj1 < obj2` |
+| `__contains__` | ពិនិត្យថាមាននៅក្នុងនេះឬទេ | `item in obj` |
+| `__iter__` / `__next__` | បង្កើតរង្វិលជុំ Custom Iteration | `for item in obj:` |
+| `__bool__`     | កំណត់តម្លៃពិតឫមិនពិត | `bool(obj)` ឫ `if obj:` |
+
+### ៣. ភាពខុសគ្នារវាង `__str__` និង `__repr__`
+
+រឿងនេះសំខាន់ណាស់សម្រាប់ Developer!
+- `__str__`: សម្រាប់ឱ្យអ្នកប្រើប្រាស់ទូទៅអាន (ស្រស់ស្អាត)
+- `__repr__`: សម្រាប់បញ្ជាក់ពីទម្រង់កូដដើម ឱ្យ Developer ងាយយល់
+
+```python
+class Book:
+    def __init__(self, title):
+        self.title = title
+
+    def __repr__(self):
+        # បញ្ចេញជាទម្រង់កូដដែលអាច Copy ទៅ Run បាន
+        return f"Book('{self.title}')"
+
+book = Book("Python OOP")
+print(book) # លទ្ធផល: Book('Python OOP')
+```
+
+### ៤. Dunder Method សម្រាប់ការកំណត់លក្ខខណ្ឌ (Comparison)
+
+ធ្វើឱ្យការប្រៀបធៀប Object ក្លាយជារឿងសាមញ្ញ៖
+
+```python
+class Student:
+    def __init__(self, score):
+        self.score = score
+
+    # ==
+    def __eq__(self, other):
+        return self.score == other.score
+
+    # <
+    def __lt__(self, other):
+        return self.score < other.score
+
+a = Student(80)
+b = Student(90)
+
+print(a == b) # False
+print(a < b)  # True
+```
+
+### ៥. ការបង្កើតប្រវែង (`__len__`) និង តម្លៃពិត (`__bool__`)
+
+```python
+class ShoppingCart:
+    def __init__(self):
+        self.items = ["A", "B"]
+
+    def __len__(self):
+        return len(self.items)
+
+    def __bool__(self):
+        return len(self.items) > 0 # ពិត បើមានទំនិញក្នុងរទេះ
+
+cart = ShoppingCart()
+print(len(cart)) # លទ្ធផល: 2
+
+if cart:
+    print("អ្នកមានទំនិញក្នុងរទេះ!")
+```
+
+### ៦. អាថ៌កំបាំងនៃការប្រើ `for` Loop (`__iter__` នឹង `__next__`)
+
+សិស្សភាគច្រើនមិនដឹងថា `for item in obj` ដំណើរការដោយរបៀបណាទេ។ នេះជាចម្លើយ៖
+
+```python
+class Counter:
+    def __init__(self):
+        self.number = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        self.number += 1
+        if self.number > 5:
+            raise StopIteration # ប្រាប់ថាចប់ហើយ!
+        return self.number
+
+# ឥឡូវអ្នកអាចប្រើ for លើវាបានហើយ
+for n in Counter():
+    print(n) # 1, 2, 3, 4, 5
+```
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ការគ្រប់គ្រង Memory ជាមួយនឹង `__slots__`
+
+តើអ្នកដឹងទេថា Object ធម្មតាស៊ី Memory ច្រើនណាស់ ព្រោះវាផ្ទុកទិន្នន័យជាទម្រង់ Dictionary? 
+បើអ្នកត្រូវបង្កើត Object រាប់លាននៅក្នុង Data Science សូមប្រើ `__slots__`។
+
+```python
+class Student:
+    # ប្រាប់ Python ថាយើងមានតែអថេរ 2 នេះទេ កុំអោយគេបង្កើតថែម
+    __slots__ = ("name", "age")
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+s = Student("Sok", 20)
+# s.grade = "A" # កំហុស (AttributeError) ព្រោះវាមានសុវត្ថិភាពនិងស៊ី Memory តិចបំផុត!
+```
+អត្ថប្រយោជន៍៖
+* ស៊ី Memory តិចតួចបំផុត
+* ការទាញយកទិន្នន័យដើរលឿនជាងមុន
+* ការពារមិនឱ្យគេបង្កើតអថេរថ្មីខុសស្តង់ដារ
+
+---
+
+## ❌ កំហុសដែលអ្នកតែងតែជួប (Common Mistakes)
+
+### ១. កុំហៅ Dunder Methods ដោយផ្ទាល់
+❌ មិនល្អ៖ `obj.__str__()` ឬ `obj.__len__()`
+✅ ល្អ (Pythonic)៖ `print(obj)` ឬ `len(obj)`
+
+### ២. កុំ Overload Operator ដោយគ្មានអត្ថន័យ
+❌ មិនល្អ៖ ការសរសេរឱ្យ `person1 + person2` បូកបញ្ចូលគ្នា បើវាមិនមានអត្ថន័យច្បាស់លាស់ក្នុងការងារពិតរបស់អ្នក។ 
+
+### ៣. កុំប្រើ Double Underscore (`__`) គ្រប់ Attribute
+អ្នកថ្មីថ្មោងចូលចិត្តដាក់ `self.__name`, `self.__age` គ្រប់កន្លែង។ វាធ្វើឱ្យកូដពិបាក Maintain។ នៅក្នុង Python ការប្រើ Single Underscore ដូចជា `self._name` គឺគ្រប់គ្រាន់ក្នុងការផ្តល់សញ្ញាថា "នេះជារបស់ឯកជន (Private)" ទៅកាន់ Developers ផ្សេងទៀតហើយ។
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ (Key Takeaways)
+
+- ប្រើ **`@property`** ជំនួស Getter/Setter ធម្មតា នៅពេលអាចធ្វើបាន ព្រោះវាជា Pythonic Style។
+- **`__repr__`** សម្រាប់ Developer (ទម្រង់ដើម), ឯ **`__str__`** សម្រាប់ User (ភាពស្រស់ស្អាត)។
+- **Dunder Methods** អនុញ្ញាតឱ្យ Object របស់អ្នកដំណើរការបានយ៉ាងរលូនដូចជា Built-in Types (ឧ. `+`, `<`, `==`, `len()`)។
+- **`__slots__`** អាចជួយសន្សំសំចៃ Memory បានយ៉ាងច្រើន សម្រាប់កម្មវិធីណាដែលត្រូវបង្កើត Objects រាប់លាន។
+- កុំប្រើ **Double Underscore** លើគ្រប់ Attribute ដោយមិនចាំបាច់ (ភាគច្រើន `_single_underscore` គឺគ្រប់គ្រាន់ហើយ)។

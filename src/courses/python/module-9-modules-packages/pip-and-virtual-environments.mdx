@@ -1,0 +1,202 @@
+---
+title: Pip និង Virtual Environments
+description: រៀនពីរបៀបដំឡើង Library ពីខាងក្រៅដោយប្រើប្រាស់ pip និងការប្រើប្រាស់ Virtual Environment (venv) ដើម្បីការពារកុំឱ្យមានជម្លោះរវាងគម្រោងផ្សេងៗគ្នា។
+objectives:
+  - ស្វែងយល់ពីតួនាទីរបស់ PyPI និង pip package manager
+  - បង្កើត និងដំណើរការ Virtual Environment (venv) សម្រាប់គម្រោងនីមួយៗ
+  - រក្សាទុកបញ្ជី Library (requirements.txt) ដើម្បីងាយស្រួលចែករំលែកកូដ
+module: module-9-modules-packages
+order: 2
+quiz:
+  - question: ហេតុអ្វីបានជាអ្នកសរសេរកម្មវិធី Python អាជីពតែងតែបង្កើត Virtual Environment សម្រាប់គម្រោងនីមួយៗ?
+    options:
+      - ព្រោះវាធ្វើឱ្យកម្មវិធីដំណើរការលឿនជាងមុន
+      - ដើម្បីការពារកុំឱ្យមានជម្លោះជំនាន់ (Version conflicts) នៃ Library វាងគម្រោងមួយ និងគម្រោងមួយទៀត
+      - ព្រោះ Python បង្ខំឱ្យប្រើ បើមិនប្រើកូដមិនរត់ទេ
+      - ដើម្បីសន្សំសំចៃទំហំ Hard Disk
+    correctAnswer: 2
+    explanation: 'គម្រោង A អាចត្រូវការ Django ជំនាន់ 3 ខណៈគម្រោង B ត្រូវការជំនាន់ 4។ បើអ្នកដំឡើងវារួមគ្នាក្នុងកុំព្យូទ័រតែមួយ វានឹងជាន់គ្នា (Conflict)។ Virtual Environment ដោះស្រាយបញ្ហានេះដោយបង្កើតកន្លែងដាច់ដោយឡែកសម្រាប់គម្រោងនីមួយៗ។'
+  - question: តើពាក្យបញ្ជាណាមួយដែលប្រើសម្រាប់រក្សាទុកឈ្មោះ និងជំនាន់នៃ Library ទាំងអស់ដែលគម្រោងរបស់អ្នកកំពុងប្រើ ចូលទៅក្នុងឯកសារ requirements.txt?
+    options:
+      - pip save > requirements.txt
+      - pip freeze > requirements.txt
+      - pip list > requirements.txt
+      - pip export requirements.txt
+    correctAnswer: 2
+    explanation: 'pip freeze បង្ហាញបញ្ជី Library ដែលបានដំឡើងរួចជាមួយនឹងជំនាន់ពិតប្រាកដរបស់វា (ឧ. requests==2.28.1)។ ការប្រើ > requirements.txt គឺដើម្បីរក្សាទុកបញ្ជីនោះចូលក្នុងឯកសារ។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+ទោះបីជា Python មាន Standard Library ដ៏សម្បូរបែបក៏ដោយ ក៏មានពេលខ្លះអ្នកត្រូវការកូដដ៏មានអានុភាពដែលអ្នកដទៃបានសរសេរ (Third-party libraries) ដូចជាកូដសម្រាប់ទាញយកទិន្នន័យពីវេបសាយ ឬកូដសម្រាប់វិភាគទិន្នន័យជាដើម។
+ដើម្បីធ្វើការងារនេះ យើងត្រូវការប្រព័ន្ធគ្រប់គ្រងកញ្ចប់ឈ្មោះថា **`pip`**។ ទន្ទឹមនឹងនេះ នៅក្នុងការងារវិជ្ជាជីវៈ អ្នកមិនគួរដំឡើង Libraries ទាំងអស់ចូលទៅក្នុងកុំព្យូទ័រដោយផ្ទាល់ទេ អ្នកត្រូវចេះបង្កើត "បន្ទប់ដាច់ដោយឡែក" សម្រាប់គម្រោងនីមួយៗ ដែលហៅថា **Virtual Environment** ដើម្បីធានាថាកូដរបស់អ្នកនឹងមិនមានបញ្ហាជាន់ជំនាន់គ្នា (Version Conflict)។
+
+---
+
+## 📚 រៀនពាក្យបច្ចេកទេស (Definitions)
+
+- **PyPI (Python Package Index):** ជាឃ្លាំងផ្ទុក Packages (Libraries) របស់ Python ដ៏ធំបំផុតនៅលើអ៊ីនធឺណិត ដែលអ្នកដទៃសរសេររួចហើយដាក់អោយប្រើប្រាស់ដោយឥតគិតថ្លៃ។
+- **pip (Pip Installs Packages):** កម្មវិធីបញ្ជាក្នុង Terminal សម្រាប់ទាញយក និងដំឡើង Packages ពី PyPI មកកាន់កុំព្យូទ័ររបស់អ្នក។
+- **Virtual Environment (venv):** គឺជាបរិស្ថានដាច់ដោយឡែកមួយ ដែលមាន Python Interpreter និង `site-packages` (កន្លែងផ្ទុក Library) ផ្ទាល់ខ្លួន ដែលអាចគ្រប់គ្រង Dependencies ដាច់ដោយឡែកពី System Python ទូទៅ។
+- **requirements.txt:** ជាឯកសារអត្ថបទដែលកត់ត្រាឈ្មោះ និងជំនាន់ពិតប្រាកដនៃ Libraries ទាំងអស់ដែលគម្រោងមួយកំពុងប្រើ។
+
+---
+
+## 💡 គំនិតគោល (The Core Idea)
+
+### ការប្រើប្រាស់ `python -m pip` (Best Practice សម្រាប់ Professional)
+
+ជាទូទៅអ្នកតែងតែឃើញគេបង្រៀនឱ្យប្រើ `pip install requests`។ ប៉ុន្តែនៅក្នុងការងារជាក់ស្តែង កុំព្យូទ័ររបស់អ្នកអាចមាន Python ច្រើនជំនាន់ (ឧទាហរណ៍ Python 3.11, 3.12, 3.13)។ 
+បើអ្នកវាយត្រឹម `pip` វាអាចនឹងទៅទាក់ទងជាមួយ Python 3.11 ខណៈពេលដែលអ្នកកំពុងសរសេរកូដក្នុង Python 3.13។
+
+**✅ របៀបសរសេរកូដស្តង់ដារ ធានាថាមិនខុស 100%:**
+```bash
+python -m pip install requests
+```
+នេះប្រាប់កុំព្យូទ័រថា៖ "សូមប្រើ `pip` របស់ Python មួយណាដែលខ្ញុំកំពុងដំណើរការនេះ!"
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ (In Depth)
+
+### ១. វដ្តជីវិតនៃការបង្កើត Virtual Environment
+
+នេះគឺជាទម្លាប់ដែលអ្នកចាំបាច់ត្រូវធ្វើរាល់ពេលបង្កើតគម្រោងថ្មី៖
+
+**ជំហានទី ១៖ បង្កើត Virtual Environment (តែងតែដាក់ឈ្មោះវាថា `.venv`)**
+```bash
+python -m venv .venv
+```
+> **ចំណាំ៖** ក្នុងឧស្សាហកម្មគេនិយមប្រើឈ្មោះ `.venv`, `venv`, ឬ `env`។ ការដាក់ឈ្មោះ `.venv` ធ្វើឱ្យកម្មវិធីដូចជា VS Code ងាយស្រួលចាប់យក (Detect) ដោយស្វ័យប្រវត្តិ។
+
+**ជំហានទី ២៖ បើកដំណើរការ (Activate)**
+- សម្រាប់ **Mac / Linux:**
+  ```bash
+  source .venv/bin/activate
+  ```
+- សម្រាប់ **Windows:**
+  ```bash
+  .venv\Scripts\activate
+  ```
+ពេល Activate ជោគជ័យ អ្នកនឹងឃើញឈ្មោះ `(.venv)` លោតនៅខាងមុខ Terminal របស់អ្នក។
+
+**ជំហានទី ៣៖ Update Pip អោយថ្មីជានិច្ច**
+Pip ចាស់អាចមានបញ្ហាក្នុងការដំឡើង Package ថ្មីៗ។ (ធ្វើភ្លាមៗក្រោយ Activate រួច)
+```bash
+python -m pip install --upgrade pip
+```
+
+### ២. ការកំណត់ VS Code អោយស្គាល់ `.venv`
+
+បើអ្នកប្រើ VS Code អ្នកត្រូវប្រាប់វាឱ្យប្រើ Python ដែលនៅក្នុង `.venv` របស់អ្នក៖
+1. ចុច **Ctrl + Shift + P** (ឬ Cmd + Shift + P លើ Mac) ដើម្បីបើក Command Palette។
+2. វាយពាក្យស្វែងរក `Python: Select Interpreter` ។
+3. ជ្រើសរើសយកផ្លូវដែលតម្រង់ទៅរក `.venv/bin/python` ។
+
+### ៣. ការគ្រប់គ្រងជំនាន់ Library យ៉ាងតឹងរ៉ឹង (Package Version Control)
+
+**❌ ការដំឡើងដោយគ្មានការគ្រប់គ្រងជំនាន់:**
+```bash
+python -m pip install pandas
+```
+ថ្ងៃនេះវាអាចនឹងដំឡើង `pandas 2.2.0` ហើយកូដអ្នកដើរយ៉ាងរលូន។ ខែក្រោយមានអ្នកទាញយកកូដអ្នកទៅដំណើរការ តែវានឹងដំឡើង `pandas 3.0` ដែលអាចធ្វើឱ្យកូដរបស់អ្នកគាំង (Break)!
+
+**✅ ការប្រើប្រាស់ `requirements.txt`:**
+វាជាកាតព្វកិច្ចដែលអ្នកត្រូវកត់ត្រាជំនាន់ (Version) អោយបានច្បាស់លាស់។
+
+```text
+# ឧទាហរណ៍ឯកសារ requirements.txt
+pandas==2.2.0
+numpy==1.26.4
+requests==2.32.0
+```
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### លំហូរការងារចែករំលែកកូដ (Workflow សម្រាប់ក្រុមការងារ)
+
+តើអ្នកសរសេរកម្មវិធី ២នាក់ អាចធ្វើការជាមួយគ្នាយ៉ាងរលូនដោយរបៀបណា?
+
+**🧑‍💻 Developer A (អ្នកសរសេរកូដដើម):**
+បញ្ចប់កូដ និងចង់បញ្ជូនឡើងទៅ GitHub។ គាត់ត្រូវ Export បញ្ជី Libraries ទាំងអស់៖
+```bash
+python -m pip freeze > requirements.txt
+```
+*(គាត់ Upload តែឯកសារកូដ និង `requirements.txt` ប៉ុណ្ណោះ ហាម Upload ថត `.venv` ដាច់ខាត!)*
+
+**👩‍💻 Developer B (អ្នកទាញយកកូដមកបន្ត):**
+ទាញយកកូដពី GitHub រួចរៀបចំបន្ទប់ដាច់ដោយឡែករបស់ខ្លួនឯង៖
+```bash
+git clone <project_url>
+cd <project_folder>
+python -m venv .venv
+source .venv/bin/activate
+```
+បន្ទាប់មកដំឡើង Libraries ទាំងអស់ដែល Developer A ធ្លាប់បានប្រើ៖
+```bash
+python -m pip install -r requirements.txt
+```
+ឥឡូវនេះកុំព្យូទ័រទាំង ២ មាន Libraries ជំនាន់ដូចគ្នាបេះបិទ 100%! ✅
+
+---
+
+## 🛒 ការអនុវត្តក្នុងពិភពពិត (Professional Project Structure)
+
+នៅពេលបង្កើតគម្រោងអាជីព ការរៀបចំឯកសារ (Folder Structure) ជារឿងសំខាន់។ រាល់គម្រោងទាំងអស់ត្រូវតែមានឯកសារ `.gitignore` ដើម្បីការពារកុំឱ្យ Upload ថត `.venv` ឬ File សម្ងាត់ចូលទៅក្នុង GitHub ឱ្យសោះ។
+
+```text
+phone_scraper/
+│
+├── .venv/                  # បន្ទប់ផ្ទុក Library (មិន Upload ចូល GitHub ទេ!)
+├── src/                    # ថតផ្ទុកកូដសំខាន់ៗ
+│   └── scraper/
+│       ├── __init__.py
+│       ├── scraper.py
+│
+├── tests/                  # ថតសម្រាប់សរសេរកូដតេស្ត (Unit Tests)
+│
+├── main.py                 # ច្រកចូលដើមនៃកម្មវិធី
+├── requirements.txt        # បញ្ជី Library និង Version ជាក់លាក់
+├── .gitignore              # ប្រាប់ Git កុំអោយខ្វល់ពី File ណាខ្លះ
+└── README.md               # ឯកសារពន្យល់ពីគម្រោង
+```
+
+**ឧទាហរណ៍នៃឯកសារ `.gitignore` ស្តង់ដារ:**
+```gitignore
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables (លេខសម្ងាត់ផ្សេងៗ)
+.env
+```
+
+---
+
+## 🚀 ចំណេះដឹងកម្រិតខ្ពស់: ស្គាល់ `pipx` (Optional)
+
+`pip` គឺសម្រាប់ដំឡើង Library អោយគម្រោងរបស់អ្នក។ 
+ប៉ុន្តែប្រសិនបើអ្នកចង់ដំឡើង **Python Applications ឫ CLI Tools** (ឧទាហរណ៍ដូចជា `black` សម្រាប់រៀបកូដ ឬ `poetry`) ឱ្យវាដំណើរការជាប្រព័ន្ធដាច់ដោយឡែកនោះ គេប្រើ `pipx` វិញ។
+```bash
+pipx install black
+pipx install poetry
+```
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ (Key Takeaways)
+
+- ប្រើប្រាស់ **`python -m pip install ...`** ជានិច្ច ដើម្បីធានាថា pip ដំណើរការលើ Python Interpreter ត្រឹមត្រូវ។
+- ដាក់ឈ្មោះ Virtual Environment ថា **`.venv`** ដើម្បីអោយ VS Code ងាយស្គាល់។
+- កំណត់ **Python Interpreter នៅក្នុង VS Code** អោយចង្អុលទៅ `.venv/bin/python` ដើម្បីអោយវាផ្តល់ Suggestion កូដបានត្រឹមត្រូវ។
+- Update pip ជានិច្ច ក្រោយពេលបង្កើត venv រួច (`python -m pip install --upgrade pip`)។
+- ហាម Upload ថត `.venv` ចូល GitHub ជាដាច់ខាត! ត្រូវបង្កើតឯកសារ **`.gitignore`** ដើម្បីទប់ស្កាត់វា។
+- ប្រើប្រាស់ឯកសារ **`requirements.txt`** ដើម្បីចងភ្ជាប់ Version របស់ Packages (ឧ. `pandas==2.2.0`) ការពារកុំឱ្យកូដគាំងពេលជំនាន់ថ្មីចេញ។
+- អនុវត្ត Workflow: **`freeze > requirements.txt`** ពេលសរសេរចប់ និង **`install -r requirements.txt`** ពេលយកកូដគេមកដំណើរការ។

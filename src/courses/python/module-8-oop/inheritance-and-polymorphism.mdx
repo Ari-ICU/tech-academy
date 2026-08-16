@@ -1,0 +1,298 @@
+---
+title: Inheritance និង Polymorphism
+description: ពង្រីក classes ដែលមានស្រាប់ជាមួយ inheritance, override methods, ប្រើ super(), ហើយសរសេរ code ដែលដំណើរការជាមួយ object ណាមួយដែលត្រូវគ្នាតាម polymorphism។
+objectives:
+  - កំណត់ subclass ដែល inherits ពី parent class
+  - Override parent methods ហើយហៅពួកវាជាមួយ super()
+  - ពន្យល់ polymorphism និង duck typing ក្នុង Python
+module: module-5-oop
+order: 2
+quiz:
+  - question: What does super().__init__() do inside a subclass?
+    options:
+      - Creates a new instance of the parent class
+      - Calls the parent class's __init__ method to initialise inherited attributes
+      - Replaces self with the parent class
+      - Deletes the current instance
+    correctAnswer: 1
+    explanation: super().__init__() calls the parent class's initialiser, ensuring inherited attributes are set up before the subclass adds its own.
+  - question: What is duck typing?
+    options:
+      - A type-checking system that requires explicit type declarations
+      - An approach where an object's suitability is determined by its methods and attributes, not its class
+      - A method for converting between types
+      - A feature exclusive to Python 3.10+
+    correctAnswer: 1
+    explanation: Duck typing — if it walks like a duck and quacks like a duck, it's a duck. Python cares about methods, not class hierarchy.
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងការសរសេរកម្មវិធីពិតប្រាកដ យើងកម្របង្កើតកូដថ្មីទាំងស្រុងណាស់។ ភាគច្រើន យើងតែងតែចង់យកកូដចាស់ដែលដើរស្រាប់ មកកែច្នៃបន្ថែមមុខងារថ្មីៗ។ នេះហើយជាអត្ថប្រយោជន៍នៃ **Inheritance (ការទទួលមរតក)**។ ចំណែកឯ **Polymorphism (ពហុរូប)** អនុញ្ញាតឱ្យមុខងារមួយអាចឆ្លើយតបខុសៗគ្នា អាស្រ័យលើអ្នកណាជាអ្នកប្រើវា ដែលជាឆ្អឹងខ្នងនៃប្រព័ន្ធធំៗ។
+
+---
+
+## 📚 រៀនពាក្យបច្ចេកទេស (Definitions)
+
+- **Inheritance:** គឺជាវិធីដែល Class ថ្មីទទួលយកលក្ខណៈ (Attributes) និងសកម្មភាព (Methods) ពី Class ចាស់ដោយស្វ័យប្រវត្តិ។
+- **Parent Class (Superclass):** Class ដើម ឬ Class ឪពុកម្តាយដែលចែករំលែកកូដរបស់ខ្លួន។
+- **Child Class (Subclass):** Class កូនដែលទទួលបានមរតក ហើយអាចបង្កើតកូដថ្មីបន្ថែមលើវា។
+- **Method Overriding:** ការដែល Class កូនសរសេរ Method មួយឈ្មោះដូចគ្នាបេះបិទទៅនឹង Class មេ ដើម្បីលុបចោលឥទ្ធិពលចាស់ ហើយបង្កើតរបៀបដំណើរការថ្មីរបស់ខ្លួន។
+- **Polymorphism:** សមត្ថភាពរបស់ Object ផ្សេងៗគ្នាក្នុងការឆ្លើយតបទៅនឹង Method ឈ្មោះតែមួយ (ឧទាហរណ៍ `pay()` តែមានការបង់ប្រាក់តាមកាត និងតាម QR)។
+- **Duck Typing:** ទស្សនវិជ្ជារបស់ Python គឺ "បើវាដើរដូចទា យំដូចទា នោះវាជាទាហើយ" (Python ខ្វល់តែថាតើ Object នោះអាចធ្វើអ្វីបាន មិនខ្វល់ថាវាជា Class អ្វីទេ)។
+
+---
+
+## 💡 គំនិតគោល (The Core Idea)
+
+### ប្រភេទនៃការទទួលមរតក (Types of Inheritance)
+
+**១. Single Inheritance (មរតកទោល):** កូនមួយមានមេតែមួយ។
+```text
+Animal
+  |
+ Dog
+```
+```python
+class Animal:
+    pass
+
+class Dog(Animal):
+    pass
+```
+
+**២. Multilevel Inheritance (មរតកច្រើនជំនាន់):** កូនទទួលពីមេ មេទទួលពីជីដូនជីតា។
+```text
+Animal
+  |
+Mammal
+  |
+ Dog
+```
+```python
+class Mammal(Animal):
+    pass
+
+class Dog(Mammal):
+    pass
+```
+
+**៣. Multiple Inheritance (មរតកប្រភពច្រើន):** កូនមួយមានមេលើសពីមួយ (Python គាំទ្ររឿងនេះ ខណៈដែល Java មិនគាំទ្រទេ!)។
+```text
+ Bird     Flyable
+    \      /
+     Eagle
+```
+```python
+class Flyable:
+    def fly(self):
+        print("ហោះហើរ...")
+
+class Bird:
+    pass
+
+class Eagle(Bird, Flyable):
+    pass
+```
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ (In Depth)
+
+### ១. លំដាប់នៃការស្វែងរកកូដ (Method Resolution Order - MRO)
+
+បើយើងមាន Multiple Inheritance តើ Python នឹងរត់ទៅរក Class មួយណាមុន? Python ប្រើប្រព័ន្ធ MRO ដោយស្វែងរកពី "ឆ្វេងទៅស្តាំ"។
+
+```python
+class A:
+    def hello(self):
+        print("A")
+
+class B(A):
+    pass
+
+class C(B):
+    pass
+
+obj = C()
+obj.hello()       # ចេញលទ្ធផល "A"
+print(C.__mro__)  # ទាញមើលផែនទីនៃការស្វែងរករបស់វា!
+```
+**Output:**
+```text
+(<class '__main__.C'>, <class '__main__.B'>, <class '__main__.A'>, <class 'object'>)
+```
+> **ចំណាំ:** វារកក្នុង C បើគ្មានទៅរកក្នុង B បើគ្មានទៅរកក្នុង A។
+
+### ២. ប្រើប្រាស់ `super()` នៅក្រៅ Constructor
+
+ភាគច្រើនយើងឃើញ `super().__init__()` ប៉ុន្តែ `super()` ក៏អាចប្រើសម្រាប់ហៅ Method ធម្មតារបស់ Parent ផងដែរ ដើម្បីប្រើកូដវាឡើងវិញ៖
+
+```python
+class Employee:
+    def work(self):
+        print("បុគ្គលិកកំពុងធ្វើការងារ")
+
+class Manager(Employee):
+    def work(self):
+        super().work() # យកសកម្មភាពការងារពីមេមកប្រើ
+        print("និងកំពុងគ្រប់គ្រងក្រុមការងារ") # បន្ថែមសកម្មភាពថ្មី
+
+m = Manager()
+m.work()
+```
+**Output:**
+```text
+បុគ្គលិកកំពុងធ្វើការងារ
+និងកំពុងគ្រប់គ្រងក្រុមការងារ
+```
+
+### ៣. ការគ្រប់គ្រង Abstract Base Class (ABC) យ៉ាងតឹងរ៉ឹង
+
+Abstract Class គឺជា Class ព្រាងទុក ដែលមិនអាចបង្កើតជា Object បានទេ។
+
+```python
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self):
+        pass
+
+# shape = Shape() # ប្រសិនបើអ្នកសរសេរបែបនេះ វានឹងចេញ Error ភ្លាម!
+```
+**Error Output:**
+```text
+TypeError: Can't instantiate abstract class Shape with abstract method area
+```
+វាជួយបង្ខំអោយ Class កូន (Child) ត្រូវតែសរសេរមុខងារ `area` ជាដាច់ខាត ទើបអាចបង្កើត Object យកទៅប្រើបាន!
+
+### ៤. Protocol: ភាពទំនើបរបស់ Structural Typing
+
+Python 3.8+ ណែនាំវិធីថ្មីដែលហៅថា `Protocol` ជំនួសឱ្យការប្រើ `ABC` ច្រើនសន្ធឹកសន្ធាប់។ វាផ្តោតទៅលើ "សមត្ថភាព" ជំនួសឱ្យ "ប្រភេទ Class"៖
+
+```python
+from typing import Protocol
+
+class Reader(Protocol):
+    def read(self):
+        ...
+
+def process(reader: Reader):
+    print(reader.read())
+```
+វិធីនេះជួយឱ្យកូដរបស់អ្នកទំនើប និងឆែកកំហុសមុនរត់បានយ៉ាងច្បាស់លាស់ជាមួយ `mypy` ។
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ភាពខុសគ្នារវាង Composition និង Inheritance
+
+សិស្សភាគច្រើនគិតថាការប្រើ Inheritance តែងតែជារឿងត្រឹមត្រូវ។ តែការពិតមិនមែនទេ!
+
+❌ **មិនល្អ (Wrong Inheritance):**
+```python
+class Engine:
+    pass
+
+class Car(Engine): # Car "គឺជា (is-a)" Engine? ទេ វាខុសតក្កវិជ្ជា!
+    pass
+```
+
+✅ **ត្រឹមត្រូវ (Better Composition):**
+នៅពេល Class មួយ "មានផ្ទុក (has-a)" Class មួយទៀត យើងត្រូវប្រើ Composition៖
+
+```python
+class Engine:
+    def start(self):
+        print("ម៉ាស៊ីនឆេះ")
+
+class Car:
+    def __init__(self):
+        self.engine = Engine() # Car មាន Engine ជាផ្នែកមួយរបស់វា
+
+    def drive(self):
+        self.engine.start()
+```
+
+> **រូបមន្តចងចាំ:** 
+> - **is-a** (តោគឺជាសត្វ) → ប្រើ **Inheritance**
+> - **has-a** (ឡានមានម៉ាស៊ីន) → ប្រើ **Composition**
+
+---
+
+## 🛒 ការអនុវត្តក្នុងពិភពពិត (Real-world Example)
+
+### ប្រព័ន្ធទូទាត់ប្រាក់ (Payment System) ជាមួយ Polymorphism
+
+ប្រព័ន្ធធំៗដូចជា E-commerce ប្រើប្រាស់ Polymorphism រាល់ថ្ងៃ ដើម្បីជៀសវាងការសរសេរ `if...else` ដ៏វែងអន្លាយ។
+
+```python
+class Payment:
+    def pay(self, amount):
+        raise NotImplementedError
+
+class CreditCardPayment(Payment):
+    def pay(self, amount):
+        print(f"កំពុងទូទាត់ ${amount} តាមរយៈ Credit Card")
+
+class KHQRPayment(Payment):
+    def pay(self, amount):
+        print(f"កំពុងទូទាត់ ${amount} តាមរយៈ KHQR")
+
+# Function នេះមិនខ្វល់ថាវាយកលុយតាមណានោះទេ! 
+# ឱ្យតែ Payment Object នោះមាន Method pay() គឺដើរទាំងអស់។ (នេះហៅថា Duck Typing)
+def checkout(payment: Payment, amount):
+    payment.pay(amount)
+
+checkout(CreditCardPayment(), 100)
+checkout(KHQRPayment(), 50)
+```
+
+---
+
+## ❌ កំហុសដែលអ្នកតែងតែជួប (Common Mistakes)
+
+### ១. ការចាប់គូរខុសតក្កវិជ្ជា (Wrong Inheritance)
+❌ `class Database(SQL):` 
+ការធ្វើបែបនេះខុសទាំងស្រុង ព្រោះ Database មិនមែន "គឺជា (is-a)" ភាសា SQL នោះទេ! ជៀសវាងប្រើ Inheritance ដោយខ្វះការគិត។
+
+### ២. ភ្លេចរៀបចំទិន្នន័យឱ្យ Class មេ (Forget `super()`)
+❌ **កំហុសធ្ងន់ធ្ងរ:**
+```python
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+class Student(Person):
+    def __init__(self, name, score):
+        # ភ្លេចហៅ Parent ទីនេះធ្វើឱ្យ self.name គ្មានទិន្នន័យ!
+        self.score = score 
+```
+✅ **ត្រឹមត្រូវ:**
+```python
+class Student(Person):
+    def __init__(self, name, score):
+        super().__init__(name) # ហៅមេឱ្យបញ្ចូលទិន្នន័យចាំបាច់សិន
+        self.score = score
+```
+
+### ៣. ឋានានុក្រមជ្រៅជ្រុល (Too Much Inheritance)
+```text
+Animal → LivingThing → Creature → Mammal → Dog
+```
+បើអ្នកប្រើ Inheritance ច្រើនជំនាន់ពេក កូដរបស់អ្នកនឹងក្លាយជាសុបិនអាក្រក់ពេលត្រូវជួសជុល។ សូមរក្សាត្រឹម ១ ទៅ ២ ជំនាន់បានហើយ!
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ (Key Takeaways)
+
+- **Inheritance** អនុញ្ញាតឱ្យ Class កូន ប្រើប្រាស់កូដឡើងវិញ និងបំប្លែងមុខងាររបស់ Class មេបានយ៉ាងងាយស្រួល។
+- ប្រើប្រាស់ **`super()`** ដើម្បីហៅ Methods ឬ Constructors (`__init__`) របស់ Class មេមកដំណើរការ ដោយមិនចាំបាច់សរសេរកូដនោះឡើងវិញ។
+- **Method Overriding** អនុញ្ញាតឱ្យ Class កូនកែប្រែមុខងារ Class មេ ដើម្បីធ្វើការងារឱ្យកាន់តែស៊ីជម្រៅនិងត្រឹមត្រូវតាមលក្ខខណ្ឌថ្មី។
+- **Polymorphism** គឺនៅពេលដែល Interface មួយអាចធ្វើការជាមួយ Objects ច្រើនប្រភេទ ដែលជួយកាត់បន្ថយការប្រើ `if/else` ច្រើនសន្ធឹកសន្ធាប់។
+- **Duck Typing** ផ្តល់សេរីភាពដល់ Python ដោយផ្តោតលើ "អ្វីដែល Object មួយអាចធ្វើបាន" ជាជាង "វាជាប្រភេទអ្វី"។
+- **Abstract Base Classes (ABC)** បង្ខំឱ្យ Class កូនត្រូវតែសរសេរមុខងារសំខាន់ៗ មុននឹងអាចបង្កើតជា Object បាន។
+- ជ្រើសរើស **Composition (has-a)** ជាជាង **Inheritance (is-a)** ប្រសិនបើ Objects ទាំងពីរនោះមិនមានទាក់ទងគ្នាជាខ្សែស្រឡាយដោយផ្ទាល់។
+- **MRO (Method Resolution Order)** គ្រប់គ្រងលំដាប់ដែល Python ដើរស្វែងរក Methods ដែលទទួលមរតក (ពីឆ្វេងទៅស្តាំ)។

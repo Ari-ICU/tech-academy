@@ -1,0 +1,69 @@
+---
+title: Project ពេញលេញ - តម្រែតម្រង់សម្រាប់ Data Science
+description: រួមបញ្ចូលចំណេះដឹងគណិតវិទ្យា និង Python ទាំងអស់ ដើម្បីបង្កើតគម្រោង Machine Learning (Linear Regression) ពីចំណុចសូន្យ ដោយមិនប្រើបណ្ណាល័យ AI។
+objectives:
+  - អនុវត្តក្បួន Gradient Descent ដោយផ្ទាល់ដៃ
+  - គណនាអនុគមន៍កំហុស (Mean Squared Error)
+  - ឃើញពីការប្រែប្រួលនៃបន្ទាត់ Regression ឆ្ពោះទៅរកចម្លើយត្រឹមត្រូវ
+module: math-module-10-math-for-ai
+order: 5
+quiz:
+  - question: នៅក្នុងក្បួន Gradient Descent នៃ Linear Regression តើអថេរចំនួនប៉ុន្មានដែលកុំព្យូទ័រព្យាយាមកែប្រែចុះឡើង ដើម្បីអោយកំហុសរួមតូចបំផុត (Cost = Minimum)?
+    options:
+      - តែ ១ ប៉ុណ្ណោះ (គឺ x)
+      - ២ គឺ m (ជម្រាល) និង c (ចំណុចកាត់អ័ក្ស y) នៃសមីការ y = mx + c
+      - គ្មានអថេរណាដែលត្រូវកែទេ ព្រោះវាកើតឡើងដោយចៃដន្យ
+      - អថេរទាំងអស់នៅក្នុងទិន្នន័យ
+    correctAnswer: 2
+    explanation: 'កុំព្យូទ័រមិនអាចកែប្រែទិន្នន័យ (x និង y) បានទេ។ អ្វីដែលវាអាចកែបាន (Parameters) គឺមេគុណជម្រាល m (ទម្ងន់ / Weight) និងចំណុចកាត់ c (Bias) ។ វាផ្លាស់ប្តូរ m និង c តិចៗ រហូតដល់រកឃើញបន្ទាត់ដែលស៊ីគ្នានឹងទិន្នន័យបំផុត។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងមេរៀនទី ៩ យើងបានប្រើ `np.polyfit()` ដើម្បីគូសបន្ទាត់ Regression ដោយមិនបាច់ខំប្រឹង។ ប៉ុន្តែ Data Scientist ពិតប្រាកដត្រូវយល់ពីយន្តការនៅពីក្រោយវា (Under the hood)។ នៅក្នុង Project នេះ យើងនឹងសរសេរ AI តូចមួយពីទំព័រទទេ ដោយប្រើប្រាស់ **Calculus (Gradient Descent)** រួមជាមួយ **Linear Algebra**!
+
+---
+
+## 💻 គម្រោង (The Capstone Project)
+
+កូដខាងក្រោមនេះ គឺជាដំណើរការដ៏ស្មុគស្មាញរបស់ AI ដែលកំពុងព្យាយាមរៀនរកបន្ទាត់ដែលល្អបំផុតដោយខ្លួនឯង មួយជំហានម្តងៗ (១០០០ ជុំ)!
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ១. ទិន្នន័យ (x = ទំហំផ្ទះ, y = តម្លៃ)
+X = np.array([1, 2, 3, 4, 5])
+Y = np.array([2, 4, 5, 4, 5])
+
+# ២. កំណត់អថេរដំបូង (ចាប់ផ្តើមទាយព្រាវៗ)
+m = 0.0 # ជម្រាល (Slope / Weight)
+c = 0.0 # ចំណុចកាត់ (Intercept / Bias)
+learning_rate = 0.01 
+epochs = 1000 # ចំនួនជុំដែលអោយវារៀន
+n = len(X)    # ចំនួនទិន្នន័យ
+
+# ៣. ក្បួន Gradient Descent (អោយ AI រៀន)
+for i in range(epochs):
+    # ក. AI ធ្វើការទាយដោយផ្អែកលើ m និង c បច្ចុប្បន្ន
+    Y_pred = m * X + c
+    
+    # ខ. គណនាដេរីវេ (Slope នៃកំហុស) តាមរូបមន្ត Calculus 
+    D_m = (-2/n) * sum(X * (Y - Y_pred)) # ដេរីវេធៀបនឹង m
+    D_c = (-2/n) * sum(Y - Y_pred)       # ដេរីវេធៀបនឹង c
+    
+    # គ. ធ្វើបច្ចុប្បន្នភាព m និង c ដើរចុះភ្នំតាម Learning Rate
+    m = m - learning_rate * D_m
+    c = c - learning_rate * D_c
+    
+print(f"បន្ទាប់ពីរៀន {epochs} ជុំ, លទ្ធផលគឺ: y = {m:.2f}x + {c:.2f}")
+
+# ៤. គូរក្រាហ្វិកបញ្ជាក់
+plt.scatter(X, Y, color='red', label="ទិន្នន័យដើម")
+plt.plot(X, m * X + c, color='blue', label="បន្ទាត់ដែល AI រកឃើញ")
+plt.title("Linear Regression បង្កើតដោយផ្ទាល់ដៃ")
+plt.legend()
+plt.show()
+```
+
+អបអរសាទរ! អ្នកបានឆ្លងកាត់ការធ្វើដំណើរដ៏វែងឆ្ងាយ តាំងពីការបូកដកលេខធម្មតា រហូតដល់ការសរសេរកូដ Gradient Descent ដ៏ស្មុគស្មាញ! អ្នកត្រៀមខ្លួនរួចជាស្រេច ដើម្បីឈានចូលទៅកាន់វគ្គសិក្សា **Machine Learning / AI** កម្រិតខ្ពស់!

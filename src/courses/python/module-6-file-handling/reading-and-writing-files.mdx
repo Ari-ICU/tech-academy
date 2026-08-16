@@ -1,0 +1,248 @@
+---
+title: Reading និង Writing Files
+description: រៀនពីរបៀបបើក អាន និងសរសេរទិន្នន័យចូលទៅក្នុង Text Files ជាមួយ Python ដោយប្រើប្រាស់ Context Manager (with) យ៉ាងមានសុវត្ថិភាព។
+objectives:
+  - យល់ដឹងពីរបៀបបើកឯកសារក្នុងទម្រង់ផ្សេងៗ (Read, Write, Append)
+  - អានទិន្នន័យពីឯកសារដោយប្រើ read(), readline(), និង readlines()
+  - សរសេរទិន្នន័យចូលឯកសារ និងប្រើប្រាស់ Context Manager (with) ដើម្បីការពារការលេចធ្លាយ Memory
+module: module-6-file-handling
+order: 1
+quiz:
+  - question: តើ Mode មួយណាដែលយើងគួរប្រើសម្រាប់បើកឯកសារ ដើម្បីបន្ថែមទិន្នន័យថ្មីនៅខាងចុង ដោយមិនលុបទិន្នន័យចាស់ចោល?
+    options:
+      - '"r"'
+      - '"w"'
+      - '"a"'
+      - '"x"'
+    correctAnswer: 2
+    explanation: '"a" (Append) ត្រូវបានប្រើសម្រាប់បន្ថែមទិន្នន័យទៅខាងចុងឯកសារ។ ចំណែក "w" នឹងលុបទិន្នន័យចាស់ចោលទាំងអស់។'
+  - question: ហេតុអ្វីបានជាយើងគួរប្រើប្រាស់ 'with open(...)' ជាជាងការប្រើ 'open()' ធម្មតា?
+    options:
+      - ព្រោះវាធ្វើឱ្យកូដដើរលឿនជាងមុន
+      - ព្រោះវានឹងបិទឯកសារ (close the file) ដោយស្វ័យប្រវត្តិទោះបីជាមាន Error ក៏ដោយ
+      - ព្រោះវាជួយឱ្យ Python អានឯកសារបានគ្រប់ប្រភេទដោយស្វ័យប្រវត្តិ
+      - ព្រោះវាជាច្បាប់តែមួយគត់សម្រាប់អានឯកសារក្នុង Python 3
+    correctAnswer: 1
+    explanation: 'Context Manager (with) ធានាថាឯកសារនឹងត្រូវបានបិទដោយស្វ័យប្រវត្តិ (file.close()) នៅពេលការងារត្រូវបានបញ្ចប់ ឬនៅពេលមាន Error កើតឡើង។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+កម្មវិធីដែលអស្ចារ្យ គឺកម្មវិធីដែលអាចចងចាំទិន្នន័យបានបន្ទាប់ពីកុំព្យូទ័របិទ។ ប្រសិនបើអ្នកមិនដឹងពីរបៀបអាន និងសរសេរឯកសារ (File Handling) ទេ នោះទិន្នន័យរបស់អ្នកទាំងអស់នឹងបាត់បង់រាល់ពេលដែលកម្មវិធីបិទ!
+
+ការយល់ដឹងពី File Handling គឺជាស្ពានចម្លងអ្នកពីការសរសេរកូដលេងសើច ទៅកាន់ការបង្កើតកម្មវិធីពិតប្រាកដដូចជា ប្រព័ន្ធចុះឈ្មោះសិស្ស (Student Management), កម្មវិធីរក្សាទុកកំណត់ហេតុ (Log Systems), ឬការទាញយកទិន្នន័យដើម្បីធ្វើ Data Analysis។
+
+---
+
+## 📚 រៀនពាក្យបច្ចេកទេស (Definitions)
+
+- **Text File:** ឯកសារដែលផ្ទុកអត្ថបទធម្មតា អាចអានបានដោយភ្នែកមនុស្ស (ឧទាហរណ៍ `.txt`, `.csv`, `.json`)។
+- **Binary File:** ឯកសារដែលផ្ទុកទិន្នន័យជាកូដ Bytes សម្រាប់តែកុំព្យូទ័រអាន (ឧទាហរណ៍ `.png`, `.jpg`, `.pdf`, `.zip`)។
+- **Encoding:** របៀបបម្លែងអក្សរទៅជា Bytes និងពី Bytes ទៅជាអក្សរវិញ (ភាគច្រើនបំផុត ពិភពលោកប្រើប្រាស់ **UTF-8** ជាស្តង់ដារ)។
+- **File Handle (ឬ File Object):** ឧបករណ៍ ឬ Object មួយដែល Python ប្រើសម្រាប់ធ្វើការជាមួយ File បន្ទាប់ពីយើងប្រកាសពាក្យ `open()` រួច។
+
+---
+
+## 💡 គំនិតគោល (The Core Idea)
+
+### តារាង File Modes ដ៏សំខាន់
+ពេលអ្នកបើកឯកសារ អ្នកត្រូវប្រាប់ Python ថា **"តើអ្នកចង់បើកវាដើម្បីធ្វើអ្វី?"** នេះហៅថា Mode!
+
+| Mode   | ការពិពណ៌នា (Description)       |
+| ------ | ----------------- |
+| `"r"`  | Read (អានទិន្នន័យ)              |
+| `"w"`  | Write (សរសេរថ្មី និងលុបចាស់ចោល) |
+| `"a"`  | Append (បន្ថែមពីលើទិន្នន័យចាស់ខាងចុង) |
+| `"x"`  | Create New File (បង្កើតថ្មីតែម្តង បើមានរួចហើយវា Error) |
+| `"rb"` | Read Binary (អានឯកសាររូបភាព, PDF)      |
+| `"wb"` | Write Binary (សរសេរឯកសារ Binary)     |
+| `"r+"` | Read & Write (អានផង និងសរសេរផង) |
+| `"a+"` | Read & Append (អានផង និងបន្ថែមផង) |
+
+> អ្នកនឹងជួប `"rb"` ឬ `"wb"` ញឹកញាប់បំផុតនៅពេលដែលអ្នកធ្វើការទាញយករូបភាពពីអុីនធឺណិត ឬទាញយក Machine Learning Models មកប្រើប្រាស់។
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ (In Depth)
+
+### ១. ការអានទិន្នន័យចេញពីឯកសារ (Reading)
+
+យើងប្រើប្រាស់ពាក្យ `with` ព្រោះវានឹងបិទឯកសារវិញដោយស្វ័យប្រវត្តិ។
+
+**អានឯកសារទាំងមូល (Reading Entire File)**
+```python
+with open("notes.txt", "r", encoding="utf-8") as file:
+    content = file.read()
+
+print(content)
+```
+
+**អានតែមួយបន្ទាត់ (Reading One Line)**
+```python
+with open("notes.txt", "r", encoding="utf-8") as file:
+    first_line = file.readline()
+
+print(first_line)
+```
+
+**អានគ្រប់បន្ទាត់ដាក់ជា List (Reading All Lines)**
+```python
+with open("notes.txt", "r", encoding="utf-8") as file:
+    lines = file.readlines()
+
+print(lines)
+```
+
+**⚠️ កំណត់ចំណាំ:**
+- `read()` → បញ្ចេញជាអក្សរភ្ជាប់គ្នា (String)
+- `readline()` → បញ្ចេញតែមួយបន្ទាត់ (One line)
+- `readlines()` → បញ្ចេញជាបញ្ជី (List នៃ String)
+
+---
+
+### ២. ការសរសេរទិន្នន័យច្រើនបន្ទាត់បញ្ចូលគ្នា (Writing Multiple Lines)
+
+ជំនួសឱ្យការសរសេរ `file.write()` ច្រើនដង អ្នកអាចប្រើ `writelines()` បាន។
+
+```python
+lines = [
+    "Python\n",
+    "Java\n",
+    "C++\n"
+]
+
+with open("languages.txt", "w") as file:
+    file.writelines(lines)
+```
+
+---
+
+### ៣. តើអក្សរគោលកំពុងចង្អុលនៅទីណា? (File Pointer: `tell` & `seek`)
+
+នៅពេលអានឯកសារ Python មាន "ទស្សន៍ទ្រនិច (Pointer)" មួយកំពុងរត់។
+
+```python
+with open("notes.txt", "r") as file:
+    print(file.tell()) # ទីតាំងបច្ចុប្បន្ន (លទ្ធផល: 0)
+
+    file.read(5)       # អាន ៥ អក្សរដំបូង
+
+    print(file.tell()) # ឥឡូវវារត់ដល់ទីតាំងលេខ 5 ហើយ!
+
+    file.seek(0)       # បញ្ជាឱ្យរត់ត្រឡប់ទៅដើមឯកសារ (ទីតាំងលេខ 0) វិញ
+
+    print(file.read()) # អានឡើងវិញពីដើមដល់ចប់
+```
+
+---
+
+### ៤. ការត្រួតពិនិត្យថាមានឯកសារនោះឬទេ (Check File Exists)
+
+```python
+import os
+
+if os.path.exists("data.txt"):
+    print("Found - រកឃើញឯកសារ")
+else:
+    print("Missing - រកមិនឃើញទេ")
+```
+> **ចំណាំ:** សព្វថ្ងៃនេះ នៅក្នុង Python ទំនើប គេនិយមប្រើ `pathlib.Path("data.txt").exists()` ច្រើនជាង។ ពួកយើងនឹងរៀនពីវានៅមេរៀនបន្ទាប់។
+
+---
+
+### ៥. ការគ្រប់គ្រងកំហុស (Exception Handling)
+
+ក្នុងពិភពពិត ឯកសារអាចនឹងបាត់បង់ ឬមិនអាចបើកបាន។ អ្នកអាជីពតែងតែការពារកូដកុំឱ្យគាំង៖
+
+```python
+try:
+    with open("student.txt", "r") as file:
+        print(file.read())
+
+except FileNotFoundError:
+    print("កំហុស៖ រកឯកសារមិនឃើញ!")
+
+except PermissionError:
+    print("កំហុស៖ អ្នកគ្មានសិទ្ធិបើកឯកសារនេះទេ!")
+
+except UnicodeDecodeError:
+    print("កំហុស៖ បញ្ហាក្នុងការបំប្លែងតួអក្សរ (Encoding error)!")
+```
+
+---
+
+### ៦. ការធ្វើការជាមួយឯកសារ Binary (Images, PDFs)
+
+ឯកសារខ្លះមិនមែនជាអក្សរទេ តែវាជាប្រភេទ Binary (Bytes)។
+
+```python
+with open("photo.jpg", "rb") as file: # កត់សម្គាល់អក្សរ "rb" (Read Binary)
+    data = file.read()
+
+print(type(data)) # <class 'bytes'>
+```
+- អាន Text → បានប្រភេទ `str` (String)
+- អាន Binary → បានប្រភេទ `bytes`
+
+---
+
+## 🛒 ការអនុវត្តក្នុងពិភពពិត (Real-world Example)
+
+### កម្មវិធីបង្កើតរបាយការណ៍សិស្ស (Student Report Generator)
+កម្មវិធីរដ្ឋបាលពិតប្រាកដតែងតែត្រូវទាញទិន្នន័យ (Database) មកបង្កើតជារបាយការណ៍រៀងរាល់ចុងខែ។
+
+```python
+students = [
+    ("Sok", 90),
+    ("Dara", 85),
+    ("Bopha", 95)
+]
+
+# សរសេររបាយការណ៍
+with open("report.txt", "w", encoding="utf-8") as file:
+    for name, score in students:
+        file.write(f"សិស្ស {name} ទទួលបានពិន្ទុ: {score}\n")
+
+print("Report generated successfully.")
+```
+
+---
+
+## ❌ កំហុសដែលអ្នកតែងតែជួប (Common Mistakes)
+
+### ១. អានឯកសារធំៗចូលទៅក្នុង Memory ទាំងមូល
+❌ ការធ្វើបែបនេះ អាចធ្វើឱ្យកុំព្យូទ័រគាំង ប្រសិនបើឯកសារធំដល់ទៅ 10GB៖
+```python
+content = file.read()
+```
+✅ ដំណោះស្រាយល្អបំផុត គឺអានម្តងមួយបន្ទាត់៖
+```python
+for line in file:
+    # ធ្វើការជាមួយ line នីមួយៗ
+    print(line)
+```
+
+### ២. ភ្លេចកំណត់ Encoding
+```python
+open("khmer.txt") # ❌ អាចមានបញ្ហាលើកុំព្យូទ័រខ្លះ
+```
+```python
+open("khmer.txt", encoding="utf-8") # ✅ ល្អបំផុត និងដំណើរការបានគ្រប់ទីកន្លែង
+```
+
+### ៣. ប្រើ Relative Path មិនបានត្រឹមត្រូវ
+សិស្សតែងគិតថា `open("data.txt")` គឺអានឯកសារដែលនៅជាប់ក្បែរកូដ `.py` របស់ខ្លួនជានិច្ច។ តែការពិតវាផ្អែកលើ Current Working Directory (CWD) របស់ Terminal។
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ (Key Takeaways)
+
+- **`open()`** ប្រើសម្រាប់បើកឯកសារ។
+- Mode សំខាន់ៗមាន **`'r'`**, **`'w'`**, **`'a'`**, **`'x'`**, **`'rb'`**, និង **`'wb'`**។
+- **`with`** គឺជាវិធីល្អបំផុត និងមានសុវត្ថិភាពបំផុត ព្រោះវាបិទឯកសារ (`close()`) ដោយស្វ័យប្រវត្តិ។
+- ត្រូវបែងចែកឱ្យច្បាស់រវាងមុខងារ **`read()`**, **`readline()`**, និង **`readlines()`**។
+- **`write()`** សរសេរទិន្នន័យមួយដង ឯ **`writelines()`** សរសេរប្រយោគច្រើនបន្ទាត់ (List) ។
+- កុំភ្លេចប្រើ **`encoding="utf-8"`** សម្រាប់ឯកសារដែលមានភាសាខ្មែរ ឬអក្សរ Unicode ផ្សេងៗ។
+- សម្រាប់ឯកសារធំៗ គួរអានម្តងមួយបន្ទាត់ (**`for line in file:`**) ដើម្បីសន្សំទំហំ Memory ។
+- ប្រើប្រាស់ **`try...except`** ដើម្បីដោះស្រាយកំហុស ដូចជា `FileNotFoundError` ឬ `PermissionError`។
+- ឯកសារអត្ថបទ (Text) និងឯកសារ Binary (Images, PDFs, ZIP) ត្រូវប្រើ Modes ខុសគ្នា (ឧទាហរណ៍ `"r"`/`"w"` ទល់នឹង `"rb"`/`"wb"`)។

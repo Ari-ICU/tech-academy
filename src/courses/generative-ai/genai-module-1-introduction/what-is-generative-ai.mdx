@@ -1,0 +1,91 @@
+---
+title: What is Generative AI?
+description: ការណែនាំអំពី generative AI — ម៉ូដែលដែលបង្កើតមាតិកាថ្មី (អត្ថបទ រូបភាព សំឡេង) ជាជាងគ្រាន់តែចាត់ថ្នាក់ ឬទស្សន៍ទាយ។
+objectives:
+  - បែងចែកម៉ូដែល generative ពីម៉ូដែល discriminative
+  - កំណត់អត្តសញ្ញាណគ្រួសារម៉ូដែល generative ស្នូល (GANs, VAEs, diffusion, transformers)
+  - ពណ៌នាអំពីការអនុវត្តជាក់ស្តែងនៃ generative AI
+module: genai-module-1-introduction
+order: 1
+quiz:
+  - question: តើអ្វីជាភាពខុសគ្នាចម្បងរវាងម៉ូដែល generative និង discriminative?
+    options:
+      - ម៉ូដែល Generative ចាត់ថ្នាក់ធាតុបញ្ចូល; ម៉ូដែល discriminative បង្កើតលទ្ធផល
+      - ម៉ូដែល Generative រៀន P(x,y); ម៉ូដែល discriminative រៀន P(y|x)
+      - ម៉ូដែល Generative ត្រូវការ labels; ម៉ូដែល discriminative មិនត្រូវការទេ
+      - មិនមានភាពខុសគ្នាទេ
+    correctAnswer: 1
+    explanation: ម៉ូដែល Generative រៀនពី joint distribution P(x,y) និងអាចបង្កើតគំរូថ្មីៗ ចំណែកឯម៉ូដែល discriminative រៀនពី conditional P(y|x) ដើម្បីចាត់ថ្នាក់ ឬទស្សន៍ទាយ។
+---
+
+## �� Overview
+
+Generative AI refers to models that *produce* new content — whether that's text, images, music, code, or 3D structures. Rather than answering "what is this?", generative models answer "what could be?".
+
+The 2020s have seen explosive advances: GPT language models can write essays, DALL·E and Stable Diffusion create images from prompts, and models like AlphaFold predict protein structures. All of these are generative at their core.
+
+
+What is Generative AI? គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+Traditional ML models are classifiers or regressors: given a data point, predict a label or a number. Generative models go the opposite direction: given a description (or nothing at all), create a plausible data point.
+
+Imagine you've seen thousands of cat photos. A discriminative model can tell you "is this a cat?". A generative model can produce a *new* cat photo that looks real but never existed before.
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+**Discriminative models** learn $P(y \mid x)$ — the probability of label $y$ given input $x$.
+**Generative models** learn $P(x)$ (unconditional) or $P(x, y)$ (joint distribution), enabling sampling of new $x$ values.
+
+### Core Generative Model Families
+
+| Model Class | Key Idea | Notable Examples |
+|---|---|---|
+| **GANs** | Generator vs discriminator adversarial training | StyleGAN, BigGAN |
+| **VAEs** | Variational autoencoder with latent space | β-VAE, VQ-VAE |
+| **Diffusion Models** | Iterative denoising from random noise | DALL·E 2, Stable Diffusion, Imagen |
+| **Transformers** | Autoregressive sequence modelling | GPT, BERT, LLaMA, Claude |
+
+## 🔢 គណិតវិទ្យា
+
+A generative model $G$ with parameters $\theta$ aims to approximate the true data distribution $P_{data}(x)$. For example, in a GAN:
+
+- The **generator** $G(z)$ maps random noise $z$ to a sample $x$.
+- The **discriminator** $D(x)$ predicts whether $x$ is real or fake.
+
+Training is a min-max game:
+
+$$\min_{G} \max_{D} \mathbb{E}_{x \sim P_{data}}[\log D(x)] + \mathbb{E}_{z \sim P_z}[\log(1 - D(G(z)))]$$
+
+The generator learns to fool the discriminator, which forces $G$ to match $P_{data}$.
+
+## 💻 កូដ
+
+```python
+from diffusers import StableDiffusionPipeline
+import torch
+
+# Load a pre-trained diffusion model (Stable Diffusion)
+pipe = StableDiffusionPipeline.from_pretrained(
+    "stabilityai/stable-diffusion-2",
+    torch_dtype=torch.float16
+)
+pipe = pipe.to("cuda")
+
+# Generate an image from a text prompt
+prompt = "a cyberpunk cityscape at sunset, highly detailed, 4k"
+image = pipe(prompt, num_inference_steps=50).images[0]
+image.save("output.png")
+```
+
+## 🌐 Real-world Example
+
+- **Text generation**: GPT-4 assists with writing emails, code, essays.
+- **Image synthesis**: Artists use Midjourney or DALL·E for concept art.
+- **Drug discovery**: Generative models design novel molecular structures.
+- **Code generation**: GitHub Copilot suggests entire functions from a docstring.
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+Generative AI models learn the structure of data well enough to create new, plausible samples. They differ fundamentally from discriminative models, which classify existing inputs. Modern generative models — especially transformers and diffusion models — power the largest AI breakthroughs of the decade, from ChatGPT to Stable Diffusion to AlphaFold.

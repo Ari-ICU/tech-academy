@@ -1,0 +1,88 @@
+---
+title: Project 1 - ការវិភាគពាណិជ្ជកម្មអេឡិចត្រូនិក (E-Commerce Analytics)
+description: អនុវត្តជំនាញ Data Analyst ពេញលេញទៅលើទិន្នន័យ E-Commerce ដើម្បីស្វែងយល់ពីផលិតផលដែលលក់ដាច់បំផុត និងអាកប្បកិរិយារបស់អតិថិជន។
+objectives:
+  - សំអាតទិន្នន័យដែលមានភាពកខ្វក់ (Missing values, ខុស Data Type)
+  - គណនាប្រាក់ចំណេញ (Profit) តាមប្រភេទផលិតផល
+  - ប្រើប្រាស់ Seaborn ដើម្បីគូរក្រាហ្វិកបង្ហាញរបកគំហើញ
+module: da-module-11-projects
+order: 1
+quiz:
+  - question: នៅក្នុងវិស័យ E-Commerce តើរង្វាស់មួយណា (Metric) ដែលសំខាន់បំផុតសម្រាប់វាស់ស្ទង់ភាពជោគជ័យនៃអាជីវកម្ម?
+    options:
+      - ចំនួនអតិថិជនចូលមើលវេបសាយ (Website Visitors)
+      - ចំនួនផលិតផលសរុបនៅក្នុងស្តុក
+      - អត្រាប្តូរទៅជាការទិញ (Conversion Rate) ឫ ចំណូលសរុប (Total Revenue)
+      - ចំនួនការ Like លើ Facebook Page
+    correctAnswer: 3
+    explanation: 'អ្នកចូលមើលច្រើន ឫ Like ច្រើន មិនប្រាកដថាទិញនោះទេ។ សម្រាប់ E-Commerce អ្វីដែលសំខាន់បំផុតគឺ "តើមនុស្សប៉ុន្មាននាក់ដែលចូលមក ហើយសម្រេចចិត្តចាយលុយពិតប្រាកដ (Conversion)?" រួមជាមួយនឹង "ចំណូលនិងប្រាក់ចំណេញសរុប"។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+សូមស្វាគមន៍មកកាន់ Module ទី ១១! ឥឡូវនេះមិនមានមេរៀនទ្រឹស្តីទៀតទេ។ នេះជាកន្លែងដែលអ្នកប្រមូលផ្តុំរាល់ចំណេះដឹងដែលបានរៀន (Pandas, Matplotlib, Seaborn) មកប្រើប្រាស់ក្នុងគម្រោងជាក់ស្តែង ដែលអ្នកអាចយកទៅដាក់ក្នុងប្រវត្តិរូប (CV/Portfolio) របស់អ្នកបាន!
+
+---
+
+## 💻 គម្រោង៖ E-Commerce Analytics
+
+ឧបមាថាអ្នកជា Data Analyst នៅក្រុមហ៊ុន E-Commerce មួយ។ ថៅកែបានផ្តល់ទិន្នន័យ `sales_data.csv` អោយអ្នក ហើយសួរថា៖ *"តើផលិតផលមួយណាលក់ដាច់ជាងគេ? ហើយយើងគួរពង្រីកការលក់នៅខេត្តណា?"*
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# ១. នាំចូលទិន្នន័យ (យើងបង្កើតទិន្នន័យក្លែងក្លាយនៅទីនេះ)
+data = {
+    'OrderID': [1, 2, 3, 4, 5, 6],
+    'Product': ['Laptop', 'Mouse', 'Phone', 'Laptop', 'Mouse', 'Tablet'],
+    'Category': ['Electronics', 'Accessories', 'Electronics', 'Electronics', 'Accessories', 'Electronics'],
+    'Price': [1000, 20, 800, 1000, 20, 400],
+    'Qty': [1, 5, 2, 1, 3, 1],
+    'City': ['Phnom Penh', 'Siem Reap', 'Phnom Penh', 'Battambang', 'Phnom Penh', 'Siem Reap']
+}
+df = pd.DataFrame(data)
+
+# ២. ការសំអាត និងរៀបចំទិន្នន័យ (Data Preparation)
+# បង្កើតជួរឈរថ្មី "ចំណូលសរុប (Revenue)" = តម្លៃគុណនឹងបរិមាណ
+df['Revenue'] = df['Price'] * df['Qty']
+
+# ៣. ឆ្លើយសំណួរទី១៖ តើផលិតផលណារកលុយបានច្រើនជាងគេ? (GroupBy)
+product_revenue = df.groupby('Product')['Revenue'].sum().reset_index()
+product_revenue = product_revenue.sort_values(by='Revenue', ascending=False)
+
+print("--- ចំណូលតាមផលិតផល ---")
+print(product_revenue)
+
+# ៤. ឆ្លើយសំណួរទី២៖ តើទីក្រុងណាទិញច្រើនជាងគេ? 
+city_sales = df.groupby('City')['Revenue'].sum().reset_index()
+
+# ៥. ការគូរក្រាហ្វិក (Data Visualization)
+sns.set_theme(style="whitegrid")
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+fig.suptitle('E-Commerce Sales Analysis', fontsize=16, fontweight='bold')
+
+# ក្រាហ្វិកឆ្វេង: ចំណូលតាមផលិតផល
+sns.barplot(data=product_revenue, x='Product', y='Revenue', ax=axes[0], palette='viridis')
+axes[0].set_title('Revenue by Product')
+axes[0].set_ylabel('Revenue ($)')
+
+# ក្រាហ្វិកស្តាំ: ចំណូលតាមទីក្រុង
+# រំលេចពណ៌ភ្នំពេញ
+colors = ['red' if city == 'Phnom Penh' else 'grey' for city in city_sales['City']]
+sns.barplot(data=city_sales, x='City', y='Revenue', ax=axes[1], palette=colors)
+axes[1].set_title('Revenue by City (Phnom Penh Leads)')
+axes[1].set_ylabel('Revenue ($)')
+
+plt.tight_layout()
+plt.show()
+```
+
+### 📝 របាយការណ៍អាជីវកម្ម (Business Insights)
+
+ផ្អែកលើការវិភាគខាងលើ៖
+1. **ផលិតផល (Products):** Laptop និង Phone គឺជាផលិតផលដែលរកចំណូលបានច្រើនជាងគេបំផុត (ទោះបីជា Mouse លក់បានចំនួនច្រើនក៏ដោយ តែចំណូលសរុបនៅតែតិច)។ យើងគួរផ្តោតការផ្សាយពាណិជ្ជកម្មលើ Laptop។
+2. **ទីតាំង (Locations):** ភ្នំពេញគឺជាទីផ្សារធំបំផុត ដែលមានចំណូលលើសខេត្តផ្សេងៗដាច់។ យុទ្ធសាស្ត្របន្ទាប់ គឺគួរតែផ្តល់ការដឹកជញ្ជូនឥតគិតថ្លៃ (Free Delivery) នៅសៀមរាប និងបាត់ដំបង ដើម្បីជំរុញការលក់នៅទីនោះ!
+
+នៅក្នុងគម្រោងបន្ទាប់ យើងនឹងផ្លាស់ប្តូរពីការវិភាគផលិតផល ទៅជាការវិភាគ "ធនធានមនុស្ស (HR Analytics)" វិញម្តង!

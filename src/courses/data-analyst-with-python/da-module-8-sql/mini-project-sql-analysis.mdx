@@ -1,0 +1,79 @@
+---
+title: Mini Project - ការវិភាគទិន្នន័យដោយប្រើ SQL (SQL Analysis)
+description: ដើរតួជា Data Analyst របស់ធនាគារ ដោយសរសេរកូដ SQL ដ៏ស្មុគស្មាញដើម្បីទាញយករបាយការណ៍បំណុលរបស់អតិថិជន ពីក្នុង Database។
+objectives:
+  - សរសេរកូដ SQL ដែលមានពាក្យបញ្ជាច្រើនបញ្ចូលគ្នា (JOIN, GROUP BY, HAVING, ORDER BY)
+  - ដោះស្រាយបញ្ហាអាជីវកម្មជាក់ស្តែង
+  - បិទបញ្ចប់វគ្គសិក្សា Data Analyst ជាមួយ Python និង SQL
+module: da-module-8-sql
+order: 7
+quiz:
+  - question: នៅក្នុងកូដ SQL ដ៏ស្មុគស្មាញមួយ តើលំដាប់លំដោយនៃការសរសេរ (Syntax Order) មួយណាដែលត្រឹមត្រូវតាមស្តង់ដារ?
+    options:
+      - SELECT -> WHERE -> FROM -> GROUP BY -> ORDER BY
+      - SELECT -> FROM -> JOIN -> WHERE -> GROUP BY -> HAVING -> ORDER BY -> LIMIT
+      - FROM -> SELECT -> GROUP BY -> HAVING -> WHERE -> ORDER BY
+      - SELECT -> FROM -> ORDER BY -> LIMIT -> WHERE
+    correctAnswer: 2
+    explanation: 'នេះគឺជារូបមន្តមាស (Golden Rule) របស់ SQL! អ្នកត្រូវប្រាប់វាថា៖ យកអ្វី (SELECT) ពីណា (FROM + JOIN) ក្នុងលក្ខខណ្ឌណា (WHERE) ចែកក្រុមតាមអ្វី (GROUP BY) ច្រោះលទ្ធផលបូក (HAVING) រៀបលំដាប់ (ORDER BY) និងកាត់យកចំនួនប៉ុន្មាន (LIMIT)។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+សូមស្វាគមន៍មកកាន់គម្រោងបញ្ចប់ (Capstone Project) នៃវគ្គសិក្សា Data Analyst របស់យើង! ថ្ងៃនេះ អ្នកធ្វើការនៅធនាគារ "Cambodia Tech Bank"។ ប្រធានផ្នែកឥណទាន (Credit Manager) បានស្នើសុំរបាយការណ៍បន្ទាន់មួយ។
+
+**សំណើរបស់ប្រធាន:** *"ជួយទាញឈ្មោះអតិថិជន ដែលកំពុងជំពាក់កម្ចីសរុប លើសពី $50,000 ដោយបង្ហាញឈ្មោះ និងប្រាក់បំណុលសរុប ហើយរៀបអ្នកជំពាក់ច្រើនជាងគេអោយនៅលើគេបង្អស់។"*
+
+---
+
+## 💻 គម្រោង៖ របាយការណ៍បំណុលអតិថិជន
+
+យើងមានតារាង ២ នៅក្នុង Database របស់ធនាគារ៖
+1. **`Clients` (ព័ត៌មានអតិថិជន):** `client_id`, `full_name`, `city`
+2. **`Loans` (កម្ចី):** `loan_id`, `client_id`, `loan_amount`, `status` (Active ឫ Paid)
+
+ដើម្បីឆ្លើយតបនឹងសំណើរបស់ប្រធាន អ្នកត្រូវសរសេរកូដ SQL ដូចខាងក្រោម៖
+
+```sql
+-- ១. ជ្រើសរើស ឈ្មោះ និង បូកសរុបចំនួនប្រាក់កម្ចី (AS តាងឈ្មោះជួរឈរថ្មី)
+SELECT 
+    C.full_name, 
+    SUM(L.loan_amount) AS total_debt
+    
+-- ២. កំណត់តារាងដើម (Clients) តាងដោយ C
+FROM Clients C
+
+-- ៣. ភ្ជាប់ជាមួយតារាងកម្ចី (Loans) តាងដោយ L
+JOIN Loans L
+    ON C.client_id = L.client_id
+    
+-- ៤. ច្រោះយកតែកម្ចីណាដែលនៅសកម្ម (មិនទាន់សងអស់)
+WHERE L.status = 'Active'
+
+-- ៥. ចងក្រងបូកសរុប តាមឈ្មោះអតិថិជនម្នាក់ៗ
+GROUP BY C.full_name
+
+-- ៦. ច្រោះយកតែអ្នកដែលបូកសរុបទៅ ជំពាក់លើសពី ៥ ម៉ឺនដុល្លារ
+HAVING SUM(L.loan_amount) > 50000
+
+-- ៧. រៀបលំដាប់ពីធំមកតូច (អ្នកជំពាក់ច្រើននៅលេខ ១)
+ORDER BY total_debt DESC
+
+-- ៨. (ជាជម្រើស) បើចង់បានតែ Top 10 អ្នកជំពាក់ធំជាងគេ
+LIMIT 10;
+```
+
+### ការសន្និដ្ឋាន
+នៅពេលអ្នក Run កូដនេះទៅក្នុង Database កុំព្យូទ័រនឹងទាញយកទិន្នន័យរាប់លានជួរ មកច្រោះ បូកសរុប រួចបញ្ចេញជាតារាងតូចមួយ (ប្រហែល ១០ ជួរ) អោយអ្នកភ្លាមៗ។ បន្ទាប់មក អ្នកអាច Download តារាងនេះជា CSV យកទៅគូរក្រាហ្វិកក្នុង **Seaborn** ឬ **Matplotlib** ដែលយើងបានរៀន យកទៅ Present ជូនថៅកែជាការស្រេច!
+
+---
+
+# 🎓 អបអរសាទរ! 
+អ្នកបានបញ្ចប់វគ្គសិក្សា **"Data Analyst ជាមួយ Python"** ជាផ្លូវការហើយ! 
+ឥឡូវនេះ អ្នកមានសមត្ថភាពពេញលេញក្នុងការ៖
+1. ប្រើ **Pandas & NumPy** ដើម្បីសំអាតទិន្នន័យ
+2. ធ្វើ **EDA** ដើម្បីរក Business Insights
+3. គូរក្រាហ្វិកជាមួយ **Matplotlib & Seaborn**
+4. ទាញទិន្នន័យពី Database ជាមួយ **SQL**
+
+**ជោគជ័យក្នុងការងារថ្មីរបស់អ្នក! 🚀**

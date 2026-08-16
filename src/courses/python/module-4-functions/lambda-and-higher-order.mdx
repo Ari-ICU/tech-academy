@@ -1,0 +1,376 @@
+---
+title: Lambda Functions និង Higher-Order Functions
+description: សរសេរ anonymous functions ដែលខ្លីជាមួយ lambda, ហើយ pass functions ជា arguments ដោយប្រើ map(), filter(), និង sorted()។
+objectives:
+  - សរសេរ lambda expressions សម្រាប់ functions មួយបន្ទាត់សាមញ្យ
+  - ប្រើ map() និង filter() ដើម្បី transform និង select ពី iterables
+  - Pass functions ជា arguments ទៅ sorted() និង built-ins ផ្សេងទៀត
+module: module-3-functions
+order: 2
+quiz:
+  - question: "What does lambda x, y: x * y do?"
+    options:
+      - "Defines a named function that multiplies two numbers"
+      - "Creates an anonymous function that returns the product of x and y"
+      - "Immediately calls a function with arguments x and y"
+      - "Creates a list [x, y]"
+    correctAnswer: 1
+    explanation: "lambda creates an anonymous (unnamed) function. lambda x, y: x * y returns the product of its two parameters."
+  - question: "What does list(filter(lambda x: x > 0, [-3, -1, 0, 2, 5])) return?"
+    options:
+      - "[-3, -1, 0, 2, 5]"
+      - "[2, 5]"
+      - "[True, True]"
+      - "[0, 2, 5]"
+    correctAnswer: 1
+    explanation: "filter() keeps only items for which the function returns True. x > 0 is True for 2 and 5 only."
+---
+
+## 🌐 Overview
+
+ចុះបើយើងប្រាប់អ្នកថា អ្នកអាចបង្កើត Function មួយបានដោយមិនចាំបាច់ដាក់ឈ្មោះឱ្យវា ហើយសរសេរចប់ក្នុងមួយបន្ទាត់? នៅក្នុង Python `lambda` អនុញ្ញាតឱ្យយើងធ្វើបែបនេះបាន។ វាកាន់តែមានថាមពលនៅពេលដែលយើងប្រើវាជាមួយ Higher-Order Functions ដូចជា `map()`, `filter()`, និង `sorted()` ដែលជាបច្ចេកទេសដ៏ពេញនិយមបំផុតសម្រាប់ការកែច្នៃទិន្នន័យ (Data Processing) លឿនៗ។
+
+---
+
+## 📚 រៀនពាក្យបច្ចេកទេស (Definitions)
+
+- **Anonymous Function:** Function ដែលមិនមានឈ្មោះ (Unnamed Function) ហើយភាគច្រើនត្រូវបានប្រើតែម្តង។
+- **Callable:** Object ណាមួយដែលអាចហៅដោយ `()` បាន ដូចជា Function ឬ Lambda ជាដើម។
+- **Higher-Order Function:** Function ដែលទទួល Function ផ្សេងជា argument ឬ return Function មួយផ្សេងទៀត។
+- **Lambda Function:** គឺជា Function តូចមួយដែលគ្មានឈ្មោះ និងត្រូវបានសរសេរយ៉ាងខ្លីក្នុងមួយបន្ទាត់កូដ។
+- **`map()`:** Function សម្រាប់យក Function មួយទៅអនុវត្ត (Apply) ទៅលើគ្រប់សមាជិកទាំងអស់ក្នុង List។
+- **`filter()`:** Function សម្រាប់ច្រោះយកតែទិន្នន័យណាដែលធ្វើឱ្យលក្ខខណ្ឌពិត (True) ប៉ុណ្ណោះ។
+
+---
+
+## 💡 ហេតុអ្វីបានជា Lambda មាន?
+
+ស្រមៃថាអ្នកត្រូវការគណនាការ៉េរបស់លេខម្តងតែ១ដងគត់។
+
+បើប្រើ `def`:
+```python
+def square(x):
+    return x * x
+
+numbers = [1, 2, 3]
+result = list(map(square, numbers))
+```
+ប៉ុន្តែ Function នេះអ្នកនឹងប្រើប្រាស់តែម្តងគត់ក្នុងកម្មវិធីទាំងមូល។ ហេតុអ្វីត្រូវខ្ជះខ្ជាយពេលបង្កើតឈ្មោះវា?
+
+យើងអាចសរសេរឱ្យខ្លីជាងនេះ៖
+```python
+numbers = [1, 2, 3]
+
+result = list(
+    map(lambda x: x * x, numbers)
+)
+```
+**អត្ថប្រយោជន៍:** Lambda ជួយសន្សំការបង្កើត Function ដែលមិនចាំបាច់មានឈ្មោះ និងធ្វើឱ្យកូដខ្លី។
+
+---
+
+## 📊 ភាពខុសគ្នារវាង `def` និង `lambda`
+
+| `def` | `lambda` |
+|------|---------|
+| មានឈ្មោះ | គ្មានឈ្មោះ |
+| អាចមាន statements (បញ្ជា) ច្រើន | មានតែ expression មួយប៉ុណ្ណោះ |
+| អាចមាន `return` ច្រើនកន្លែង | Return លទ្ធផលដោយស្វ័យប្រវត្តិ |
+| សម្រាប់ Function ធំៗដែលស្មុគស្មាញ | សម្រាប់ Function តូចៗមួយបន្ទាត់ |
+| ងាយស្រួលរកកំហុស (Debug) | ល្អសម្រាប់ Higher-order functions |
+
+---
+
+## 🧩 Function ក៏ជាទិន្នន័យ (Function as Variable)
+
+អ្នករៀនដំបូងភាគច្រើន មិនសូវយល់ពីចំណុចនេះទេ៖ **Function ក៏ជាទិន្នន័យមួយដែរក្នុង Python!**
+
+```python
+def hello():
+    print("Hello")
+
+say = hello # ចម្លង Function ដាក់ក្នុងអថេរ say
+
+say() # ហៅអថេរ say ឱ្យដំណើរការ!
+```
+
+ដោយសារវាជាទិន្នន័យធម្មតា យើងអាច៖
+- រក្សាទុកវាក្នុង Variable
+- បញ្ជូនវាជា Argument ចូល Function ផ្សេង
+- Return វាចេញពី Function ផ្សេង
+
+---
+
+## 🚚 ការបញ្ជូន Function ចូលជា Argument
+
+```python
+def greet(name):
+    return f"Hello {name}"
+
+def execute(func, value):
+    print(func(value))
+
+execute(greet, "Alice")
+```
+ការពន្យល់៖
+* `execute()` ទទួលយក Function មួយ (`func`) ជាអថេរ
+* ហើយវាហៅ Function នោះនៅពេលក្រោយ ព្រមទាំងបោះតម្លៃចូល។
+* **នេះហើយគឺជាអ្វីដែលហៅថា Higher-Order Function!**
+
+---
+
+## 🗺️ ការយល់ដឹងពី `map()`
+
+ជំនួសឱ្យការប្រើតែ `for` loop សូមមើលរូបភាពនៃការប្រើ `map()`៖
+
+```text
+numbers (បញ្ជីដើម)
+
+[1]   [2]   [3]   [4]
+
+ │     │     │     │
+ ▼     ▼     ▼     ▼
+
+   lambda x: x²
+
+ │     │     │     │
+ ▼     ▼     ▼     ▼
+
+[1]   [4]   [9]  [16]
+```
+
+---
+
+## 🚰 ការយល់ដឹងពី `filter()`
+
+```text
+Numbers (បញ្ជីដើម)
+
+[-3]  [-1]  [0]  [2]  [5]
+
+ │     │     │    │    │
+ ▼     ▼     ▼    ▼    ▼
+
+     lambda x: x > 0
+
+                  │    │
+                  ▼    ▼
+
+                 [2]  [5]
+```
+វាច្រោះបោះចោលលេខណាដែលតូចជាង ឬស្មើ 0។
+
+---
+
+## 🔄 ការរៀបចំទិន្នន័យជាមួយ `sorted()`
+
+នៅពេលយើងមានទិន្នន័យស្មុគស្មាញ យើងត្រូវការ `key=` ដើម្បីប្រាប់ Python ថាត្រូវរៀបតាមលក្ខខណ្ឌអ្វី។
+
+```text
+មុនពេលរៀបចំ (Before)
+
+Bob     70
+Alice   95
+Tom     82
+
+        │
+
+sorted(key=lambda x: x["score"])
+
+        ▼
+
+Bob     70
+Tom     82
+Alice   95
+```
+
+**១. រៀបតាមប្រវែងអក្សរ (Sort by length):**
+```python
+words = [
+    "banana",
+    "kiwi",
+    "apple",
+    "orange"
+]
+
+print(
+    sorted(
+        words,
+        key=lambda x: len(x)
+    )
+)
+# ['kiwi', 'apple', 'banana', 'orange']
+```
+
+**២. រៀបអក្សរមិនគិតធំតូច (Sort case-insensitive):**
+```python
+names = [
+    "alice",
+    "Bob",
+    "carol"
+]
+
+print(
+    sorted(
+        names,
+        key=lambda x: x.lower()
+    )
+)
+# ['alice', 'Bob', 'carol']
+```
+
+---
+
+## ✅ អនុគមន៍ `any()` និង `all()`
+
+ត្រូវបានប្រើប្រាស់គ្រប់ពេលវេលានៅក្នុង Data Science!
+
+```python
+scores = [80, 90, 95]
+
+print(
+    all(score >= 50 for score in scores)
+)
+# True (ព្រោះគ្រប់ពិន្ទុទាំងអស់ សុទ្ធតែ >= 50)
+
+print(
+    any(score == 100 for score in scores)
+)
+# False (ព្រោះអត់មានពិន្ទុណាស្មើ 100 សោះ)
+```
+*   `all()`: ផ្តល់តម្លៃ `True` លុះត្រាតែគ្រប់ធាតុទាំងអស់ **សុទ្ធតែពិត**។
+*   `any()`: ផ្តល់តម្លៃ `True` នៅពេលមាន **យ៉ាងហោចណាស់មួយពិត**។
+
+---
+
+## 🏆 ការស្វែងរកតម្លៃជាមួយ `max()` និង `min()`
+
+អ្នកអាចប្រើ Lambda ដើម្បីប្រាប់ថាចង់ប្រៀបធៀបតាមផ្នែកមួយណា៖
+
+```python
+students = [
+    {"name": "Alice", "gpa": 3.8},
+    {"name": "Bob", "gpa": 3.4},
+    {"name": "Carol", "gpa": 3.9}
+]
+
+best = max(
+    students,
+    key=lambda s: s["gpa"]
+)
+
+print(best) # {'name': 'Carol', 'gpa': 3.9}
+```
+
+---
+
+## ⚔️ List Comprehension ទល់នឹង `map()`
+
+នៅក្នុងសហគមន៍អ្នកប្រើប្រាស់ Python ទំនើប (Modern Python) គេចូលចិត្តប្រើ List Comprehension ជាង។
+
+```python
+numbers = [1, 2, 3, 4]
+
+# ប្រើ map()
+square1 = list(
+    map(
+        lambda x: x * x,
+        numbers
+    )
+)
+
+# ប្រើ list comprehension
+square2 = [
+    x * x
+    for x in numbers
+]
+```
+**ហេតុអ្វីគេចូលចិត្ត List Comprehension ជាង?**
+* ស្រួលអានជាង និងមានភាពច្បាស់លាស់ (Readability)
+* ដើរលឿនជាង (Performance)
+* មានលក្ខណៈជា Pythonic ជាង
+
+---
+
+## ❌ កុំប្រើ Lambda នៅពេល៖
+
+* កូដរបស់អ្នកមានលើសពីមួយ Expression។
+* អ្នកត្រូវដោះស្រាយកំហុស (Debug) ញឹកញាប់។
+* កូដរបស់អ្នកមានតក្កវិជ្ជាស្មុគស្មាញ (Complex Logic)។
+* អ្នកត្រូវសរសេរឯកសារពន្យល់ (Documentation/Docstring)។
+* អ្នកត្រូវហៅកូដនេះមកប្រើឡើងវិញច្រើនកន្លែង។
+
+ក្នុងករណីទាំងអស់នេះ **សូមប្រើ `def` ជំនួសវិញ!**
+
+---
+
+## ⚡ កំណត់ចំណាំអំពីល្បឿន (Performance)
+
+**`lambda` មិនលឿនជាង `def` ទេ!**
+
+នៅពីក្រោយខ្នង Python បង្កើត Function Object ដូចគ្នាទាំងស្រុង។ ភាពខុសគ្នាតែមួយគត់គឺ៖
+* `lambda` សរសេរបានខ្លីជាង។
+* `def` ងាយស្រួលអាន និងស្វែងរកកំហុសជាង។
+
+---
+
+## 📝 សំណួរសម្ភាសន៍ទូទៅ (Common Interview Questions)
+
+1. តើ `lambda` និង `def` ខុសគ្នាដូចម្តេច?
+2. តើ `lambda` អាចមាន statements (ដូចជា if, while) ច្រើនបានទេ? (ចម្លើយ: ទេ បានតែ ១ expression ប៉ុណ្ណោះ)
+3. ហេតុអ្វី `map()` ត្រឡប់មកជា iterator ជំនួសឱ្យ list នៅក្នុង Python 3? (ចម្លើយ: ដើម្បីសន្សំសំចៃ Memory ពេលទិន្នន័យមានទំហំធំ)
+4. តើ `sorted(key=...)` ធ្វើការដូចម្តេច? (ចម្លើយ: វាហៅ `key` function ទៅលើគ្រប់ធាតុនីមួយៗ ដើម្បីយកលទ្ធផលមកប្រៀបធៀបគ្នារៀបលំដាប់)
+5. តើ List Comprehension ល្អជាង `map()` នៅពេលណា?
+
+---
+
+## 🧪 លំហាត់អនុវត្តន៍ (Practice Exercises)
+
+សាកល្បងសរសេរកូដសម្រាប់បញ្ហាខាងក្រោម៖
+
+```python
+# Exercise 1
+numbers = [5, 10, 15]
+# សូមប្រើប្រាស់ map និង lambda ដើម្បីបូកលេខនីមួយៗ +10
+```
+
+---
+```python
+# Exercise 2
+names = [
+    "Alice",
+    "BOB",
+    "carol"
+]
+# សូមប្រើ map() និង lambda ដើម្បីបម្លែងឈ្មោះទាំងអស់ទៅជា lowercase
+```
+
+---
+```python
+# Exercise 3
+numbers = [-5, -1, 0, 3, 9]
+# សូមប្រើ filter() ដើម្បីរក្សាទុកតែលេខវិជ្ជមាន (ធំជាង 0)
+```
+
+---
+```python
+# Exercise 4
+students = [
+    {"name": "A", "score": 60},
+    {"name": "B", "score": 95},
+    {"name": "C", "score": 80},
+]
+# សូមតម្រៀប (sort) students តាមពិន្ទុ (score) ពីធំទៅតូច (descending)
+```
+
+---
+```python
+# Exercise 5
+prices = [100, 200, 300]
+# សូមប្រើ List Comprehension ដើម្បីបន្ថែមពន្ធ VAT 10% ទៅលើតម្លៃនីមួយៗ (គុណនឹង 1.1)
+```
+
+---
+
+## Overall Rating
+មេរៀននេះជំរុញអ្នកឱ្យគិតដូចជាអ្នកសរសេរកម្មវិធីកម្រិតខ្ពស់! ការយល់ដឹងពីរបៀបដែល Function អាចត្រូវបានរក្សាទុក បញ្ជូនជាទិន្នន័យ និងប្រើប្រាស់ជាលក្ខខណ្ឌនៅក្នុង `sorted()`, `max()`, និង `any()` គឺជាអាវុធដ៏មុតស្រួចនៅក្នុង Data Science, AI និងក្នុងការអភិវឌ្ឍន៍ Software ខ្នាតធំ។

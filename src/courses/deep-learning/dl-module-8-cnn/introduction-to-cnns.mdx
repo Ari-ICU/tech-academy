@@ -1,0 +1,206 @@
+---
+title: Convolutional Neural Networks (CNNs)
+description: ស្វែងយល់ពីរបៀបដែល CNNs ទាញយកអត្ថប្រយោជន៍ពីរចនាសម្ព័ន្ធលំហក្នុងរូបភាពដោយប្រើ convolution, pooling, និង learned filters ដែលជារចនាសម្ព័ន្ធនៅពីក្រោយ computer vision ទំនើប។
+objectives:
+  - ពន្យល់ពីរបៀបដែលប្រតិបត្តិការ convolution ចាប់យកលក្ខណៈពិសេសលំហក្នុងរូបភាព
+  - ពណ៌នាពីតួនាទីរបស់ស្រទាប់ pooling និងអនុគមន៍សកម្មភាពនៅក្នុង CNNs
+  - បង្កើត និងបណ្តុះបណ្តាល CNN សម្រាប់ការចាត់ថ្នាក់រូបភាពជាមួយ PyTorch
+module: dl-module-8-cnn
+order: 1
+quiz:
+  - question: តើ 3×3 convolutional filter រៀនដើម្បីចាប់យកអ្វី?
+    options:
+      - លំនាំសកលនៅទូទាំងរូបភាពទាំងមូល
+      - លំនាំលំហក្នុងតំបន់ (គែម វាយនភាព រាង) នៅក្នុងជិតខាង 3×3
+      - តម្លៃភីកសែលមធ្យមនៅក្នុងរូបភាព
+      - ស្លាកចំណាត់ថ្នាក់ (class label) នៃរូបភាព
+    correctAnswer: 1
+    explanation: A convolutional filter slides over the input and computes a dot product with each local patch. A 3×3 filter learns to detect patterns in a 3×3 pixel neighbourhood — early layers detect edges and textures; deeper layers detect shapes and objects.
+  - question: តើគោលបំណងនៃ max pooling គឺជាអ្វី?
+    options:
+      - ដើម្បីបង្កើនកម្រិតភាពច្បាស់ (spatial resolution) នៃ feature maps
+      - ដើម្បីកាត់បន្ថយវិមាត្រលំហ បង្កើតភាពមិនប្រែប្រួលនៃការបកប្រែ (translation invariance) និងកាត់បន្ថយការគណនា
+      - ដើម្បីធ្វើឱ្យតម្លៃភីកសែលធម្មតារវាង 0 និង 1
+      - ដើម្បីបន្ថែមភាពមិនមែនលីនេអ៊ែរ (non-linearity)
+    correctAnswer: 1
+    explanation: Max pooling reduces the spatial size of feature maps by taking the maximum value in each pooling window. This reduces computation, memory, and makes the representation more robust to small translations in the input.
+---
+
+## �� Overview
+
+CNNs revolutionised computer vision by exploiting the spatial structure of images. Instead of connecting every pixel to every neuron (which would require billions of parameters for a 1080p image), CNNs use local, weight-sharing filters that detect the same features anywhere in the image.
+
+
+Convolutional Neural Networks (CNNs) គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+Imagine scanning an image looking for a cat's eye. You don't need to learn a separate detector for "eye in top-left corner" and "eye in bottom-right corner" — the eye looks the same everywhere. CNNs exploit this **translation invariance** by using the same filter weights at every position.
+
+## 🔢 គណិតវិទ្យា
+
+**Convolution**: for input $X$ and filter $K$ of size $k \times k$:
+
+$$S(i, j) = \sum_{m}\sum_{n} X(i+m,\, j+n) \cdot K(m, n)$$
+
+**Output size** after convolution with padding $p$ and stride $s$:
+
+$$O = \left\lfloor \frac{W - k + 2p}{s} \right\rfloor + 1$$
+
+**Parameter count** in a conv layer: $k \times k \times C_{in} \times C_{out} + C_{out}$ (biases)
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+### Convolution Operation
+
+$$S(i, j) = \sum_{m}\sum_{n} X(i+m,\, j+n) \cdot K(m, n)$$
+
+### Output Size
+
+$$O = \left\lfloor \frac{W - k + 2p}{s} \right\rfloor + 1$$
+
+where $W$ = input size, $k$ = kernel size, $p$ = padding, $s$ = stride.
+
+### CNN Architecture Pattern
+
+```
+Input → [Conv → BN → ReLU → Pool] × N → Flatten → FC → Output
+```
+
+| Layer type | Purpose |
+|---|---|
+| Conv | Learn spatial filters (edges, textures, shapes) |
+| BatchNorm | Stabilise activations, faster training |
+| ReLU | Non-linearity |
+| MaxPool | Reduce spatial size, translation invariance |
+| Dropout | Regularisation — randomly zero activations |
+| Flatten | Convert spatial maps to vector |
+| Linear (FC) | Final classification/regression |
+
+## 💻 កូដ
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
+
+torch.manual_seed(42)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# ── CNN ARCHITECTURE ──────────────────────────────────
+class CNN(nn.Module):
+    def __init__(self, num_classes=10):
+        super().__init__()
+
+        # Feature extraction
+        self.features = nn.Sequential(
+            # Block 1
+            nn.Conv2d(1, 32, kernel_size=3, padding=1),   # 28→28
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(32, 32, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(2, 2),                            # 28→14
+            nn.Dropout2d(0.25),
+
+            # Block 2
+            nn.Conv2d(32, 64, kernel_size=3, padding=1),  # 14→14
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(2, 2),                            # 14→7
+            nn.Dropout2d(0.25),
+        )
+
+        # Classifier
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(64 * 7 * 7, 256),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5),
+            nn.Linear(256, num_classes),
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        x = self.classifier(x)
+        return x
+
+model = CNN(num_classes=10).to(device)
+
+# Model summary
+total_params = sum(p.numel() for p in model.parameters())
+print(f"Total parameters: {total_params:,}")
+
+# ── DATA LOADING ──────────────────────────────────────
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.1307,), (0.3081,))  # MNIST mean, std
+])
+
+# (In practice: download=True)
+# train_ds = datasets.MNIST('.', train=True, transform=transform, download=True)
+# test_ds  = datasets.MNIST('.', train=False, transform=transform, download=True)
+# train_loader = DataLoader(train_ds, batch_size=64, shuffle=True)
+# test_loader  = DataLoader(test_ds,  batch_size=256)
+
+# ── TRAINING LOOP ─────────────────────────────────────
+def train_epoch(model, loader, criterion, optimiser):
+    model.train()
+    total_loss = correct = 0
+    for X, y in loader:
+        X, y = X.to(device), y.to(device)
+        optimiser.zero_grad()
+        logits = model(X)
+        loss   = criterion(logits, y)
+        loss.backward()
+        optimiser.step()
+        total_loss += loss.item() * len(X)
+        correct    += (logits.argmax(1) == y).sum().item()
+    return total_loss / len(loader.dataset), correct / len(loader.dataset)
+
+def evaluate(model, loader, criterion):
+    model.eval()
+    total_loss = correct = 0
+    with torch.no_grad():
+        for X, y in loader:
+            X, y = X.to(device), y.to(device)
+            logits = model(X)
+            total_loss += criterion(logits, y).item() * len(X)
+            correct    += (logits.argmax(1) == y).sum().item()
+    return total_loss / len(loader.dataset), correct / len(loader.dataset)
+
+# Training example (commented out — requires MNIST data):
+# criterion = nn.CrossEntropyLoss()
+# optimiser = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4)
+# scheduler = optim.lr_scheduler.StepLR(optimiser, step_size=5, gamma=0.5)
+#
+# for epoch in range(15):
+#     train_loss, train_acc = train_epoch(model, train_loader, criterion, optimiser)
+#     val_loss,   val_acc   = evaluate(model, test_loader, criterion)
+#     scheduler.step()
+#     print(f"Epoch {epoch+1:2d}: "
+#           f"train={train_acc:.3f}, val={val_acc:.3f}, "
+#           f"lr={scheduler.get_last_lr()[0]:.6f}")
+
+# ── UNDERSTANDING CONV LAYERS ─────────────────────────
+# What shape does each layer output?
+x = torch.randn(1, 1, 28, 28)   # batch=1, channels=1, 28×28
+print("Input shape:", x.shape)
+
+conv1 = nn.Conv2d(1, 32, 3, padding=1)
+pool  = nn.MaxPool2d(2, 2)
+conv2 = nn.Conv2d(32, 64, 3, padding=1)
+
+x = conv1(x);  print("After Conv1:", x.shape)   # (1, 32, 28, 28)
+x = pool(x);   print("After Pool1:", x.shape)   # (1, 32, 14, 14)
+x = conv2(x);  print("After Conv2:", x.shape)   # (1, 64, 14, 14)
+x = pool(x);   print("After Pool2:", x.shape)   # (1, 64,  7,  7)
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+CNNs exploit spatial structure through **weight-sharing** (the same filter applied everywhere) and **local connectivity** (each neuron connects only to a local region). **Conv layers** learn spatial filters. **Pooling layers** reduce spatial dimensions and add translation invariance. **BatchNorm** stabilises training. **Dropout** prevents overfitting. The architecture pattern `Conv → BN → ReLU → Pool` repeated 2-3 times, followed by fully-connected layers, is the backbone of most image classification networks.

@@ -1,0 +1,178 @@
+---
+title: Large Language Models (LLMs)
+description: Understand how large language models work — autoregressive generation, tokenisation, the transformer architecture, pre-training vs fine-tuning, and practical prompting.
+objectives:
+  - Explain how LLMs generate text through next-token prediction
+  - Understand tokenisation and why it matters for prompting
+  - Apply prompting techniques including zero-shot, few-shot, and chain-of-thought
+module: genai-module-3-llms
+order: 1
+quiz:
+  - question: How does an LLM generate text?
+    options:
+      - It retrieves text from a database
+      - It predicts the next most likely token one at a time, conditioning on all previous tokens
+      - It randomly selects words from its training data
+      - It executes a set of predefined grammar rules
+    correctAnswer: 1
+    explanation: LLMs are autoregressive models — they generate text token by token, each time predicting the probability distribution over the vocabulary given all preceding tokens. The output is sampled from this distribution.
+  - question: What is the difference between zero-shot and few-shot prompting?
+    options:
+      - Zero-shot is faster; few-shot is more accurate
+      - Zero-shot gives no examples in the prompt; few-shot includes a few input-output examples to guide the model
+      - Zero-shot uses a smaller model; few-shot uses a larger one
+      - They are identical
+    correctAnswer: 1
+    explanation: Zero-shot prompting asks the model to perform a task without any examples. Few-shot prompting includes 2-5 worked examples in the prompt, showing the model the desired input-output format, which significantly improves performance on complex tasks.
+---
+
+## �� Overview
+
+Large Language Models are the technology behind ChatGPT, Claude, Gemini, and GitHub Copilot. Understanding how they work — not just how to use them — lets you prompt them effectively, understand their limitations, and build applications on top of them.
+
+
+Large Language Models (LLMs) គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+An LLM is trained on trillions of tokens of text to predict the next word. After seeing enough text, the model develops a rich internal representation of language, facts, reasoning patterns, and code. At inference time, it generates text token by token, sampling from a probability distribution at each step.
+
+The surprising result: a model trained purely to predict the next word becomes capable of translation, summarisation, code generation, and complex reasoning.
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+### Autoregressive Language Modelling
+
+The model learns to maximise:
+
+$$\mathcal{L} = \sum_{t=1}^{T} \log P(x_t \mid x_1, x_2, \ldots, x_{t-1};\, \theta)$$
+
+where $x_1, \ldots, x_T$ are tokens in the training corpus.
+
+### Tokenisation
+
+Text is split into **tokens** — roughly 3/4 of a word on average. `"DataScience"` → `["Data", "Science"]`. Token limits matter: GPT-4 context = 128k tokens ≈ 100,000 words.
+
+### Key LLM Parameters
+
+| Parameter | Effect |
+|---|---|
+| **Temperature** | Higher = more random/creative; 0 = greedy/deterministic |
+| **Top-p (nucleus sampling)** | Sample from smallest set of tokens whose cumulative probability exceeds p |
+| **Max tokens** | Maximum length of generated response |
+| **System prompt** | Instructions that shape the model's persona and behaviour |
+
+## 💻 កូដ
+
+```python
+# Using the OpenAI Python SDK (also works with compatible APIs)
+# pip install openai
+
+from openai import OpenAI
+
+client = OpenAI(api_key="your-api-key-here")
+
+# ── BASIC COMPLETION ──────────────────────────────────
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "You are a data science tutor. Be concise."},
+        {"role": "user",   "content": "What is the difference between mean and median?"},
+    ],
+    temperature=0.3,
+    max_tokens=200,
+)
+print(response.choices[0].message.content)
+
+# ── ZERO-SHOT PROMPTING ───────────────────────────────
+zero_shot = """
+Classify the sentiment of this review as POSITIVE, NEGATIVE, or NEUTRAL.
+Review: "The model accuracy improved by 12% after hyperparameter tuning."
+Sentiment:"""
+
+# ── FEW-SHOT PROMPTING (better for complex tasks) ─────
+few_shot = """
+Classify the sentiment of each review.
+
+Review: "Training loss decreased steadily throughout."
+Sentiment: POSITIVE
+
+Review: "The model overfit badly despite regularisation."
+Sentiment: NEGATIVE
+
+Review: "We used a 80/20 train/test split."
+Sentiment: NEUTRAL
+
+Review: "Precision dropped from 0.91 to 0.78 after deployment."
+Sentiment:"""
+
+# ── CHAIN-OF-THOUGHT PROMPTING ────────────────────────
+cot_prompt = """
+Solve this step by step:
+
+A dataset has 1,000 examples. We use 80% for training and 20% for testing.
+Of the training set, we further split 10% as validation.
+
+How many examples are in each split?
+
+Let me think through this step by step:"""
+
+# ── STRUCTURED OUTPUT ─────────────────────────────────
+structured_prompt = """
+Extract the following information from the text and return as JSON:
+- model_name
+- accuracy (float)
+- dataset
+
+Text: "We trained a Random Forest on the MNIST dataset and achieved 97.3% accuracy."
+
+JSON:"""
+
+# ── SYSTEM PROMPT ENGINEERING ─────────────────────────
+def ask_ds_tutor(question: str) -> str:
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are an expert data science tutor. "
+                    "Always explain concepts from first principles. "
+                    "Use Python code examples when helpful. "
+                    "Be concise but complete."
+                )
+            },
+            {"role": "user", "content": question},
+        ],
+        temperature=0.4,
+        max_tokens=500,
+    )
+    return response.choices[0].message.content
+
+# Example: print(ask_ds_tutor("Explain gradient descent intuitively"))
+
+# ── STREAMING (for real-time output) ─────────────────
+# stream = client.chat.completions.create(
+#     model="gpt-4o-mini",
+#     messages=[{"role":"user","content":"Explain neural networks briefly"}],
+#     stream=True,
+# )
+# for chunk in stream:
+#     if chunk.choices[0].delta.content:
+#         print(chunk.choices[0].delta.content, end="", flush=True)
+
+# ── COUNTING TOKENS (tiktoken) ────────────────────────
+import tiktoken
+
+enc = tiktoken.encoding_for_model("gpt-4o")
+text = "Data science combines statistics, programming, and domain expertise."
+tokens = enc.encode(text)
+print(f"\nText: '{text}'")
+print(f"Tokens: {tokens}")
+print(f"Token count: {len(tokens)}")
+print(f"Decoded: {[enc.decode([t]) for t in tokens]}")
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+LLMs generate text by predicting the next token autoregressively, trained on massive text corpora. **Tokenisation** determines how text is chunked — understanding token counts helps you work within context limits. **Zero-shot** prompting works for simple tasks; **few-shot** examples dramatically improve complex tasks. **Chain-of-thought** prompting elicits step-by-step reasoning. **Temperature** controls randomness — use low values for factual tasks, higher for creative ones. The **system prompt** is the most powerful way to shape model behaviour consistently.

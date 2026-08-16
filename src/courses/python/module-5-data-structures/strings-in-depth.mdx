@@ -1,0 +1,243 @@
+---
+title: Strings in Depth
+description: ឈ្វេងយល់លម្អិតអំពីការប្រើប្រាស់អក្សរនិងអត្ថបទនៅក្នុង Python របៀបកាត់យកផ្នែកណាមួយនៃអត្ថបទ និងបច្ចេកទេសផ្លាស់ប្តូរទម្រង់អក្សរដែលគេប្រើញឹកញាប់។
+objectives:
+  - យល់ដឹងពីរបៀបយកអក្សរតាមលំដាប់ (Indexing) និងកាត់យកផ្នែក (Slicing) នៃ String
+  - ប្រើប្រាស់ Methods សំខាន់ៗរបស់ String និងការ Formatting ដោយ f-strings
+  - យល់ដឹងពីលក្ខណៈមិនអាចកែប្រែបាន (Immutable) របស់ String
+module: module-4-data-structures
+order: 3
+quiz:
+  - question: តើអថេរ text = "Python" មានតួអក្សរនៅ Index ទី 2 គឺជាអក្សរអ្វី?
+    options:
+      - P
+      - y
+      - t
+      - h
+    correctAnswer: 2
+    explanation: 'Index នៅក្នុង Python ចាប់ផ្តើមពី 0។ ដូច្នេះ P=0, y=1, និង t=2។'
+  - question: តើការប្រៀបធៀប string ពីរដើម្បីមើលថាវាមានតម្លៃដូចគ្នាឬទេ គួរប្រើមួយណា?
+    options:
+      - "string1 is string2"
+      - "string1 == string2"
+      - "string1.equals(string2)"
+      - "string1 === string2"
+    correctAnswer: 2
+    explanation: 'នៅក្នុង Python, == ប្រើសម្រាប់ប្រៀបធៀបតម្លៃ ខណៈពេលដែល is ប្រើសម្រាប់ប្រៀបធៀបអត្តសញ្ញាណ (Object Identity)។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+ទិន្នន័យអត្ថបទ (Text Data) មាននៅគ្រប់ទីកន្លែងក្នុងពិភពវិទ្យាសាស្ត្រទិន្នន័យ (Data Science) ដូចជា៖ ឈ្មោះអតិថិជន, មតិយោបល់ (Reviews) លើផលិតផល, និងទិន្នន័យក្នុងប្រព័ន្ធផ្សេងៗ។ នៅក្នុង Python ពួកវាត្រូវបានហៅថា **Strings**។
+
+នៅក្នុងភាសា Python អក្សរ (Strings) ក៏ត្រូវបានចាត់ទុកជាបណ្តុំទិន្នន័យ (Sequence) ដូចទៅនឹង Lists ឬ Tuples ដែរ ដែលមានន័យថាអ្នកអាចរាប់ទីតាំង កាត់យកផ្នែក ឬស្វែងរកអក្សរនៅក្នុងនោះបានយ៉ាងងាយស្រួល។ នេះគឺជាមូលដ្ឋានគ្រឹះសម្រាប់ការសម្អាតទិន្នន័យ (Data Cleaning) ប្រកបដោយប្រសិទ្ធភាព!
+
+---
+
+## 📚 រៀនពាក្យបច្ចេកទេស (Definitions)
+
+- **String (អក្សរ ឫ អត្ថបទ):** បណ្តុំនៃតួអក្សរ (Characters) ដែលត្រូវបានរុំព័ទ្ធដោយសញ្ញា `""` ឬ `''`។
+- **Immutable:** លក្ខណៈដែលប្រាប់ថាពេល String ត្រូវបានបង្កើតហើយ យើងមិនអាចដោះដូរតួអក្សរណាមួយរបស់វាបានទេ។ បើយើងកែប្រែ គឺយើងកំពុងបង្កើត String ថ្មី។
+- **Concatenation:** ការបូកបញ្ចូលអក្សរពីរ ឬច្រើនចូលគ្នាឱ្យក្លាយជាអក្សរតែមួយដោយប្រើសញ្ញា `+`។
+
+---
+
+## 💡 គំនិតគោល (The Core Idea)
+
+ស្រមៃថា String គឺជាខ្សែក្រវាត់អង្កាំមួយខ្សែ។ អង្កាំនិមួយៗ គឺជាតួអក្សរមួួយ ហើយអង្កាំទាំងអស់ត្រូវបានតម្រៀបតាមលេខរៀងរបស់វា។
+
+អ្នកអាច៖
+- ចង្អុលយកអង្កាំណាមួយក៏បានតាមលេខរៀង (Indexing)
+- កាត់យកអង្កាំមួយកំណាត់មកប្រើ (Slicing)
+- រាប់ចំនួនអង្កាំ (Length)
+- លាបពណ៌អង្កាំទាំងអស់ឱ្យទៅជាអក្សរធំ ឬអក្សរតូច (Methods)
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ (In Depth) 
+
+### ១. ការទាញយកអក្សរ និងបញ្ច្រាស (Indexing, Slicing, & Reversing)
+
+អ្នកអាចប្រើវិធីសាស្រ្តកាត់ទិន្នន័យ (Slicing) ដូចគ្នានឹង List ដែរ!
+
+```python
+text = "Python"
+
+# យកអក្សរទីមួយ
+print(text[0])       # P
+
+# យកអក្សរចុងក្រោយ
+print(text[-1])      # n
+
+# កាត់យកមួយផ្នែក
+print(text[0:4])     # Pyth
+
+# ការបញ្ច្រាសអក្សរដ៏លឿនបំផុតរបស់ Python
+print(text[::-1])    # nohtyP
+```
+
+---
+
+### ២. អនុគមន៍ជំនួយរបស់អក្សរដ៏មានអានុភាព (Additional String Methods)
+
+Python ផ្តល់នូវមុខងាររាប់សិប ដែលជួយសន្សំពេលវេលាអ្នកយ៉ាងច្រើនក្នុងការកែច្នៃអក្សរ៖
+
+```python
+text = "Python Programming"
+
+# ការពិនិត្យរកមើលអក្សរ
+print(text.startswith("Python"))     # True (តើផ្តើមដោយពាក្យនេះ?)
+print(text.endswith("ing"))          # True (តើបញ្ចប់ដោយពាក្យនេះ?)
+print(text.find("Program"))          # 7 (ទីតាំងដែលវាចាប់ផ្តើមរកឃើញ)
+print(text.count("m"))               # 2 (រាប់ថាមានអក្សរ m ប៉ុន្មានតួ)
+
+# ការពិនិត្យប្រភេទអក្សរ
+print(text.isalpha())                # False (មានដកឃ្លា ដូច្នេះវាមិនមែនជាអក្សរសុទ្ធទេ)
+print(text.isdigit())                # False (មានលេខសុទ្ធឬទេ?)
+print(text.isalnum())                # False (មានតែអក្សរនិងលេខឬទេ?)
+```
+
+---
+
+### ៣. f-Strings (ចាំបាច់បំផុតសម្រាប់ Python សម័យទំនើប)
+
+ជំនួសឱ្យការប្រើសញ្ញា `+` ដើម្បីបូកពាក្យ ដែលមើលទៅរញ៉េរញ៉ៃ Python ជំនាន់ 3.6+ បានណែនាំនូវការប្រើ f-strings។
+
+```python
+name = "Alice"
+score = 95
+
+# ប្រើ f-string ងាយស្រួលអានបំផុត!
+print(f"{name} scored {score}")
+```
+**អត្ថប្រយោជន៍របស់ f-Strings:**
+- ដើរលឿនជាង (Faster performance)
+- ងាយស្រួលសរសេរ និងអានជាងកូដបូកសញ្ញា `+`
+- អ្នកសរសេរកម្មវិធីអាជីព ភាគច្រើនណែនាំឱ្យប្រើវាជាស្តង់ដារ។
+
+---
+
+### ៤. ការផ្សំបញ្ជីទៅជាអក្សរវិញដោយ `join()`
+
+សិស្សតែងតែចេះប្រើ `.split()` ដើម្បីបំបែកអក្សរ តែភ្លេចពី `.join()` ក្នុងការផ្សំពួកវាចូលគ្នាវិញ!
+
+```python
+words = ["Python", "is", "awesome"]
+
+# ផ្សំគ្នាដោយប្រើការដកឃ្លា (" ") នៅចន្លោះ
+sentence = " ".join(words)
+
+print(sentence)
+```
+**លទ្ធផល Output:**
+```text
+Python is awesome
+```
+
+---
+
+### ៥. ការពិនិត្យមើលសមាជិក (String Membership)
+
+ចង់ដឹងថាពាក្យមួយមាននៅក្នុងប្រយោគឬទេ? `in` គឺជាមិត្តល្អបំផុតរបស់អ្នក!
+
+```python
+text = "Machine Learning"
+
+print("Machine" in text)    # True
+print("AI" not in text)     # True
+```
+
+---
+
+### ៦. ការរៀបចំទម្រង់អក្សរឱ្យស្អាត (String Formatting)
+
+ប្រើវាសម្រាប់តម្រឹមអត្ថបទ (Alignment) ឬបន្ថែមលេខសូន្យឱ្យគ្រប់ខ្ទង់ (Padding) ជាពិសេសក្នុងការធ្វើរបាយការណ៍។
+
+```python
+name = "Sok"
+
+print(name.center(20)) # ដាក់ឱ្យចំកណ្តាលនៃចន្លោះ 20 តួអក្សរ
+print(name.ljust(20))  # រុញទៅឆ្វេង
+print(name.rjust(20))  # រុញទៅស្តាំ
+
+print("5".zfill(3))    # បន្ថែមលេខសូន្យពីមុខឱ្យគ្រប់ 3 ខ្ទង់ -> 005
+```
+
+---
+
+### ៧. ការ Loop ទៅលើអក្សរម្តងមួយៗ (Iterating)
+
+```python
+for ch in "Python":
+    print(ch)
+```
+Python នឹងព្រីនអក្សរ P, y, t, h, o, n ម្តងមួយៗចុះក្រោមយ៉ាងមានសណ្តាប់ធ្នាប់។
+
+---
+
+## 🛒 ការអនុវត្តក្នុងពិភពពិត (Real-world Application)
+
+### ការពិនិត្យភាពត្រឹមត្រូវនៃអ៊ីមែល (Email Validation)
+ការពិនិត្យមើល និងសម្អាតទិន្នន័យអ៊ីមែល គឺជាកិច្ចការប្រចាំថ្ងៃរបស់ Data Scientists និង Web Developers។ តោះសាកល្បង៖
+
+```python
+emails = [
+    " alice@example.com ",
+    "bob@gmail.com",
+    "invalid_email",
+]
+
+valid_emails = []
+
+for email in emails:
+    # ទី១: កាត់ចោលដកឃ្លាសងខាង និងប្តូរជាអក្សរតូចទាំងអស់
+    clean_email = email.strip().lower()
+
+    # ទី២: ពិនិត្យមើលសញ្ញា @ និងសញ្ញាចុច
+    if "@" in clean_email and "." in clean_email:
+        valid_emails.append(clean_email)
+
+print(valid_emails)
+```
+**លទ្ធផល Output:**
+```text
+['alice@example.com', 'bob@gmail.com']
+```
+អបអរសាទរ! គ្រាន់តែប្រើ `.strip()`, `.lower()` និង `in` អ្នកអាចសម្អាតទិន្នន័យអតិថិជនរាប់លាននាក់បានយ៉ាងរលូន។
+
+---
+
+## ❌ កំហុសដែលអ្នកតែងតែជួប (Common Mistakes)
+
+**១. ព្យាយាមកែប្រែតួអក្សរ (Strings are Immutable)**
+```python
+name = "Cat"
+name[0] = "B" # TypeError! String មិនអាចកែប្រែបានទេ។
+```
+✅ **ដំណោះស្រាយ:** បង្កើតអក្សរថ្មី `name = "B" + name[1:]`
+
+**២. ប្រៀបធៀបដោយប្រើ `is` ជាជាង `==`**
+សិស្សភាគច្រើនគិតថាវាដូចគ្នា តែវាមិនពិតទេ!
+```python
+name = "Alice"
+
+# ❌ មិនត្រឹមត្រូវ (ពិនិត្យមើល Object Identity នៅក្នុង Memory ដែលអាចខុស)
+if name is "Alice":
+    pass
+
+# ✅ ត្រឹមត្រូវបំផុត (ប្រៀបធៀបតម្លៃទិន្នន័យពិតប្រាកដ Value)
+if name == "Alice":
+    pass
+```
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ (Key Takeaways)
+
+- **Strings គឺជាបណ្តុំអក្សរ (Ordered Sequences):** អ្នកអាចប្រើ Indexing និង Slicing ដើម្បីកាត់យកតួអក្សរណាមួយបានយ៉ាងងាយស្រួល។
+- **Strings គឺ Immutable:** ពួកវាមិនអាចផ្លាស់ប្តូរបានទេ បន្ទាប់ពីបង្កើតរួច។
+- ប្រើប្រាស់ **String Methods** ដ៏មានអានុភាពដូចជា `lower()`, `upper()`, `strip()`, `replace()`, `split()`, និង `join()`។
+- ប្រើប្រាស់ **f-strings** (`f"{variable}"`) សម្រាប់ការបញ្ចួលតម្លៃទៅក្នុងអត្ថបទ ដែលជាស្តង់ដាររបស់ Python ទំនើប។
+- ប្រើប្រាស់ **`in`** និង **`not in`** ដើម្បីស្វែងរកការមានវត្តមាននៃពាក្យយ៉ាងលឿន (Membership Testing)។
+- ប្រើប្រាស់ **`==`** ដើម្បីប្រៀបធៀបតម្លៃអក្សរដាច់ខាត កុំប្រើប្រាស់ពាក្យ `is`។
+- ការកែច្នៃអក្សរ (String manipulation) គឺជាកិច្ចការដែលសំខាន់បំផុតមួយនៅក្នុងពិភព Data Cleaning, Web Development, Automation និង Machine Learning។

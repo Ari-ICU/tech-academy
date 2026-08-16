@@ -1,0 +1,127 @@
+---
+title: Logistic Regression
+description: Understand logistic regression for binary and multi-class classification — the sigmoid function, log-loss, decision boundary, and regularisation.
+objectives:
+  - Explain how logistic regression maps inputs to probabilities via the sigmoid function
+  - Train and evaluate a logistic regression classifier with scikit-learn
+  - Interpret coefficients and understand regularisation with C parameter
+module: ml-module-5-classification
+order: 2
+quiz:
+  - question: What does the sigmoid function output?
+    options:
+      - Any real number
+      - A value between 0 and 1 representing a probability
+      - A class label directly
+      - A negative log-likelihood
+    correctAnswer: 1
+    explanation: "The sigmoid function σ(z) = 1 / (1 + e^(-z)) maps any real-valued input to the range (0, 1), making it suitable for outputting probabilities."
+  - question: What does a large positive coefficient in logistic regression mean?
+    options:
+      - That feature has no effect on the prediction
+      - Increasing that feature strongly increases the probability of the positive class
+      - That feature should be removed
+      - The model is overfitting
+    correctAnswer: 1
+    explanation: A large positive coefficient means the corresponding feature strongly pushes the predicted probability toward 1 (positive class). A large negative coefficient pushes it toward 0.
+---
+
+## �� Overview
+
+Logistic regression is the go-to baseline for classification problems. Despite its name, it is a classification algorithm — not regression. It is fast, interpretable, and often surprisingly competitive with complex models.
+
+
+Logistic Regression គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+Linear regression predicts a number. For classification we need a probability between 0 and 1. The trick is to apply the **sigmoid function** to the linear output, squashing any value into $(0, 1)$. If the probability exceeds 0.5, we predict class 1; otherwise class 0.
+
+## 🔢 The Math
+
+**Hypothesis:**
+
+$$\hat{p} = \sigma(\mathbf{x}^T\boldsymbol{\beta}) = \frac{1}{1 + e^{-\mathbf{x}^T\boldsymbol{\beta}}}$$
+
+**Log-loss (binary cross-entropy):**
+
+$$J(\boldsymbol{\beta}) = -\frac{1}{n}\sum_{i=1}^{n}\left[y_i\log\hat{p}_i + (1-y_i)\log(1-\hat{p}_i)\right]$$
+
+**Decision boundary:** $\hat{p} = 0.5$ when $\mathbf{x}^T\boldsymbol{\beta} = 0$ — the hyperplane where the linear score is zero.
+
+## 💻 កូដ
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import (
+    classification_report, confusion_matrix,
+    roc_auc_score, RocCurveDisplay
+)
+from sklearn.datasets import load_breast_cancer
+
+# Load data
+data = load_breast_cancer()
+X, y = data.data, data.target
+feature_names = data.feature_names
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# Scale (important for logistic regression)
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s  = scaler.transform(X_test)
+
+# ── TRAIN ─────────────────────────────────────────────
+# C = 1/lambda — higher C = less regularisation
+model = LogisticRegression(C=1.0, max_iter=1000, random_state=42)
+model.fit(X_train_s, y_train)
+
+# ── EVALUATE ──────────────────────────────────────────
+y_pred  = model.predict(X_test_s)
+y_proba = model.predict_proba(X_test_s)[:, 1]
+
+print(classification_report(y_test, y_pred,
+      target_names=data.target_names))
+print(f"ROC-AUC: {roc_auc_score(y_test, y_proba):.4f}")
+
+# ── COEFFICIENTS ──────────────────────────────────────
+coefs = pd.Series(model.coef_[0], index=feature_names)
+print("\nTop 5 positive features:")
+print(coefs.sort_values(ascending=False).head())
+print("\nTop 5 negative features:")
+print(coefs.sort_values().head())
+
+# ── PROBABILITY OUTPUT ────────────────────────────────
+sample = X_test_s[:5]
+probs  = model.predict_proba(sample)
+for i, (p0, p1) in enumerate(probs):
+    print(f"Sample {i}: P(benign)={p0:.3f}, P(malignant)={p1:.3f}")
+
+# ── REGULARISATION EFFECT ────────────────────────────
+results = []
+for C in [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]:
+    m = LogisticRegression(C=C, max_iter=1000)
+    cv = cross_val_score(m, X_train_s, y_train, cv=5, scoring="roc_auc")
+    results.append({"C": C, "AUC mean": cv.mean(), "AUC std": cv.std()})
+
+print("\nRegularisation effect:")
+print(pd.DataFrame(results).round(4).to_string(index=False))
+
+# ── MULTICLASS ────────────────────────────────────────
+from sklearn.datasets import load_iris
+Xi, yi = load_iris(return_X_y=True)
+multi = LogisticRegression(multi_class="multinomial",
+                           solver="lbfgs", max_iter=500)
+multi.fit(StandardScaler().fit_transform(Xi), yi)
+print(f"\nIris (3-class) accuracy: {multi.score(StandardScaler().fit_transform(Xi), yi):.3f}")
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+Logistic regression applies the sigmoid function to a linear combination of features to output a probability. It is trained by minimising log-loss with gradient descent. Regularisation is controlled by `C` (inverse of penalty strength) — smaller `C` means stronger regularisation. Always scale features before training. Despite its simplicity, logistic regression is an excellent baseline and is highly interpretable via its coefficients.

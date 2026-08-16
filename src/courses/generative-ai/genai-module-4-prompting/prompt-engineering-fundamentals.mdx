@@ -1,0 +1,210 @@
+---
+title: Prompt Engineering
+description: Master the art and science of prompt design — structuring prompts for accuracy, using roles and personas, applying chain-of-thought, and building reusable prompt templates.
+objectives:
+  - Write clear, structured prompts that consistently produce accurate outputs
+  - Apply zero-shot, few-shot, chain-of-thought, and role prompting techniques
+  - Build reusable prompt templates for common data science tasks
+module: genai-module-4-prompting
+order: 1
+quiz:
+  - question: Why does chain-of-thought prompting improve LLM accuracy on reasoning tasks?
+    options:
+      - It makes the model use more tokens, which increases accuracy
+      - It forces the model to externalise its reasoning steps, catching errors before the final answer
+      - It trains the model on new data
+      - It reduces hallucination by limiting output length
+    correctAnswer: 1
+    explanation: Chain-of-thought prompting asks the model to reason step by step before giving an answer. This externalised reasoning allows the model to catch and correct errors mid-thought, significantly improving accuracy on multi-step problems.
+  - question: What is the main purpose of a system prompt?
+    options:
+      - To provide the user's question to the model
+      - To set the model's persona, behaviour, and constraints for the entire conversation
+      - To limit the number of tokens generated
+      - To provide few-shot examples
+    correctAnswer: 1
+    explanation: The system prompt is processed before any user messages and defines the model's role, constraints, output format, and persona. It shapes all subsequent responses in the conversation.
+---
+
+## �� Overview
+
+Prompt engineering is the skill of communicating with LLMs effectively. A well-engineered prompt can be the difference between a generic, useless response and a precise, expert-level answer. For data science workflows, good prompts can automate data cleaning, generate analysis code, explain model outputs, and write documentation.
+
+
+Prompt Engineering គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+Think of the LLM as an extremely knowledgeable consultant who has read everything ever written. Prompting is how you brief them on what you need. A vague brief gets a vague result. A specific, context-rich brief gets an expert answer tailored to your exact situation.
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+### The Anatomy of a Good Prompt
+
+A strong prompt typically has four components:
+
+1. **Role** — tell the model who it is
+2. **Context** — provide relevant background
+3. **Task** — state exactly what you need
+4. **Constraints** — specify format, length, tone, what to avoid
+
+### Prompting Techniques
+
+| Technique | When to use | Example |
+|---|---|---|
+| **Zero-shot** | Simple, well-defined tasks | "Translate this to French:" |
+| **Few-shot** | Complex tasks needing format guidance | Provide 2-5 examples first |
+| **Chain-of-thought** | Multi-step reasoning, maths | "Think step by step:" |
+| **Role prompting** | Domain expertise needed | "You are a senior data scientist..." |
+| **Self-consistency** | High-stakes answers | Generate 5 answers, pick the majority |
+| **RAG** | Need current/specific facts | Inject retrieved documents into context |
+
+## 💻 កូដ
+
+```python
+# Prompt templates for common data science tasks
+# No API key needed to study — these are templates you can run with any LLM
+
+# ── TEMPLATE 1: CODE REVIEW ───────────────────────────
+CODE_REVIEW_TEMPLATE = """
+You are a senior Python data scientist with expertise in pandas and scikit-learn.
+
+Review the following Python code for:
+1. Correctness and potential bugs
+2. Performance issues (avoid loops over DataFrames, etc.)
+3. Data leakage risks
+4. Style and readability
+
+Code to review:
+```python
+{code}
+```
+
+Provide your review in this format:
+BUGS: (list any bugs found, or "None")
+PERFORMANCE: (list improvements, or "Looks good")
+DATA_LEAKAGE: (any risks, or "None detected")
+STYLE: (suggestions, or "Clean")
+OVERALL: (1-2 sentence summary)
+"""
+
+# ── TEMPLATE 2: EDA ASSISTANT ─────────────────────────
+EDA_TEMPLATE = """
+You are a data scientist performing exploratory data analysis.
+
+Dataset description: {dataset_description}
+
+Here is a summary of the data:
+{data_summary}
+
+Please:
+1. Identify the 3 most important patterns or insights
+2. List any data quality concerns
+3. Suggest the 3 most informative visualisations to create
+4. Recommend the most appropriate ML algorithm to start with and why
+
+Be specific and actionable.
+"""
+
+# ── TEMPLATE 3: CHAIN-OF-THOUGHT FOR STATS ────────────
+STATS_COT_TEMPLATE = """
+Solve this statistics problem by thinking through each step carefully.
+
+Problem: {problem}
+
+Work through this step by step:
+Step 1 - Identify what type of problem this is:
+Step 2 - List the relevant formula or approach:
+Step 3 - Plug in the numbers:
+Step 4 - Calculate the result:
+Step 5 - Interpret what the result means in context:
+
+Final answer:
+"""
+
+# ── TEMPLATE 4: FEATURE ENGINEERING ADVISOR ──────────
+FEATURE_TEMPLATE = """
+You are a feature engineering expert.
+
+I am building a {model_type} model to predict {target_variable}.
+
+My current features are:
+{current_features}
+
+Suggest 5 new engineered features that could improve model performance.
+For each feature:
+- Name: (descriptive name)
+- Formula: (how to compute it)
+- Rationale: (why it might help)
+- pandas code: (one-liner to create it)
+"""
+
+# ── TEMPLATE 5: ERROR EXPLAINER ───────────────────────
+ERROR_TEMPLATE = """
+I encountered this Python error while working on a data science task:
+
+Error message:
+{error_message}
+
+Code that produced the error:
+```python
+{code}
+```
+
+Please:
+1. Explain in plain English what caused this error
+2. Show the corrected code
+3. Explain how to avoid this error in the future
+"""
+
+# ── USAGE EXAMPLES ────────────────────────────────────
+def fill_template(template: str, **kwargs) -> str:
+    """Fill a prompt template with values."""
+    return template.format(**kwargs)
+
+# Example: code review prompt
+code_to_review = """
+df_train = pd.read_csv('train.csv')
+df_test = pd.read_csv('test.csv')
+
+# Scale the data
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+df_train_scaled = scaler.fit_transform(df_train)
+df_test_scaled = scaler.fit_transform(df_test)  # BUG: should be .transform()
+"""
+
+review_prompt = fill_template(CODE_REVIEW_TEMPLATE, code=code_to_review)
+print("Code Review Prompt (first 200 chars):")
+print(review_prompt[:200], "...")
+
+# Example: chain-of-thought stats
+stats_prompt = fill_template(
+    STATS_COT_TEMPLATE,
+    problem="A classifier has 800 true positives, 200 false positives, "
+            "150 false negatives, and 850 true negatives. "
+            "Calculate precision, recall, and F1 score."
+)
+print("\nStats CoT Prompt (first 300 chars):")
+print(stats_prompt[:300], "...")
+
+# ── ADVANCED: SELF-CONSISTENCY ────────────────────────
+# For critical questions, generate multiple responses and aggregate
+def self_consistent_answer(question: str, n: int = 5) -> str:
+    """
+    Generate n independent answers and return the most common one.
+    Useful for reducing hallucination on factual questions.
+    (Requires API access to run)
+    """
+    # In practice:
+    # answers = [generate(question, temperature=0.7) for _ in range(n)]
+    # return most_common(answers)
+    return f"Would generate {n} answers and pick majority for: {question}"
+
+print("\nSelf-consistency example:")
+print(self_consistent_answer("What is the optimal max_depth for a Random Forest?"))
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+Effective prompt engineering follows a consistent structure: **role + context + task + constraints**. Use **few-shot examples** to show the model the exact format you want. **Chain-of-thought** dramatically improves accuracy on reasoning, maths, and code tasks by externalising the reasoning process. Build **reusable templates** for recurring tasks — code review, EDA analysis, error explanation — to get consistent, high-quality results without re-engineering prompts each time. For high-stakes outputs, use **self-consistency**: generate multiple responses and take the majority answer.

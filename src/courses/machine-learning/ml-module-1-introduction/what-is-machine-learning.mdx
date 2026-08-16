@@ -1,0 +1,88 @@
+---
+title: What is Machine Learning?
+description: A precise definition of machine learning from first principles, grounded in the classic formulation by Tom Mitchell.
+objectives:
+  - State the formal definition of machine learning
+  - Distinguish supervised, unsupervised, and reinforcement learning
+  - Identify a task, performance measure, and experience in a real example
+module: ml-module-1-introduction
+order: 1
+quiz:
+  - question: In supervised learning, what does the training data consist of?
+    options:
+      - Unlabelled examples
+      - Input-output pairs with known labels
+      - Reward signals only
+      - Randomly generated samples
+    correctAnswer: 1
+    explanation: Supervised learning requires labelled training data — pairs of inputs and their corresponding known outputs.
+---
+
+## �� Overview
+
+Machine learning is the subfield of AI in which systems learn from data rather than being explicitly programmed with rules. It is the engine behind most modern AI applications, from spam filters to image recognition to large language models.
+
+
+What is Machine Learning? គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+Traditional programming: you write rules, the computer applies them to data to produce output.
+Machine learning: you provide data *and* the desired outputs, and the algorithm figures out the rules.
+
+This shift is powerful when the rules are too complex to write by hand — for example, "what makes an email spam?" involves thousands of nuanced patterns that would take forever to codify manually. ML discovers those patterns automatically.
+
+## 📖 ការសិក្សាស៊ីជម្រៅ
+
+Tom Mitchell's classic definition (1997):
+
+> "A computer program is said to learn from experience **E** with respect to some class of tasks **T** and performance measure **P**, if its performance at tasks in **T**, as measured by **P**, improves with experience **E**."
+
+### The Three Paradigms
+
+| Paradigm | Training data | Goal | Examples |
+|---|---|---|---|
+| **Supervised** | Labelled $(x, y)$ pairs | Learn $f: x \to y$ | Classification, regression |
+| **Unsupervised** | Unlabelled $x$ | Discover structure | Clustering, dimensionality reduction |
+| **Reinforcement** | Reward signal | Maximise cumulative reward | Game-playing, robotics |
+
+## 🔢 The Math
+
+In supervised learning we seek a function $f$ that minimises the **expected loss**:
+
+$$\mathcal{L} = \mathbb{E}_{(x,y) \sim \mathcal{D}}\left[\ell(f(x), y)\right]$$
+
+where $\mathcal{D}$ is the true data distribution and $\ell$ is a loss function (e.g., squared error for regression, cross-entropy for classification).
+
+Because we cannot access $\mathcal{D}$ directly, we minimise the **empirical loss** over our training set of $n$ examples:
+
+$$\hat{\mathcal{L}} = \frac{1}{n} \sum_{i=1}^{n} \ell(f(x_i), y_i)$$
+
+## 💻 កូដ
+
+```python
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+# Load data (T = classify iris species, E = labelled samples)
+X, y = load_iris(return_X_y=True)
+
+# Split into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train a classifier (experience E improves performance P on task T)
+clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf.fit(X_train, y_train)
+
+# Evaluate
+preds = clf.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, preds):.2%}")  # ~97%
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+Machine learning programs improve at a task through experience, without being explicitly programmed with task-specific rules. The three major paradigms are supervised learning (labelled data), unsupervised learning (finding structure), and reinforcement learning (reward maximisation). The mathematical goal is to find a function that minimises a loss over the data distribution.

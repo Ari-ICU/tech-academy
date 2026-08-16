@@ -1,0 +1,65 @@
+---
+title: មូលដ្ឋានគ្រឹះ NumPy (NumPy Basics)
+description: ស្វែងយល់ពីបណ្ណាល័យគណិតវិទ្យាដ៏មានឥទ្ធិពលបំផុតក្នុង Python សម្រាប់ធ្វើការជាមួយទិន្នន័យជាលេខ និង Array ធំៗ។
+objectives:
+  - យល់ពីភាពខុសគ្នារវាង NumPy Array និង Python List
+  - បង្កើត 1D និង 2D Arrays
+  - អនុវត្តមុខងារស្ថិតិជាមូលដ្ឋាន (mean, median, std)
+module: da-module-2-numpy
+order: 1
+quiz:
+  - question: ហេតុអ្វីបានជា Data Analyst និយមប្រើ NumPy Array ជាង Python List ធម្មតា?
+    options:
+      - ព្រោះ NumPy ងាយស្រួលសរសេរកូដជាង
+      - ព្រោះ NumPy អាចផ្ទុកអក្សរបានច្រើនជាង
+      - ព្រោះ NumPy Array លឿនជាង ស៊ីមេម៉ូរីតិចជាង និងមានអនុគមន៍គណិតវិទ្យាស្រាប់
+      - ព្រោះវាជាលក្ខខណ្ឌតម្រូវរបស់ការដំឡើង Python
+    correctAnswer: 3
+    explanation: 'NumPy ត្រូវបានសរសេរដោយភាសា C ពីក្រោយខ្នង ដែលធ្វើអោយវាដើរលឿនជាង Python List ធម្មតារហូតដល់ ៥០ ដង សម្រាប់ការគណនាទិន្នន័យធំៗ។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងការវិភាគទិន្នន័យ យើងតែងតែធ្វើការជាមួយលេខរាប់លាន។ Python List ធម្មតាមិនមានល្បឿនលឿនគ្រប់គ្រាន់សម្រាប់កិច្ចការនេះទេ។ ដូច្នេះហើយទើបគេបង្កើត **NumPy (Numerical Python)** ឡើង។ គ្រប់ Library ល្បីៗទាំងអស់ (Pandas, Scikit-learn, TensorFlow) សុទ្ធតែប្រើប្រាស់ NumPy ជាគ្រឹះ។
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការបង្កើត NumPy Array (1D ឫ 2D)
+
+```python
+import numpy as np
+
+# 1D Array (ដូចបញ្ជីធម្មតា)
+prices = np.array([10, 20, 30, 40])
+print(prices)
+
+# 2D Array (ដូចតារាង Matrix)
+matrix = np.array([
+    [1, 2, 3],
+    [4, 5, 6]
+])
+print(matrix)
+```
+
+### ២. ការគណនាគណិតវិទ្យាដ៏មានអានុភាព (Broadcasting)
+
+ជាមួយ NumPy អ្នកមិនបាច់ប្រើ `for loop` ដើម្បីគណនាទិន្នន័យច្រើននោះទេ។
+```python
+# ដកពន្ធ 10% ពីតម្លៃទាំងអស់ក្នុងពេលតែមួយ
+net_prices = prices * 0.9
+print(net_prices)
+```
+
+### ៣. មុខងារស្ថិតិ (Statistical Functions)
+
+```python
+ages = np.array([25, 30, 22, 28, 35])
+
+print("មធ្យមភាគ:", np.mean(ages))
+print("មេដ្យាន:", np.median(ages))
+print("គម្លាតស្តង់ដារ (Standard Deviation):", np.std(ages))
+print("តម្លៃខ្ពស់បំផុត:", np.max(ages))
+```
+រាល់ការគណនាជាមួយ NumPy គឺលឿនរន្ទះ!

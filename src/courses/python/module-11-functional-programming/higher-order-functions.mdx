@@ -1,0 +1,188 @@
+---
+title: Higher-Order និង Pure Functions
+description: ឈ្វេងយល់ពីទស្សនៈវិជ្ជាដ៏ជ្រាលជ្រៅរបស់ Functional Programming រួមមាន Pure Functions, Immutability, និងការប្រើប្រាស់ Higher-Order Functions កម្រិតខ្ពស់។
+objectives:
+  - ស្វែងយល់ពីភាពខុសគ្នារវាង Pure Functions និង Impure Functions
+  - យល់ដឹងពីសារៈសំខាន់នៃ Immutability (ភាពមិនអាចកែប្រែបាន) ក្នុង Functional Programming
+  - បង្កើត Higher-Order Functions ស្មុគស្មាញដើម្បីរៀបចំកូដឱ្យកាន់តែមានប្រសិទ្ធភាព
+module: module-11-functional-programming
+order: 2
+quiz:
+  - question: តើលក្ខណៈសម្បត្តិអ្វីខ្លះដែលធ្វើឱ្យអនុគមន៍មួយក្លាយជា 'Pure Function'?
+    options:
+      - វាត្រូវតែអត់មាន Parameters
+      - វាត្រូវតែមិនមាន Side Effects ហើយតែងតែប្រគល់លទ្ធផលដូចគ្នាជានិច្ចប្រសិនបើបញ្ចូល Arguments ដូចគ្នា
+      - វាត្រូវតែសរសេរត្រឹមតែមួយបន្ទាត់ (One-liner)
+      - វាត្រូវតែដំណើរការលឿនជាងអនុគមន៍ធម្មតា
+    correctAnswer: 2
+    explanation: 'Pure Function ប្រៀបដូចជារូបមន្តគណិតវិទ្យា។ បើអ្នកដាក់ x=2 វានឹងចេញ y=4 ជានិច្ច ហើយវាមិនលួចទៅកែប្រែអថេរផ្សេងៗនៅក្រៅកូដរបស់វានោះទេ (No Side Effects)។'
+  - question: ហេតុអ្វីបានជា Functional Programming លើកទឹកចិត្តឱ្យប្រើប្រាស់ទិន្នន័យដែលមិនអាចកែប្រែបាន (Immutability) ដូចជា Tuple ជាជាង List?
+    options:
+      - ព្រោះ Tuple ស៊ី Memory តិចជាង
+      - ព្រោះវាការពារមិនឱ្យមានកំហុស (Bugs) ដោយសារការកែប្រែទិន្នន័យដោយអចេតនាពីកន្លែងផ្សេង
+      - ព្រោះ Python 3 នឹងលុប List ចោលនៅពេលអនាគត
+      - ព្រោះ Tuple អាចផ្ទុកទិន្នន័យបានច្រើនជាង List
+    correctAnswer: 2
+    explanation: 'នៅពេលទិន្នន័យមិនអាចកែប្រែបាន (Immutable) អ្នកមិនបាច់បារម្ភថាមានអនុគមន៍ណាមួយលួចប្តូរតម្លៃរបស់វានោះទេ។ វាធ្វើឱ្យកូដមានសុវត្ថិភាពខ្ពស់ក្នុងការដំណើរការ (Thread-safe)។'
+---
+
+## 🌐 Overview
+
+ការសរសេរកូដមានច្រើនទម្រង់ (Paradigms)។ អ្នកប្រហែលជាស៊ាំនឹង Object-Oriented Programming (OOP) ដែលអ្វីៗត្រូវបានរៀបចំជា Classes និង Objects។ ប៉ុន្តែតើអ្នកដឹងទេថា មានទម្រង់សរសេរកូដមួយទៀតដែលល្បីល្បាញខាង **"ភាពអាចទាយទុកជាមុនបាន (Predictability)"** និង **"គ្មានកំហុស (Bug-free)"** ទេ?
+នោះគឺ **Functional Programming (FP)**។ នៅក្នុងមេរៀននេះ យើងនឹងស្វែងយល់ពីអាថ៌កំបាំងដែលធ្វើឱ្យ FP ក្លាយជាជម្រើសទីមួយសម្រាប់ការវិភាគទិន្នន័យ និងប្រព័ន្ធដែលទាមទារសុវត្ថិភាពខ្ពស់។
+
+---
+
+## 📚 Definitions
+
+- **Pure Function (អនុគមន៍បរិសុទ្ធ):** ជាអនុគមន៍ដែលតែងតែផ្តល់លទ្ធផលដូចគ្នាជានិច្ចរាល់ពេលដែលអ្នកផ្តល់ input ដូចគ្នា ព្រមទាំងមិនបង្កឱ្យមាន **Side Effects** (ការប្រែប្រួល) ទៅលើពិភពខាងក្រៅ។
+- **Side Effect (ផលប៉ះពាល់ក្រៅ):** ការធ្វើឱ្យមានការផ្លាស់ប្តូរណាមួយនៅក្រៅអនុគមន៍ ដូចជា ការកែប្រែអថេរ Global, ការសរសេរចូលឯកសារ (File I/O), ឬ ការ print ទៅកាន់អេក្រង់។
+- **Immutability (ភាពមិនអាចកែប្រែបាន):** ជាច្បាប់ដែលហាមឃាត់ការកែប្រែទិន្នន័យបន្ទាប់ពីវាត្រូវបានបង្កើតរួច។ បើអ្នកចង់កែប្រែ អ្នកត្រូវបង្កើតទិន្នន័យចម្លងថ្មី។
+- **Higher-Order Function (HOF):** អនុគមន៍ដែលទទួលយកអនុគមន៍ផ្សេងទៀតជា argument ឬ return អនុគមន៍ចេញមកក្រៅ (ដូចជា `map()`, `filter()`, និង Decorators)។
+
+---
+
+## 💡 The Core Idea
+
+ស្រមៃថាអ្នកចង់គណនា **ផ្ទៃក្រឡាការ៉េ**។
+- **Impure Function (មិនបរិសុទ្ធ):** គឺដូចជាការប្រើម៉ាស៊ីនគិតលេខដែលលួចផ្ញើសារប្រាប់មិត្តភក្តិអ្នករាល់ពេលអ្នកចុចលេខ (វាមាន Side Effect លួចលាក់)។ ឬមួយថ្ងៃវាគណនា 2x2=4 តែថ្ងៃស្អែកវាគណនា 2x2=5 (លទ្ធផលមិនទៀងទាត់)។
+- **Pure Function (បរិសុទ្ធ):** គឺដូចជារូបមន្តគណិតវិទ្យាក្នុងសៀវភៅ។ $f(x) = x^2$ ។ បើអ្នកដាក់ $x=2$ វានឹងចេញ $4$ ជានិច្ច មិនថាអ្នកគណនានៅទីណា ម៉ោងណា ឬអាកាសធាតុបែបណានោះទេ!
+
+---
+
+## 📖 In Depth
+
+**តើធ្វើយ៉ាងណាទើបដឹងថាជា Pure Function?**
+1. **លទ្ធផលពឹងផ្អែកតែលើ Input:** វាមិនយកទិន្នន័យពី `datetime.now()` (ដែលម៉ោងដើររហូត) ឬ `random()` មកប្រើទេ។
+2. **គ្មានការកែប្រែ (No Mutation):** វាមិនទៅ `.append()` ចូល List ដែលនៅខាងក្រៅ ឬប្តូរតម្លៃ Global Variable ទេ។
+
+**សារៈសំខាន់នៃ Immutability:**
+ក្នុង Data Science ពេលអ្នកមានទិន្នន័យ១លានជួរ បើអ្នកអនុញ្ញាតឱ្យអនុគមន៍ផ្សេងៗកែប្រែទិន្នន័យនោះចុះឡើង អ្នកនឹងរកមិនឃើញទេថាកំហុសកើតឡើងនៅទីណា។ ដូច្នេះ គេតែងតែ copy ទិន្នន័យនោះចេញ ទើបធ្វើការគណនា។
+
+---
+
+## 💻 Code Breakdown
+
+```python
+# ឧទាហរណ៍ទី១: Impure ធៀបនឹង Pure Function
+
+# --- កូដមិនបរិសុទ្ធ (Impure Function) ---
+total = 0
+def add_to_total(amount):
+    global total
+    total += amount # កែប្រែអថេរនៅខាងក្រៅ (Side Effect!)
+    return total
+
+print(add_to_total(5)) # លទ្ធផល: 5
+print(add_to_total(5)) # លទ្ធផល: 10 (Input ដូចគ្នា តែលទ្ធផលខុសគ្នា!)
+
+# --- កូដបរិសុទ្ធ (Pure Function) ---
+def add(a, b):
+    return a + b # អត់ប៉ះពាល់អ្នកណាទាំងអស់!
+
+print(add(5, 5)) # លទ្ធផល: 10
+print(add(5, 5)) # លទ្ធផល: 10 ជានិច្ច មិនថាសាកល្បងប៉ុន្មានដងក៏ដោយ
+```
+
+```python
+# ឧទាហរណ៍ទី២: ការជៀសវាងបញ្ហា Mutation លើបញ្ជី (Lists)
+
+def add_item_impure(my_list, item):
+    my_list.append(item) # កែប្រែ List ដើម
+    return my_list
+
+def add_item_pure(my_list, item):
+    new_list = my_list.copy() # បង្កើតចម្លងសិន (Immutability)
+    new_list.append(item)
+    return new_list
+
+original_data = [1, 2, 3]
+
+# ការប្រើប្រាស់កូដបរិសុទ្ធ ការពារមិនឱ្យ original_data ខូចខាត
+new_data = add_item_pure(original_data, 4)
+
+print(f"បញ្ជីដើមនៅដដែល: {original_data}") # [1, 2, 3]
+print(f"បញ្ជីថ្មី: {new_data}") # [1, 2, 3, 4]
+```
+
+```python
+# ឧទាហរណ៍ទី៣: ការបង្កើត Higher-Order Function កម្រិតខ្ពស់
+# HOF ដែលទទួលយកអនុគមន៍ ហើយ Return អនុគមន៍ថ្មីមកវិញ
+
+def create_multiplier(factor):
+    """Factory Function ដែលបង្កើតអនុគមន៍គុណនឹងតួលេខណាមួយ"""
+    def multiplier(number):
+        return number * factor
+    return multiplier
+
+# យើងអាចប្រើ HOF នេះដើម្បី "បង្កើត" អនុគមន៍ផ្សេងៗទៀត
+double = create_multiplier(2)
+triple = create_multiplier(3)
+
+print(f"10 គុណនឹង 2 គឺ: {double(10)}")
+print(f"10 គុណនឹង 3 គឺ: {triple(10)}")
+
+# យើងថែមទាំងអាចប្រើអនុគមន៍ដែលទើបបង្កើតទាំងនេះ ជាមួយ map() ទៀតផង!
+numbers = [1, 2, 3, 4]
+doubled_numbers = list(map(double, numbers))
+print(f"បញ្ជីលេខទ្វេដង: {doubled_numbers}")
+```
+
+---
+
+## 🌐 ការអនុវត្តជាក់ស្តែង (Real-world Application)
+
+**ការបង្កើត Data Transformation Pipeline ដែលមានសុវត្ថិភាព**
+
+នៅក្នុង Data Pipeline គេតែងតែសរសេរមុខងារនិមួយៗជា Pure Functions ដើម្បីងាយស្រួលតេស្ត និងមិនឱ្យប៉ះពាល់ទិន្នន័យដើម៖
+
+```python
+# Pure Functions សម្រាប់សម្អាតទិន្នន័យ
+def remove_spaces(text):
+    return text.strip()
+
+def to_lowercase(text):
+    return text.lower()
+
+def remove_punctuation(text):
+    import string
+    # បង្កើត string ថ្មីដែលគ្មានសញ្ញាខណ្ឌ
+    return text.translate(str.maketrans('', '', string.punctuation))
+
+# Higher-Order Function សម្រាប់ប្រមូលផ្តុំអនុគមន៍ទាំងអស់បញ្ចូលគ្នា
+def create_pipeline(*functions):
+    def pipeline(data):
+        result = data
+        for func in functions:
+            result = func(result) # បញ្ជូនលទ្ធផលពីអនុគមន៍មួយ ទៅអនុគមន៍មួយទៀត
+        return result
+    return pipeline
+
+# បង្កើតម៉ាស៊ីនសម្អាតទិន្នន័យ (Cleaner) របស់យើង
+clean_text_pipeline = create_pipeline(remove_spaces, to_lowercase, remove_punctuation)
+
+# សាកល្បង
+raw_data = "   Hello, WORLD!!!   "
+clean_data = clean_text_pipeline(raw_data)
+
+print(f"ទិន្នន័យដើម: '{raw_data}'")
+print(f"ទិន្នន័យស្អាត: '{clean_data}'")
+```
+អត្ថប្រយោជន៍ដ៏ធំគឺ បើមានបញ្ហា អ្នកដឹងច្បាស់ថាវាខុសនៅអនុគមន៍មួយណា ព្រោះពួកវាអត់មាន Side Effects ធ្វើឱ្យជាន់គ្នាឡើយ។
+
+---
+
+## ❌ Common Mistakes
+
+- **ភ្លេចថា Methods របស់ List ច្រើនតែមាន Side Effects:**
+  អនុគមន៍ដូចជា `my_list.sort()` ឬ `my_list.append()` នឹងកែប្រែបញ្ជីដើមទាំងស្រុង (Mutates in place)។ ក្នុងក្បួន Functional Programming គេប្រើ `sorted(my_list)` ជំនួសវិញ ព្រោះវាប្រគល់បញ្ជីថ្មីដោយមិនប៉ះពាល់បញ្ជីដើម។
+- **ព្យាយាមសរសេរអ្វីគ្រប់យ៉ាងជា Functional សុទ្ធ:**
+  ទោះបីជា FP ល្អយ៉ាងណាក៏ដោយ Python មិនមែនជាភាសា Functional សុទ្ធសាធនោះទេ (មិនដូចជា Haskell ទេ)។ ការសរសេរ Pure Functions គ្រប់កន្លែងអាចធ្វើឱ្យកូដស៊ី Memory ច្រើនដោយសារត្រូវ Copy ទិន្នន័យរហូត។ គប្បីប្រើប្រាស់ FP ចំពោះតែផ្នែក Data Processing បានហើយ។
+
+---
+
+## ✅ Key Takeaways
+
+- **Pure Functions** គឺជាមាសពេជ្រនៃការសរសេរកូដ! វាធ្វើឱ្យកូដងាយស្រួលតេស្ត គ្មាន Side Effects និងមានលទ្ធផលទៀងទាត់ជានិច្ច។
+- ព្យាយាមរក្សា **Immutability (ភាពមិនអាចកែប្រែបាន)** តាមដែលអាចធ្វើទៅបាន ដោយចៀសវាងការកែប្រែ List ឬ Dictionary ចាស់ៗដោយផ្ទាល់។
+- ប្រើប្រាស់ **Higher-Order Functions** ដូចជា Factory Functions ដើម្បីបង្កើតកូដដែលអាចយកមកប្រើប្រាស់ឡើងវិញបានច្រើនដង និងមានភាពបត់បែនខ្ពស់។

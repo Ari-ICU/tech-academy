@@ -1,0 +1,77 @@
+---
+title: ការនាំចូលទិន្នន័យ (Importing Data)
+description: របៀបប្រើប្រាស់ Pandas ដើម្បីអានទិន្នន័យពីឯកសារខាងក្រៅដូចជា CSV, Excel និង JSON ចូលមកក្នុងកុំព្យូទ័រសម្រាប់ការវិភាគ។
+objectives:
+  - ប្រើប្រាស់មុខងារ `pd.read_csv()` សម្រាប់ឯកសារ CSV
+  - ដឹងពីរបៀបអានឯកសារ Excel និង JSON
+  - យល់ពីការរក្សាទុកទិន្នន័យ (Exporting) ទៅជាឯកសារវិញ
+module: da-module-3-pandas-fundamentals
+order: 3
+quiz:
+  - question: ក្នុងចំណោមប្រភេទឯកសារខាងក្រោម តើប្រភេទឯកសារមួយណាដែល Data Analyst ជួបប្រទះញឹកញាប់ជាងគេបំផុត និងមានល្បឿនអានលឿនជាង Excel?
+    options:
+      - .docx (Word)
+      - .csv (Comma Separated Values)
+      - .txt
+      - .pdf
+    correctAnswer: 2
+    explanation: 'ឯកសារ CSV (Comma Separated Values) គឺជាទម្រង់ឯកសារអត្ថបទធម្មតាដែលខណ្ឌចែកទិន្នន័យនីមួយៗដោយសញ្ញាក្បៀស (,)។ វាស្រាល លឿន និងត្រូវបានប្រើប្រាស់ជាស្តង់ដារសម្រាប់ផ្ទុកទិន្នន័យធំៗរាប់លានជួរ ដែល Excel មិនអាចបើកបាន។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងការងារពិត អ្នកនឹងមិនវាយទិន្នន័យបញ្ចូលម្តងមួយៗ (Hard-code) នោះទេ។ ក្រុមហ៊ុននឹងផ្តល់ទិន្នន័យអោយអ្នកជាឯកសារ Excel ឫទាញយកពីប្រព័ន្ធក្នុងទម្រង់ជា CSV។ នេះគឺជាពេលដែល Pandas បញ្ចេញថាមពលរបស់ខ្លួន គឺវាអាច "អាន" ឯកសារទាំងនោះមកធ្វើជា DataFrame ក្នុងពេលត្រឹមតែ ១ វិនាទី!
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការអានឯកសារ CSV (ពេញនិយមបំផុត)
+
+សន្មតថាអ្នកមានឯកសារឈ្មោះ `sales_data.csv` នៅក្នុងថត (Folder) តែមួយជាមួយកូដរបស់អ្នក។
+
+```python
+import pandas as pd
+
+# អានឯកសារ CSV ចូលទៅក្នុងអថេរឈ្មោះ df (តំណាងអោយ DataFrame)
+df = pd.read_csv("sales_data.csv")
+
+# បង្ហាញទិន្នន័យ ៥ ជួរដំបូង ដើម្បីប្រាកដថាអានបានជោគជ័យ
+print(df.head())
+```
+
+### ២. ការអានឯកសារ Excel
+
+ជួនកាល ទិន្នន័យត្រូវបានបញ្ជូនមកពីផ្នែកគណនេយ្យជាទម្រង់ Excel (`.xlsx`)។
+
+```python
+# អានឯកសារ Excel (អ្នកអាចបញ្ជាក់ឈ្មោះ Sheet បាន)
+# ចំណាំ: ប្រហែលជាត្រូវដំឡើងបណ្ណាល័យ 'openpyxl' ជាមុនសិន (pip install openpyxl)
+df_excel = pd.read_excel("financial_report.xlsx", sheet_name="Q1_Sales")
+
+print(df_excel.head())
+```
+
+### ៣. ការអានឯកសារ JSON
+
+បើទាញទិន្នន័យពី API របស់ Website វាច្រើនតែជាទម្រង់ JSON។
+
+```python
+# អានទិន្នន័យ JSON
+df_json = pd.read_json("users.json")
+```
+
+### ៤. ការនាំចេញ (Exporting Data)
+
+បន្ទាប់ពីអ្នកសំអាត និងវិភាគទិន្នន័យចប់សព្វគ្រប់ អ្នកចង់ផ្ញើវាទៅអោយអ្នកផ្សេង។ យើងអាច "រក្សាទុក (Save)" វាត្រឡប់ទៅជាឯកសារវិញបានយ៉ាងងាយ។
+
+```python
+# រក្សាទុក DataFrame (df) ទៅជាឯកសារ CSV ថ្មី
+# index=False គឺដើម្បីកុំអោយវាថតលេខរៀង (0, 1, 2...) ចូលទៅក្នុងឯកសារ
+df.to_csv("clean_sales_data.csv", index=False)
+
+# រក្សាទុកទៅជា Excel
+df.to_excel("clean_sales_data.xlsx", index=False)
+```
+
+**គន្លឹះ:** មុខងារ `read_csv` អាចអានឯកសារដែលនៅលើ Internet (URL) បានដោយផ្ទាល់! ឧទាហរណ៍៖ `pd.read_csv("https://website.com/data.csv")` ។

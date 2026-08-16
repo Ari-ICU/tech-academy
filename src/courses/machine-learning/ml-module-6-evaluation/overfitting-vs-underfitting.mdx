@@ -1,0 +1,160 @@
+---
+title: Overfitting, Underfitting, and Regularisation
+description: Understand the bias-variance trade-off, diagnose overfitting and underfitting from learning curves, and apply L1, L2, and Dropout regularisation to fix them.
+objectives:
+  - Distinguish overfitting from underfitting using training vs validation error
+  - Explain the bias-variance trade-off mathematically and intuitively
+  - Apply L1 (Lasso), L2 (Ridge), and early stopping to reduce overfitting
+module: ml-module-6-evaluation
+order: 10
+quiz:
+  - question: A model has 99% training accuracy and 62% validation accuracy. What is the problem?
+    options:
+      - Underfitting — the model is too simple
+      - Overfitting — the model memorised the training data and does not generalise
+      - The dataset is too small to evaluate
+      - The learning rate is too high
+    correctAnswer: 1
+    explanation: A large gap between training accuracy (99%) and validation accuracy (62%) is the classic sign of overfitting. The model has memorised training examples including noise, but fails on unseen data.
+  - question: What does L2 (Ridge) regularisation do to model weights?
+    options:
+      - Sets some weights to exactly zero
+      - Penalises large weights by adding the sum of squared weights to the loss, shrinking them toward zero
+      - Randomly drops neurons during training
+      - Normalises the input features
+    correctAnswer: 1
+    explanation: Ridge regression adds λ||w||² to the loss function, which penalises large weights and shrinks all of them toward (but not to) zero. This reduces model complexity and variance. L1 (Lasso) can drive weights all the way to zero, performing feature selection.
+---
+
+## �� Overview
+
+Every machine learning model faces a fundamental tension: fit the training data closely (risk overfitting) or keep the model simple (risk underfitting). Regularisation is the set of techniques that navigate this trade-off.
+
+
+Overfitting, Underfitting, and Regularisation គឺជាចំណុចសំខាន់នៅក្នុងកម្មវិធីសិក្សានេះ។ វាផ្ដល់នូវបច្ចេកទេសស្នូលសម្រាប់អ្នកដើម្បីពង្រឹងចំណេះដឹង និងការអនុវត្តជាក់ស្ដែង។
+
+## 💡 គំនិតសំខាន់
+
+**Overfitting** = memorising. A student who memorises exam answers but doesn't understand the concepts fails on new questions.
+
+**Underfitting** = oversimplifying. A student who only learned "everything is probably class A" will fail on any nuanced question.
+
+The goal is a model that has learned the *pattern*, not the *noise*.
+
+## 🔢 The Math
+
+**Bias-variance decomposition** of expected test error:
+
+$$\mathbb{E}[(y - \hat{f}(x))^2] = \underbrace{\text{Bias}^2[\hat{f}(x)]}_{\text{underfitting}} + \underbrace{\text{Var}[\hat{f}(x)]}_{\text{overfitting}} + \underbrace{\sigma^2}_{\text{irreducible noise}}$$
+
+**Ridge (L2) loss:**
+
+$$J_{Ridge} = \text{MSE} + \lambda\sum_{j=1}^{p}\beta_j^2$$
+
+**Lasso (L1) loss:**
+
+$$J_{Lasso} = \text{MSE} + \lambda\sum_{j=1}^{p}|\beta_j|$$
+
+L1 produces sparse solutions (some $\beta_j = 0$) — automatic feature selection. L2 shrinks all coefficients proportionally.
+
+## 💻 កូដ
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import Ridge, Lasso, ElasticNet
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import (
+    train_test_split, learning_curve, validation_curve, cross_val_score
+)
+from sklearn.metrics import mean_squared_error
+
+np.random.seed(42)
+
+# Generate data with a non-linear pattern + noise
+X = np.sort(np.random.randn(200, 1), axis=0)
+y = 0.5*X.ravel()**3 - X.ravel() + np.random.randn(200) * 0.5
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# ── UNDERFITTING — degree-1 (too simple) ─────────────
+under = Pipeline([
+    ("poly", PolynomialFeatures(degree=1)),
+    ("scaler", StandardScaler()),
+    ("model", Ridge()),
+])
+under.fit(X_train, y_train)
+print("Degree 1 (underfit):")
+print(f"  Train RMSE: {mean_squared_error(y_train, under.predict(X_train), squared=False):.3f}")
+print(f"  Test  RMSE: {mean_squared_error(y_test,  under.predict(X_test),  squared=False):.3f}")
+
+# ── OVERFITTING — degree-15 (too complex) ─────────────
+over = Pipeline([
+    ("poly", PolynomialFeatures(degree=15)),
+    ("scaler", StandardScaler()),
+    ("model", Ridge(alpha=0.0001)),
+])
+over.fit(X_train, y_train)
+print("\nDegree 15 (overfit):")
+print(f"  Train RMSE: {mean_squared_error(y_train, over.predict(X_train), squared=False):.3f}")
+print(f"  Test  RMSE: {mean_squared_error(y_test,  over.predict(X_test),  squared=False):.3f}")
+
+# ── JUST RIGHT — degree-3 + Ridge ─────────────────────
+good = Pipeline([
+    ("poly", PolynomialFeatures(degree=3)),
+    ("scaler", StandardScaler()),
+    ("model", Ridge(alpha=1.0)),
+])
+good.fit(X_train, y_train)
+print("\nDegree 3 + Ridge (good):")
+print(f"  Train RMSE: {mean_squared_error(y_train, good.predict(X_train), squared=False):.3f}")
+print(f"  Test  RMSE: {mean_squared_error(y_test,  good.predict(X_test),  squared=False):.3f}")
+
+# ── RIDGE vs LASSO vs ELASTICNET ─────────────────────
+from sklearn.datasets import make_regression
+Xr, yr = make_regression(n_samples=200, n_features=50,
+                          n_informative=10, noise=10, random_state=42)
+
+Xr_train, Xr_test, yr_train, yr_test = train_test_split(Xr, yr, test_size=0.2)
+scaler = StandardScaler()
+Xr_train_s = scaler.fit_transform(Xr_train)
+Xr_test_s  = scaler.transform(Xr_test)
+
+models = {
+    "Ridge (L2)":      Ridge(alpha=1.0),
+    "Lasso (L1)":      Lasso(alpha=0.1),
+    "ElasticNet":      ElasticNet(alpha=0.1, l1_ratio=0.5),
+}
+
+print("\nRegularisation comparison:")
+for name, m in models.items():
+    m.fit(Xr_train_s, yr_train)
+    test_rmse = mean_squared_error(yr_test, m.predict(Xr_test_s), squared=False)
+    n_zeros   = np.sum(m.coef_ == 0)
+    print(f"  {name:15s}: RMSE={test_rmse:.2f}, zero coefs={n_zeros}/50")
+
+# ── LEARNING CURVES ───────────────────────────────────
+train_sizes, train_scores, val_scores = learning_curve(
+    good, X, y, cv=5, scoring="neg_root_mean_squared_error",
+    train_sizes=np.linspace(0.1, 1.0, 8)
+)
+
+print("\nLearning curve (Train vs Val RMSE):")
+for ts, tr, vs in zip(train_sizes,
+                       -train_scores.mean(axis=1),
+                       -val_scores.mean(axis=1)):
+    gap = vs - tr
+    status = "overfit" if gap > 0.2 else "ok"
+    print(f"  n={ts:3.0f}: train={tr:.3f}, val={vs:.3f} [{status}]")
+```
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ
+
+**Underfitting** (high bias): both train and test error are high — model too simple. Fix: increase model complexity, add features, reduce regularisation.
+
+**Overfitting** (high variance): low train error, high test error — model too complex. Fix: get more data, add regularisation, reduce model complexity, use early stopping.
+
+**Ridge (L2)** shrinks all weights — use when you want to keep all features but reduce their impact. **Lasso (L1)** drives some weights to zero — use when you want automatic feature selection. **ElasticNet** combines both. Always diagnose with **learning curves** before reaching for a fix.

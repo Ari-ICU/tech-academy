@@ -1,0 +1,283 @@
+---
+title: File System Operations
+description: រៀនពីរបៀបគ្រប់គ្រងឯកសារ និងថត (Directories) ដោយប្រើប្រាស់ pathlib ដើម្បីស្វែងរក បង្កើត ចម្លង និងលុបទីតាំងឯកសារ។
+objectives:
+  - ស្វែងយល់ពីភាពខុសគ្នារវាង Absolute Path និង Relative Path
+  - ប្រើប្រាស់ pathlib និង shutil សម្រាប់បង្កើត ចម្លង លុប និងប្តូរឈ្មោះឯកសារ/ថត
+  - ទាញយកបញ្ជីឯកសារនៅក្នុងថត (Directory Listing) មកប្រើប្រាស់
+module: module-6-file-handling
+order: 3
+quiz:
+  - question: តើភាពខុសគ្នារវាង Absolute Path និង Relative Path គឺជាអ្វី?
+    options:
+      - Absolute Path ចាប់ផ្តើមពីថតបច្ចុប្បន្ន ចំណែក Relative Path ចាប់ផ្តើមពី Root (C:\ ឬ /)
+      - Absolute Path ចាប់ផ្តើមពីគល់ (Root) នៃ Drive (ឧ. C:\) ឯ Relative Path ចាប់ផ្តើមពីទីតាំងដែលយើងកំពុងឈរ (ថតបច្ចុប្បន្ន)
+      - ទាំងពីរនេះគឺដូចគ្នា គ្រាន់តែប្រើក្នុងប្រព័ន្ធប្រតិបត្តិការខុសគ្នា
+      - Relative Path អាចប្រើបានតែនៅលើ Mac ប៉ុណ្ណោះ
+    correctAnswer: 2
+    explanation: 'Absolute Path គឺជាទីតាំងពេញលេញ (ឧ. C:\Users\Admin\file.txt)។ Relative Path គឺជាទីតាំងធៀបនឹងកន្លែងដែលកម្មវិធីកំពុងរត់ (ឧ. ./file.txt)។'
+  - question: តើ Library មួយណាដែល Python ណែនាំឱ្យប្រើសម្រាប់ការគ្រប់គ្រង File Paths ជំនាន់ថ្មីព្រោះវាងាយស្រួលជាងការតអក្សរចូលគ្នា?
+    options:
+      - os.path
+      - sys
+      - pathlib
+      - filemanager
+    correctAnswer: 3
+    explanation: 'pathlib ជា Library ជំនាន់ថ្មី (មានតាំងពី Python 3.4) ដែលប្រើប្រាស់ Object-Oriented approach ដែលធ្វើឱ្យការសរសេរកូដគ្រប់គ្រង Path មានភាពងាយស្រួល និងស្អាតជាង os.path ឆ្ងាយណាស់។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងពិភពការងារពិត កម្មវិធីរបស់អ្នកមិនត្រឹមតែអង្គុយអានឯកសារមួយមុខនោះទេ! ជារឿយៗ អ្នកត្រូវសរសេរកូដដើម្បីរៀបចំថតឯកសារឱ្យមានសណ្តាប់ធ្នាប់ (ឧ. បែងចែកឯកសារតាមឆ្នាំ), លុបឯកសារចាស់ៗចោលដោយស្វ័យប្រវត្តិ, ឬស្វែងរកឯកសាររាប់ពាន់នៅក្នុងកុំព្យូទ័រ។ 
+
+នៅក្នុង Python ជំនាន់ទំនើប យើងលែងសូវប្រើ `os.path` ទៀតហើយ ផ្ទុយទៅវិញយើងងាកមកប្រើប្រាស់ **`pathlib`** ដែលធ្វើឱ្យការសរសេរកូដទាក់ទងនឹងឯកសារមានភាពស្រស់ស្អាតជាងមុន។
+
+---
+
+## 📚 រៀនពាក្យបច្ចេកទេស (Definitions)
+
+- **Path (ទីតាំង):** ផ្លូវដែលចង្អុលទៅកាន់កន្លែងដែលឯកសារ ឬថត (Folder) ស្ថិតនៅ។
+- **Absolute Path (ទីតាំងពេញ):** ទីតាំងដែលចាប់ផ្តើមពីគល់កុំព្យូទ័រតែម្តង (ឧ. `C:\Users\Sok\data.csv` ឬ `/Users/Sok/data.csv`)។
+- **Relative Path (ទីតាំងធៀប):** ទីតាំងដែលធៀបទៅនឹងកន្លែងដែលអ្នកកំពុងឈរ (ឧ. `data/sales.csv`)។
+- **CWD (Current Working Directory):** ថតទីតាំងបច្ចុប្បន្ន ដែលកម្មវិធី Python របស់អ្នកកំពុងដើរ។
+
+---
+
+## 💡 គំនិតគោល (The Core Idea)
+
+### ការយល់ដឹងពី Relative Paths
+សិស្សភាគច្រើនតែងតែច្រឡំទីតាំង! សូមពិនិត្យមើលរចនាសម្ព័ន្ធនេះ៖
+
+```text
+project/
+│
+├── main.py
+├── data/
+│   └── sales.csv
+└── images/
+```
+
+ប្រសិនបើអ្នកកំពុងរត់ (Run) `main.py` ហើយអ្នកសរសេរថា `Path("data/sales.csv")` នោះគឺវាមានន័យថាវាដើរចេញពី `main.py` ចូលទៅក្នុង `data`។ វាមិនមែនទៅចាប់យកឯកសារក្បែរៗនោះទេ តែវាពឹងផ្អែកលើ CWD របស់កម្មវិធី។
+
+---
+
+## 📖 ការសិក្សាស៊ីជម្រៅ (In Depth)
+
+### ១. ការដឹងពីទីតាំងខ្លួនឯង (CWD និង Home)
+
+សិស្សតែងតែត្រូវដឹងថា កម្មវិធីកំពុងរត់នៅទីណា។
+
+```python
+from pathlib import Path
+
+# តើកម្មវិធីកំពុងរត់នៅថត (Directory) មួយណា?
+print(Path.cwd())    # Current Working Directory
+
+# តើ Home Folder របស់ User នេះនៅឯណា?
+print(Path.home())   # ឧ. /Users/Alice ឫ C:\Users\Alice
+```
+
+### ២. អត្ថប្រយោជន៍ឆ្លងប្រព័ន្ធប្រតិបត្តិការ (Cross-platform Benefit)
+
+កុំព្យូទ័រ Windows ប្រើ `\` (ឧ. `data\file.txt`) ចំណែក Mac/Linux ប្រើ `/` (ឧ. `data/file.txt`)។ ប្រើ `pathlib` ដោះស្រាយបញ្ហានេះបានយ៉ាងឆ្លាតវៃ៖
+
+```python
+from pathlib import Path
+
+# អ្នកគ្រាន់តែប្រើសញ្ញា / សម្រាប់តភ្ជាប់ថតចូលគ្នា
+file_path = Path("data") / "report.csv"
+
+print(file_path)
+```
+Python នឹងប្តូរសញ្ញា `/` ទៅតាមកុំព្យូទ័រនីមួយៗដោយស្វ័យប្រវត្តិ។
+
+### ៣. ការបំបែកចំណែកនៃទីតាំង (Parts, Parent, និង Resolve)
+
+```python
+from pathlib import Path
+
+p = Path("reports/2024/january.csv")
+
+# បំបែកឈ្មោះថតនីមួយៗ
+print(p.parts)  # ('reports', '2024', 'january.csv')
+
+# ថតដែលផ្ទុកវា
+print(p.parent) # reports/2024
+
+# ថតខាងលើមួយកម្រិតទៀត
+print(p.parents[1]) # reports
+
+# ទាញយកទីតាំងពេញលេញ (Absolute Path) ចេញពីទីតាំងធៀប
+print(p.resolve())
+```
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ការត្រួតពិនិត្យឯកសារ (File vs Directory Checking)
+
+មុនពេលអ្នកអានអ្វីមួយ អ្នកត្រូវប្រាកដថាវាមានជាមុនសិន។
+
+```python
+from pathlib import Path
+
+path = Path("data.csv")
+
+print(path.exists())    # តើវាមានពិតប្រាកដទេ?
+print(path.is_file())   # តើវាជាឯកសារ (File) មែនទេ?
+print(path.is_dir())    # តើវាជាថត (Directory) មែនទេ?
+```
+
+### ២. ការអានទំហំ និងព័ត៌មាន (Reading File Metadata)
+
+```python
+from pathlib import Path
+
+file = Path("report.txt")
+
+if file.exists():
+    # .stat().st_size ប្រាប់ពីទំហំជា Bytes
+    print(file.stat().st_size, "bytes")
+```
+
+### ៣. ការស្វែងរកឯកសារ (iterdir vs glob vs rglob)
+
+រឿងដែលគេច្រឡំច្រើនបំផុត!
+| ឈ្មោះ Method       | ការពិពណ៌នា |
+| ---------------- | ----------------------------------------- |
+| `iterdir()`      | ទាញយកអ្វីៗគ្រប់យ៉ាងដែលមាននៅក្នុងថតមួយ (សរុបទាំងអស់)     |
+| `glob("*.txt")`  | ស្វែងរកឯកសារដែលមានកន្ទុយ `.txt` តែនៅក្នុងថតហ្នឹងមួយប៉ុណ្ណោះ |
+| `rglob("*.txt")` | ស្វែងរកឯកសារ `.txt` ស៊ីជម្រៅរហូតដល់គ្រប់ថតតូចៗខាងក្នុងទាំងអស់ (Recursive Search) |
+
+**ឧទាហរណ៍:**
+```python
+from pathlib import Path
+
+folder = Path(".") # មើលនៅក្នុងថតបច្ចុប្បន្ន
+
+print("Everything:")
+for item in folder.iterdir():
+    print(item)
+
+print("\nOnly TXT files:")
+for item in folder.glob("*.txt"):
+    print(item)
+
+print("\nRecursive search:")
+for item in folder.rglob("*.txt"):
+    print(item)
+```
+
+### ៤. ការបង្កើតថត និងចម្លងឯកសារ (Creating & Copying)
+
+ការចម្លងឯកសារ (Copying) ទាមទារជំនួយពីម៉ូឌុល `shutil`។
+
+```python
+from pathlib import Path
+import shutil
+
+# បង្កើតថតថ្មី (exist_ok=True ការពារកុំឱ្យ Error បើវាមានរួចហើយ)
+Path("backup").mkdir(exist_ok=True)
+
+# ចម្លងឯកសារមួយ
+shutil.copy("report.txt", "backup/report_copy.txt")
+
+# ចម្លងថតទាំងមូល
+shutil.copytree("images", "images_backup")
+```
+
+### ៥. ការប្តូរឈ្មោះ និងការរំកិលទីតាំង (Rename actually Moves files!)
+
+នៅក្នុង Python, ការប្តូរឈ្មោះ (Rename) និង ការប្តូរទីតាំង (Move) គឺប្រើពាក្យបញ្ជាតែមួយប៉ុណ្ណោះ!
+
+```python
+file = Path("old.txt")
+
+# ប្តូរឈ្មោះ
+file.rename("new.txt")
+
+# នេះគឺជារបៀបរំកិលទីតាំង (Move)
+Path("a.txt").rename(Path("archive") / "a.txt")
+```
+
+### ៦. ការលុបឯកសារ និងថត (Deleting Files)
+
+ត្រូវប្រុងប្រយ័ត្ន! ពេលលុបហើយ មិនមាននៅក្នុង Recycle Bin ទេ។
+
+```python
+from pathlib import Path
+import shutil
+
+file = Path("old.txt")
+
+if file.exists():
+    file.unlink() # ប្រើ unlink() ដើម្បីលុបឯកសារ
+
+# រំលឹកឡើងវិញ:
+# unlink() = លុបឯកសារ
+# rmdir() = លុបថតទទេស្អាត
+# shutil.rmtree() = លុបថតដែលមានទិន្នន័យខាងក្នុង (លុបទាំងស្រុងគ្មានសល់)
+```
+
+---
+
+## 🛒 ការអនុវត្តក្នុងពិភពពិត: កម្មវិធីគ្រប់គ្រង Dataset (Dataset Manager)
+
+នេះគឺជាកម្មវិធីពិតៗ ដែលរៀបចំទិន្នន័យ Machine Learning៖ រាប់ចំនួន CSV files, បង្កើតថត Backup, ចម្លងឯកសារចូល និងប្រាប់ពីទំហំ។
+
+```python
+from pathlib import Path
+import shutil
+
+dataset_dir = Path("datasets")
+backup_dir = Path("backup_datasets")
+
+# ១. បង្កើតថត Backup (បើមិនទាន់មាន)
+backup_dir.mkdir(exist_ok=True)
+
+print("🔍 ស្វែងរកឯកសារ CSV...")
+
+# ២. ស្វែងរកគ្រប់ CSV Files
+for file in dataset_dir.rglob("*.csv"):
+    
+    # ៣. ពិនិត្យមើលទំហំ
+    size_mb = file.stat().st_size / (1024 * 1024)
+    print(f"រកឃើញ: {file.name} (ទំហំ {size_mb:.2f} MB)")
+    
+    # ៤. ចម្លងវាទៅទុកនៅក្នុងថត Backup 
+    target_path = backup_dir / file.name
+    shutil.copy(file, target_path)
+
+print("✅ ការ Backup បានបញ្ចប់ដោយជោគជ័យ!")
+```
+
+---
+
+## ❌ កំហុសដែលអ្នកតែងតែជួប (Common Mistakes)
+
+**១. ភ្លេចគិតពី Current Working Directory (CWD)**
+អ្នកសរសេរ `open("data.csv")` ហើយសង្ឃឹមថាវានឹងស្វែងរកក្បែរឯកសារកូដ `.py` របស់អ្នក។ ខុសហើយ! តាមពិតវាស្វែងរកនៅក្នុងទីតាំង `Path.cwd()` របស់ Terminal ។
+
+**២. ប្រើប្រាស់ទីតាំងដែលរឹងតេក (Hard-coded Paths)**
+```python
+# ❌ កុំសរសេរបែបនេះ វាដើរតែលើកុំព្យូទ័ររបស់អ្នកប៉ុណ្ណោះ!
+path = "C:\\Users\\Admin\\Desktop\\data.csv"
+
+# ✅ សរសេរបែបនេះទើបត្រឹមត្រូវ និងដើរលើគ្រប់កុំព្យូទ័រ
+path = Path.home() / "Desktop" / "data.csv"
+```
+
+**៣. សន្មត់ថាឯកសារតែងតែមានជានិច្ច**
+ជៀសវាងបញ្ហាគាំងកូដ ដោយការប្រើ `if path.exists():` មុននឹងបញ្ជាអ្វីមួយទៅលើវា។
+
+---
+
+## ✅ ចំណុចសំខាន់ៗដែលត្រូវចាំ (Key Takeaways)
+
+- **`pathlib.Path`** គឺជាមធ្យោបាយទំនើប និងជាស្តង់ដារដែលគេណែនាំឱ្យប្រើប្រាស់ ដើម្បីធ្វើការជាមួយឯកសារ និងថតនៅក្នុង Python។
+- ប្រើប្រាស់ **`Path.cwd()`** ដើម្បីដឹងថាកម្មវិធីរបស់អ្នកកំពុងដើរនៅទីតាំងណា។
+- ប្រើប្រាស់ **`.exists()`**, **`.is_file()`**, និង **`.is_dir()`** ដើម្បីត្រួតពិនិត្យមុននឹងប្រតិបត្តិការលើឯកសារផ្សេងៗ។
+- អនុគមន៍ **`rename()`** មិនត្រឹមតែអាចប្តូរឈ្មោះបានទេ តែថែមទាំងអាចរំកិលទីតាំង (Move) ឯកសារបានយ៉ាងរលូន។
+- ប្រើប្រាស់ **`unlink()`** ដើម្បីលុបឯកសារ, **`rmdir()`** សម្រាប់ថតដែលទទេ, និង **`shutil.rmtree()`** សម្រាប់លុបថតដែលពោរពេញដោយឯកសារខាងក្នុង។
+- ជាចុងក្រោយ សូមប្រើប្រាស់ **`Path(...) / "file.txt"`** ជាជាងការយកអក្សរមកតគ្នា ដើម្បីជៀសវាងបញ្ហាពេលប្រើលើកុំព្យូទ័រខុសគ្នា (Mac ទល់នឹង Windows)។

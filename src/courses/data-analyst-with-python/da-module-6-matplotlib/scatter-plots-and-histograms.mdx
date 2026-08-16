@@ -1,0 +1,75 @@
+---
+title: ក្រាហ្វិកចំណុច និងរបាយ (Scatter Plot & Histogram)
+description: ប្រើប្រាស់ Scatter Plot ដើម្បីរកមើលទំនាក់ទំនងរវាងលេខនិងលេខ (Correlation) និងប្រើ Histogram ដើម្បីមើលពីការប្រមូលផ្តុំនៃទិន្នន័យ។
+objectives:
+  - គូរ Scatter Plot សម្រាប់ Bivariate Analysis (លេខ vs លេខ)
+  - គូរ Histogram សម្រាប់ Univariate Analysis (មើលរបាយលេខ)
+  - កំណត់ទំហំធុង (Bins) នៅក្នុង Histogram
+module: da-module-6-matplotlib
+order: 3
+quiz:
+  - question: ប្រសិនបើអ្នកចង់មើលថា "តើអតិថិជនភាគច្រើនមានអាយុចន្លោះពីប៉ុន្មាន ទៅប៉ុន្មាន?" តើអ្នកគួរប្រើក្រាហ្វិកមួយណា?
+    options:
+      - Line Chart
+      - Bar Chart
+      - Scatter Plot
+      - Histogram
+    correctAnswer: 4
+    explanation: 'Histogram មើលទៅស្រដៀង Bar Chart ដែរ ប៉ុន្តែវាសម្រាប់វិភាគ "របាយលេខ (Distribution)"។ វានឹងរៀបចំអាយុជាកញ្ចប់ៗ (Bins) ដូចជា 10-20, 20-30 ដើម្បីអោយយើងឃើញយ៉ាងច្បាស់ថា វ័យណាដែលធំជាងគេក្នុងចំណោមអតិថិជនយើង។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុង Module 5 (EDA) យើងបានប្រើកូដដើម្បីរក Correlation និង Distribution។ ឥឡូវនេះ យើងនឹងប្រែក្លាយកូដស្ងួតៗទាំងនោះ ទៅជារូបភាពដែលភ្នែកយើងអាចវិនិច្ឆ័យបានភ្លាមៗក្នុងរយៈពេលត្រឹម ១ វិនាទី!
+
+---
+
+## 💻 ការបំបែកកូដ (Code Breakdown)
+
+### ១. ក្រាហ្វិកចំណុច (Scatter Plot)
+
+ស័ក្តិសមបំផុតសម្រាប់ប្រៀបធៀប អថេរលេខពីរ ថាតើវាមានទំនាក់ទំនងគ្នាដែរឬទេ? (Correlation)
+
+```python
+import matplotlib.pyplot as plt
+
+# ទិន្នន័យ (អាយុ និង ប្រាក់ខែ)
+age = [22, 25, 28, 30, 35, 40, 45, 50, 55, 60]
+salary = [300, 400, 450, 600, 800, 1000, 1100, 1500, 1400, 2000]
+
+# គូរ Scatter Plot ដោយប្រើ .scatter()
+plt.scatter(age, salary, color='purple', alpha=0.7) 
+# alpha គឺកម្រិតថ្លា (Transparency) ដើម្បីការពារកុំអោយចំណុចត្រួតគ្នាខ្លាំងពេក
+
+plt.title("ទំនាក់ទំនងរវាងអាយុ និង ប្រាក់ខែ (Age vs Salary)")
+plt.xlabel("អាយុ (ឆ្នាំ)")
+plt.ylabel("ប្រាក់ខែ (ដុល្លារ)")
+
+plt.show()
+```
+**Insights:** អ្នកនឹងឃើញចំណុចតម្រៀបគ្នាពីឆ្វេង(ក្រោម) ទៅស្តាំ(លើ) ដែលបញ្ជាក់ពីទំនាក់ទំនងស្របទិសគ្នា (Positive Correlation)!
+
+### ២. ក្រាហ្វិករ៉ាវ ឫរបាយ (Histogram)
+
+Histogram ត្រូវបានប្រើសម្រាប់មើលកម្រិតប្រមូលផ្តុំនៃលេខ។ តើអតិថិជនយើងភាគច្រើនក្មេង ឫចាស់?
+
+```python
+import numpy as np
+
+# បង្កើតទិន្នន័យអាយុចៃដន្យចំនួន ១០០០ នាក់ (ផ្តោតលើមធ្យមភាគអាយុ ៣០)
+np.random.seed(42)
+customer_ages = np.random.normal(loc=30, scale=10, size=1000)
+
+# គូរ Histogram ដោយប្រើ .hist()
+# bins=20 មានន័យថាយើងចង់ចែកអាយុទាំងនោះជា ២០ កញ្ចប់តូចៗ (ឧ. 10-15, 15-20...)
+plt.hist(customer_ages, bins=20, color='green', edgecolor='black')
+
+plt.title("របាយអាយុរបស់អតិថិជន (Customer Age Distribution)")
+plt.xlabel("អាយុ")
+plt.ylabel("ចំនួនមនុស្ស (នាក់)")
+
+plt.show()
+```
+**Insights:** អ្នកនឹងឃើញរូបរាង "កណ្តឹង (Bell Curve)" ដែលមានកំពូលខ្ពស់ជាងគេនៅចន្លោះអាយុ ៣០ ឆ្នាំ។ នេះមានន័យថា អតិថិជនគោលដៅរបស់អ្នក គឺជាមនុស្សវ័យ ៣០ ឆ្នាំ!
+
+<ScatterHistDemoChart />

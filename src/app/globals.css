@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
+/* Tell Tailwind v4 to use class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens */
 :root {
+  --foreground: #0a0a0a;
   --background: #ffffff;
-  --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --foreground: #ededed;
+  --background: #0a0a0a;
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.scroll-mt-20 {
+  scroll-margin-top: 5rem;
+}
+
+/* ── KaTeX ───────────────────────────────────────────── */
+
+/* Block / display math — full width, centered, good spacing */
+.math-display,
+.katex-display {
+  display: block;
+  margin: 1.75rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.katex-display > .katex {
+  display: inline-block;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Inline math — keep it inline */
+.math-inline .katex {
+  display: inline;
+}
+
+/* Dark mode — inherit color */
+.dark .katex {
+  color: inherit;
+}
+
+/* ── Prose ───────────────────────────────────────────── */
+.prose pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.prose :where(pre):not(:where([class~="not-prose"] *)) {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.prose :where(code):not(:where([class~="not-prose"] *))::before,
+.prose :where(code):not(:where([class~="not-prose"] *))::after {
+  content: none;
 }

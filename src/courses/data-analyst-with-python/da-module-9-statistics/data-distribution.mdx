@@ -1,0 +1,67 @@
+---
+title: របាយទិន្នន័យ (Data Distribution)
+description: យល់ពីទម្រង់នៃការប្រមូលផ្តុំទិន្នន័យ ជាពិសេស Normal Distribution (រូបរាងកណ្តឹង) ដែលជាគ្រឹះនៃការធ្វើតេស្តសម្មតិកម្ម។
+objectives:
+  - យល់ពីអត្ថន័យនៃ Normal Distribution
+  - ស្គាល់ពី Skewness (ទិន្នន័យទោរទន់ទៅម្ខាង)
+  - ប្រើប្រាស់ Seaborn ដើម្បីគូរក្រាហ្វិក Distribution
+module: da-module-9-statistics
+order: 3
+quiz:
+  - question: នៅក្នុង Normal Distribution (របាយធម្មតា) តើតម្លៃ Mean, Median, និង Mode មានលក្ខណៈដូចម្តេច?
+    options:
+      - Mean > Median > Mode
+      - ពួកវាស្មើគ្នាទាំង ៣ (ស្ថិតនៅចំកណ្តាលនៃកណ្តឹង)
+      - Mode > Mean
+      - មិនអាចប្រៀបធៀបបានទេ
+    correctAnswer: 2
+    explanation: 'នេះគឺជាលក្ខណៈពិសេសរបស់ Normal Distribution! ដោយសារវាមានរាងស៊ីមេទ្រី (សងខាងប៉ុនគ្នា) នោះអ្នកដែលនៅកណ្តាលគេ (Median), អ្នកដែលបានពិន្ទុដូចគ្នាភាគច្រើន (Mode) និងមធ្យមភាគ (Mean) គឺធ្លាក់ចំលើលេខតែមួយ។'
+---
+
+## 🌐 សេចក្តីផ្តើម (Overview)
+
+នៅក្នុងពិភពលោកយើងនេះ អ្វីៗជាច្រើន (ដូចជា កម្ពស់មនុស្ស, ពិន្ទុប្រឡងសិស្ស, សីតុណ្ហភាព) តែងតែមានទម្រង់ប្រមូលផ្តុំនៅកណ្តាល ហើយតិចតួចបំផុតនៅខាងចុងទាំងសងខាង។ ទម្រង់នេះហៅថា **Normal Distribution (របាយធម្មតា ឫ រូបកណ្តឹង)**។
+
+---
+
+## 💻 ការគណនា និងគូរក្រាហ្វិក (Code Breakdown)
+
+យើងប្រើ **Seaborn** ដើម្បីគូរក្រាហ្វិកមើល Distribution។ កាលពីមុនយើងប្រើ `plt.hist()` ឥឡូវយើងប្រើ `sns.histplot(kde=True)` ដែលវានឹងគូរបន្ទាត់កោងៗ (KDE) ពីលើ Histogram នោះ។
+
+```python
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# ១. បង្កើតទិន្នន័យ Normal Distribution ចំនួន ១ ម៉ឺននាក់ (ឧ. ពិន្ទុប្រឡង)
+# Mean = 50 (មធ្យម), Std = 10 (គម្លាតពីមធ្យម)
+np.random.seed(0)
+scores = np.random.normal(loc=50, scale=10, size=10000)
+
+# គូរក្រាហ្វិក
+sns.histplot(scores, kde=True, color='blue')
+plt.title("Normal Distribution (ពិន្ទុប្រឡង)")
+plt.show()
+```
+**ការបកស្រាយ (The 68-95-99.7 Rule):**
+បើសិនជាទិន្នន័យនោះជា Normal Distribution មែន, វិទ្យាសាស្ត្រអះអាងថា៖
+- **68%** នៃសិស្សទាំងអស់ គឺមានពិន្ទុស្ថិតនៅចន្លោះ +1 និង -1 Standard Deviation (គឺចន្លោះ 40 ទៅ 60 ពិន្ទុ)។
+- **95%** ស្ថិតនៅចន្លោះ +2 និង -2 Std (គឺ 30 ទៅ 70)។
+- **99.7%** ស្ថិតនៅចន្លោះ 20 ទៅ 80 ពិន្ទុ (ស្ទើរតែទាំងអស់)។ សិស្សដែលបាន 90 ពិន្ទុ គឺកម្រមែនទែន (Outlier)!
+
+### ទិន្នន័យទោរទន់ (Skewed Distribution)
+
+មិនមែនទិន្នន័យទាំងអស់សុទ្ធតែចេញរាងកណ្តឹងស្អាតនោះទេ។ ឧទាហរណ៍៖ "ប្រាក់ខែបុគ្គលិក"។
+
+```python
+# បង្កើតទិន្នន័យប្រាក់ខែ ដែលមានអ្នកបានខ្ពស់ខ្លាំងតែ ២-៣ នាក់ (Right-Skewed)
+salaries = np.random.exponential(scale=1000, size=10000)
+
+sns.histplot(salaries, kde=True, color='red')
+plt.title("Right-Skewed Distribution (ប្រាក់ខែ)")
+plt.show()
+```
+**ការបកស្រាយ:**
+អ្នកនឹងឃើញថា "កន្ទុយ" នៃក្រាហ្វិកអូសបន្លាយទៅខាងស្តាំយ៉ាងវែង (ហៅថា Positive Skew ឫ Right-Skewed)។ នេះបញ្ជាក់ថា មនុស្សភាគច្រើនទទួលបានប្រាក់ខែទាប (ប្រមូលផ្តុំខាងឆ្វេង) ប៉ុន្តែមានមនុស្សតិចតួចបំផុត (ដូចជា CEO) ទទួលបានប្រាក់ខែខ្ពស់កប់ពពកនៅខាងស្តាំចុងកន្ទុយ! 
+
+ក្នុងករណីនេះ អ្នក **ត្រូវតែប្រើ Median** ជំនួស Mean សម្រាប់ការវិភាគ ដូចដែលយើងបានរៀនក្នុងមេរៀនទី១!
