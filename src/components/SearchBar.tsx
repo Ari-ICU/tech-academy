@@ -37,11 +37,25 @@ export function SearchBar() {
     }
 
     const timer = setTimeout(async () => {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-      if (res.ok) {
-        const data = await res.json();
-        setResults(data.results);
-        setIsOpen(true);
+      try {
+        // Detect if running on GitHub Pages subpath (/tech-academy) or local development
+        const isSubpath = typeof window !== "undefined" && window.location.pathname.startsWith("/tech-academy");
+        const indexUrl = isSubpath ? "/tech-academy/search-index.json" : "/search-index.json";
+
+        const res = await fetch(indexUrl);
+        if (res.ok) {
+          const allLessons: SearchResult[] = await res.json();
+          const q = query.toLowerCase();
+          const filtered = allLessons.filter(
+            (item) =>
+              item.title.toLowerCase().includes(q) ||
+              (item.description && item.description.toLowerCase().includes(q))
+          );
+          setResults(filtered.slice(0, 20));
+          setIsOpen(true);
+        }
+      } catch (error) {
+        console.error("Failed to perform client-side search:", error);
       }
     }, 300);
 
