@@ -70,10 +70,15 @@ print(fruits[-2])   # banana
 ```
 
 **គំនូសតាងចំណាំ:**
-```text
-Value:     apple    banana    orange
-Positive:    0         1         2
-Negative:   -3        -2        -1
+```mermaid
+flowchart LR
+    subgraph List ["fruits = ['apple', 'banana', 'orange']"]
+        direction LR
+        box0["Value: 'apple'\nPos: 0\nNeg: -3"]
+        box1["Value: 'banana'\nPos: 1\nNeg: -2"]
+        box2["Value: 'orange'\nPos: 2\nNeg: -1"]
+        box0 --- box1 --- box2
+    end
 ```
 > Negative Index គឺមានប្រយោជន៍ខ្លាំងណាស់ ពេលអ្នកចង់យករបស់ចុងក្រោយគេ ដោយមិនបាច់ខ្វល់ថា List នោះមានប្រវែងប៉ុន្មានឡើយ។
 

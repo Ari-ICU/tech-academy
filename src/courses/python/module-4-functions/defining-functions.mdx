@@ -194,13 +194,15 @@ Python
 ```
 
 **គំនូសតាង៖**
-```text
-Global Scope
-(ពិភពខាងក្រៅ)
-name = "Python"
-↓
-   ចូលក្នុង Function (Local Scope)
-   name = "Alice" (មិនប៉ះពាល់អ្នកក្រៅទេ)
+```mermaid
+flowchart TD
+    subgraph Global ["Global Scope (ពិភពខាងក្រៅ)"]
+        G["name = 'Python'"]
+    end
+    subgraph Local ["Local Scope (ក្នុង Function)"]
+        L["name = 'Alice'\n(មិនប៉ះពាល់ Global ទេ)"]
+    end
+    G --> L
 ```
 
 **ការប្រើប្រាស់ពាក្យ `global`:**
