@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Module, Lesson } from "@/types";
 import { useBookmarks } from "@/hooks/useBookmarks";
@@ -18,9 +19,19 @@ export function LessonSidebar({
   className = "w-60",
 }: LessonSidebarProps) {
   const { isBookmarked } = useBookmarks();
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (sidebarRef.current) {
+      const activeEl = sidebarRef.current.querySelector('[aria-current="page"]');
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  }, [activeLesson.slug, activeLesson.moduleSlug]);
 
   return (
-    <aside className={`shrink-0 ${className}`}>
+    <aside ref={sidebarRef} className={`shrink-0 ${className}`}>
       <nav aria-label="Course navigation">
         {modules.map((mod) => (
           <div key={mod.slug} className="mb-6">
