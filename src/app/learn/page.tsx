@@ -66,7 +66,7 @@ const COURSE_META: Record<
     Icon: Sparkles,
     gradient: "from-amber-500 to-orange-400",
     description:
-      "បង្កើតជាមួយ large language models, diffusion models និង prompt engineering។",
+      "បង្កើតជាមួយ large language models, diffusion models និង prompt engineering।",
   },
 };
 
@@ -132,49 +132,6 @@ export default function CoursesPage() {
               course.description || meta.description;
             const isComingSoon = course.slug !== "python";
 
-            if (isComingSoon) {
-              return (
-                <div
-                  key={course.slug}
-                  className="group relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 opacity-75 transition-all duration-300 overflow-hidden flex flex-col"
-                >
-                  {/* Gradient top bar */}
-                  <div className={`h-1.5 bg-gradient-to-r ${gradient}`} />
-
-                  <div className="p-6 flex flex-col flex-1">
-                    {/* Icon box and lock badge */}
-                    <div className="flex items-start justify-between mb-5">
-                      <div
-                        className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-md`}
-                      >
-                        <Icon className="w-6 h-6 text-white" />
-                      </div>
-                      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                        <Lock className="w-3 h-3" />
-                        ជិតមកដល់
-                      </span>
-                    </div>
-
-                    <h2 className="text-lg font-bold mb-2 text-gray-900 dark:text-white transition-colors">
-                      {course.title}
-                    </h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm mb-5 flex-1 leading-relaxed line-clamp-2">
-                      {description}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5" />
-                          ឥតគិតថ្លៃ
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-
             return (
               <Link
                 key={course.slug}
@@ -185,13 +142,19 @@ export default function CoursesPage() {
                 <div className={`h-1.5 bg-gradient-to-r ${gradient}`} />
 
                 <div className="p-6 flex flex-col flex-1">
-                  {/* Icon box */}
+                  {/* Icon box and lock/coming soon tag */}
                   <div className="flex items-start justify-between mb-5">
                     <div
                       className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-md`}
                     >
                       <Icon className="w-6 h-6 text-white" />
                     </div>
+                    {isComingSoon && (
+                      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                        <Lock className="w-3 h-3" />
+                        ជិតមកដល់
+                      </span>
+                    )}
                   </div>
 
                   <h2 className="text-lg font-bold mb-2 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
@@ -203,12 +166,12 @@ export default function CoursesPage() {
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
-                      {lessonCount > 0 && (
+                      {lessonCount > 0 && !isComingSoon ? (
                         <span className="flex items-center gap-1">
                           <BookOpen className="w-3.5 h-3.5" />
                           {lessonCount} មេរៀន
                         </span>
-                      )}
+                      ) : null}
                       <span className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
                         ឥតគិតថ្លៃ
