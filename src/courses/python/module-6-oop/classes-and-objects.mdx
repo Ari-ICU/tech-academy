@@ -280,3 +280,129 @@ class Student:
 - **Encapsulation** (ការលាក់បាំងទិន្នន័យ)
 - **Polymorphism** (ការផ្លាស់ប្តូររូបរាងកូដ)
 - **Abstraction** (ការបំបាំងភាពស្មុគស្មាញ)
+
+---
+
+## 🚀 Mini-Project: ប្រព័ន្ធគ្រប់គ្រងគណនីធនាគារ (Bank Account Management System)
+
+### 🎯 គោលបំណងគម្រោង
+អនុវត្តចំណេះដឹងពីមេរៀនទី ៦ តាមរយៈការបង្កើត `class BankAccount`, ការប្រើប្រាស់ `__init__`, `self`, Instance Attributes (`account_number`, `owner`, `balance`), និង Methods (`deposit`, `withdraw`, `transfer`, `get_statement`)។
+
+```mermaid
+classDiagram
+    class BankAccount {
+        +String account_number
+        +String owner
+        +Float balance
+        +List transactions
+        +deposit(amount)
+        +withdraw(amount)
+        +transfer(target_account, amount)
+        +print_statement()
+    }
+```
+
+### 💻 កូដពេញលេញ (Full Source Code)
+
+```python
+# -------------------------------------------------------------
+# Mini-Project: OOP Bank Account Management System
+# -------------------------------------------------------------
+
+class BankAccount:
+    bank_name = "ABA Advanced Bank"  # Class Attribute
+
+    def __init__(self, account_number: str, owner: str, initial_balance: float = 0.0):
+        self.account_number = account_number
+        self.owner = owner
+        self.balance = initial_balance
+        self.transactions = [f"បើកគណនីដំបូង: +${initial_balance:.2f}"]
+
+    def deposit(self, amount: float):
+        """ដាក់ប្រាក់ចូលគណនី"""
+        if amount <= 0:
+            print("⚠️ ចំនួនទឹកប្រាក់ដាក់ត្រូវតែធំជាង 0!")
+            return False
+        self.balance += amount
+        self.transactions.append(f"ដាក់ប្រាក់ (Deposit): +${amount:.2f}")
+        print(f"✅ បានដាក់ប្រាក់ ${amount:.2f} ចូលគណនី {self.account_number}។ សមតុល្យបច្ចុប្បន្ន: ${self.balance:.2f}")
+        return True
+
+    def withdraw(self, amount: float):
+        """ដកប្រាក់ចេញពីគណនី"""
+        if amount <= 0:
+            print("⚠️ ចំនួនទឹកប្រាក់ដកត្រូវតែធំជាង 0!")
+            return False
+        if amount > self.balance:
+            print(f"❌ បរាជ័យ! សមតុល្យទឹកប្រាក់មិនគ្រប់គ្រាន់ (នៅសល់ត្រឹម ${self.balance:.2f})")
+            return False
+        self.balance -= amount
+        self.transactions.append(f"ដកប្រាក់ (Withdraw): -${amount:.2f}")
+        print(f"✅ បានដកប្រាក់ ${amount:.2f} ជោគជ័យ។ សមតុល្យនៅសល់: ${self.balance:.2f}")
+        return True
+
+    def transfer(self, target_account: 'BankAccount', amount: float):
+        """ផ្ទេរប្រាក់ទៅកាន់គណនីផ្សេង"""
+        print(f"\n🔄 កំពុងផ្ទេរប្រាក់ ${amount:.2f} ពី {self.owner} ទៅ {target_account.owner}...")
+        if self.withdraw(amount):
+            target_account.deposit(amount)
+            self.transactions.append(f"ផ្ទេរចេញទៅ {target_account.owner}: -${amount:.2f}")
+            target_account.transactions.append(f"ទទួលផ្ទេរពី {self.owner}: +${amount:.2f}")
+            print("🎉 ការផ្ទេរប្រាក់ទទួលបានជោគជ័យពេញលេញ!")
+            return True
+        return False
+
+    def print_statement(self):
+        """បង្ហាញរបាយការណ៍សង្ខេបនៃចរន្តទឹកប្រាក់"""
+        print("\n" + "=" * 45)
+        print(f"   🏦 {BankAccount.bank_name} — របាយការណ៍គណនី   ")
+        print("=" * 45)
+        print(f"👤 ម្ចាស់គណនី  : {self.owner}")
+        print(f"🔢 លេខគណនី   : {self.account_number}")
+        print(f"💰 សមតុល្យសរុប : ${self.balance:.2f}")
+        print("-" * 45)
+        print("📜 ប្រវត្តិប្រតិបត្តិការ (Transaction History):")
+        for t in self.transactions:
+            print(f"   • {t}")
+        print("=" * 45)
+
+# --- ដំណាក់កាលដំណើរការតេស្តកូដ (Simulation) ---
+acc1 = BankAccount("001-987-111", "Sokha Mean", initial_balance=500.0)
+acc2 = BankAccount("002-334-222", "Bopha Roth", initial_balance=100.0)
+
+# ប្រតិបត្តិការ
+acc1.deposit(200.0)
+acc1.withdraw(50.0)
+acc1.transfer(acc2, 150.0)
+
+# បង្ហាញរបាយការណ៍
+acc1.print_statement()
+acc2.print_statement()
+```
+
+### 🖥️ ឧទាហរណ៍នៃការដំណើរការកូដ (Sample Run)
+```text
+✅ បានដាក់ប្រាក់ $200.00 ចូលគណនី 001-987-111។ សមតុល្យបច្ចុប្បន្ន: $700.00
+✅ បានដកប្រាក់ $50.00 ជោគជ័យ។ សមតុល្យនៅសល់: $650.00
+
+🔄 កំពុងផ្ទេរប្រាក់ $150.00 ពី Sokha Mean ទៅ Bopha Roth...
+✅ បានដកប្រាក់ $150.00 ជោគជ័យ។ សមតុល្យនៅសល់: $500.00
+✅ បានដាក់ប្រាក់ $150.00 ចូលគណនី 002-334-222។ សមតុល្យបច្ចុប្បន្ន: $250.00
+🎉 ការផ្ទេរប្រាក់ទទួលបានជោគជ័យពេញលេញ!
+
+=============================================
+   🏦 ABA Advanced Bank — របាយការណ៍គណនី   
+=============================================
+👤 ម្ចាស់គណនី  : Sokha Mean
+🔢 លេខគណនី   : 001-987-111
+💰 សមតុល្យសរុប : $500.00
+---------------------------------------------
+📜 ប្រវត្តិប្រតិបត្តិការ (Transaction History):
+   • បើកគណនីដំបូង: +$500.00
+   • ដាក់ប្រាក់ (Deposit): +$200.00
+   • ដកប្រាក់ (Withdraw): -$50.00
+   • ដកប្រាក់ (Withdraw): -$150.00
+   • ផ្ទេរចេញទៅ Bopha Roth: -$150.00
+=============================================
+```
+

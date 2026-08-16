@@ -202,3 +202,105 @@ check_price()
 - ប្រើប្រាស់បណ្ណាល័យ **`requests`** ដើម្បីទាក់ទងជាមួយអុីនធឺណិត (GET, POST)។
 - បើគ្មាន API ទេ សូមប្រើប្រាស់ **`BeautifulSoup`** ដើម្បីកកាយយកទិន្នន័យចេញពីកូដ HTML (Web Scraping)។
 - កុំភ្លេចគោរពក្រមសីលធម៌ដោយកុំទាញយកទិន្នន័យញឹកញាប់ពេក និងដាក់ `User-Agent` ដើម្បីកុំឱ្យគេបិទការភ្ជាប់របស់អ្នក។
+
+---
+
+## 🚀 Mini-Project: កម្មវិធីទាញយកអត្រាប្តូរប្រាក់ផ្ទាល់ (Live Currency Exchange Rate App)
+
+### 🎯 គោលបំណងគម្រោង
+អនុវត្តចំណេះដឹងពីមេរៀនទី ៧ អំពីការហៅទៅកាន់ **Public REST API** ដោយប្រើ `requests.get()`, ការអានទិន្នន័យ JSON ដោយ `.json()`, ការគ្រប់គ្រង Network Error, និងការគណនាបំប្លែងតម្លៃរូបិយប័ណ្ណភ្លាមៗ។
+
+```mermaid
+graph TD
+    A["ចាប់ផ្តើម (Start)"] --> B["User បញ្ចូលរូបិយប័ណ្ណគោល (Base: USD)"]
+    B --> C["ផ្ញើ GET Request ទៅ open.er-api.com"]
+    C --> D{"Status Code == 200?"}
+    D -- "បរាជ័យ (No)" --> E["បង្ហាញសារកំហុស (Network Error)"]
+    D -- "ជោគជ័យ (Yes)" --> F["ទាញយក JSON Rates (KHR, EUR, JPY, THB)"]
+    F --> G["គណនាបំប្លែងទឹកប្រាក់ (Converted Amount)"]
+    G --> H["បង្ហាញតារាងអត្រាប្តូរប្រាក់បច្ចុប្បន្ន"]
+    H --> I["បញ្ចប់ (End)"]
+```
+
+### 💻 កូដពេញលេញ (Full Source Code)
+
+```python
+# -------------------------------------------------------------
+# Mini-Project: Live Currency Exchange Rate App using REST API
+# -------------------------------------------------------------
+import requests
+
+def get_exchange_rates(base_currency="USD"):
+    """ទាញយកអត្រាប្តូរប្រាក់បច្ចុប្បន្នពី Public Exchange Rate API"""
+    url = f"https://open.er-api.com/v6/latest/{base_currency.upper()}"
+    
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+        
+        if data.get("result") == "success":
+            return data["rates"]
+        else:
+            print("⚠️ មិនអាចទាញយកទិន្នន័យរូបិយប័ណ្ណបានឡើយ។")
+            return None
+    except requests.exceptions.RequestException as error:
+        print(f"❌ កំហុសក្នុងការភ្ជាប់បណ្តាញ Network: {error}")
+        return None
+
+def main():
+    print("==========================================")
+    print("  💱 កម្មវិធីប្តូរប្រាក់ផ្ទាល់ (Live Currency Rate)  ")
+    print("==========================================\n")
+    
+    amount_str = input("💵 សូមបញ្ចូលចំនួនទឹកប្រាក់ដុល្លារ ($ USD): ").strip()
+    try:
+        usd_amount = float(amount_str)
+    except ValueError:
+        print("⚠️ សូមបញ្ចូលជាចំនួនលេខត្រឹមត្រូវ!")
+        return
+
+    print("\n🔄 កំពុងទាញយកទិន្នន័យអត្រាប្តូរប្រាក់ពី Cloud API...")
+    rates = get_exchange_rates("USD")
+    
+    if rates:
+        khr_rate = rates.get("KHR", 4050.0)
+        eur_rate = rates.get("EUR", 0.92)
+        thb_rate = rates.get("THB", 35.5)
+        jpy_rate = rates.get("JPY", 155.0)
+
+        print("\n" + "=" * 45)
+        print("       📊 អត្រាប្តូរប្រាក់អន្តរជាតិបច្ចុប្បន្ន       ")
+        print("=" * 45)
+        print(f"🇰🇭 ប្រាក់រៀលខ្មែរ (KHR) : {usd_amount * khr_rate:,.2f} ៛ (1$ = {khr_rate:,.2f} ៛)")
+        print(f"🇪🇺 ប្រាក់អឺរ៉ូ (EUR)     : €{usd_amount * eur_rate:,.2f}")
+        print(f"🇹🇭 ប្រាក់បាតថៃ (THB)   : ฿{usd_amount * thb_rate:,.2f}")
+        print(f"🇯🇵 ប្រាក់យ៉េនជប៉ុន (JPY) : ¥{usd_amount * jpy_rate:,.2f}")
+        print("=" * 45)
+        print("✅ ទិន្នន័យត្រូវបានទាញយកពី API ផ្ទាល់ដោយជោគជ័យ!")
+
+if __name__ == "__main__":
+    main()
+```
+
+### 🖥️ ឧទាហរណ៍នៃការដំណើរការកូដ (Sample Run)
+```text
+==========================================
+  💱 កម្មវិធីប្តូរប្រាក់ផ្ទាល់ (Live Currency Rate)  
+==========================================
+
+💵 សូមបញ្ចូលចំនួនទឹកប្រាក់ដុល្លារ ($ USD): 100
+
+🔄 កំពុងទាញយកទិន្នន័យអត្រាប្តូរប្រាក់ពី Cloud API...
+
+=============================================
+       📊 អត្រាប្តូរប្រាក់អន្តរជាតិបច្ចុប្បន្ន       
+=============================================
+🇰🇭 ប្រាក់រៀលខ្មែរ (KHR) : 408,500.00 ៛ (1$ = 4,085.00 ៛)
+🇪🇺 ប្រាក់អឺរ៉ូ (EUR)     : €92.40
+🇹🇭 ប្រាក់បាតថៃ (THB)   : ฿3,610.00
+🇯🇵 ប្រាក់យ៉េនជប៉ុន (JPY) : ¥15,480.00
+=============================================
+✅ ទិន្នន័យត្រូវបានទាញយកពី API ផ្ទាល់ដោយជោគជ័យ!
+```
+

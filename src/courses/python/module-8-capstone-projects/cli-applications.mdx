@@ -208,3 +208,71 @@ if __name__ == "__main__":
 - បណ្ណាល័យ **`argparse`** ជាឧបករណ៍ស្តង់ដារសម្រាប់ចាប់យក និងបកប្រែពាក្យបញ្ជាដែលអ្នកប្រើប្រាស់វាយបញ្ចូល ព្រមទាំងបង្កើតសៀវភៅណែនាំ `-h` (Help Menu) ដោយស្វ័យប្រវត្តិ។
 - ប្រើប្រាស់ **Positional Arguments** សម្រាប់ទិន្នន័យចាំបាច់ដែលខ្វះមិនបាន (ឧ. ទីតាំង Folder)។
 - ប្រើប្រាស់ **Optional Arguments (Flags)** សម្រាប់ជម្រើសបន្ថែមដែលអាចបិទឬបើក (ឧ. `-v` សម្រាប់ Verbose)។
+
+---
+
+## 🎓 គម្រោងបញ្ចប់វគ្គសិក្សា (Capstone Project Tracks)
+
+អ្នកអាចជ្រើសរើសផ្លូវមួយក្នុងចំណោមជម្រើសទាំង ៣ ខាងក្រោមនេះ ដើម្បីកសាងគម្រោងធំចុងក្រោយរបស់អ្នក៖
+
+```mermaid
+graph TD
+    A["🏆 ជម្រើសគម្រោងបញ្ចប់វគ្គ (Capstone Tracks)"]
+    A --> B["ជម្រើស A: Web & APIs<br/>(FastAPI / Flask REST API)"]
+    A --> C["ជម្រើស B: Automation & Scripting<br/>(File Organizer & Web Scraper)"]
+    A --> D["ជម្រើស C: Data Analysis<br/>(Pandas, NumPy, Matplotlib)"]
+```
+
+---
+
+### 🌐 ជម្រើស A: Web & APIs Track (បង្កើត REST API Backend)
+* **គោលបំណង:** បង្កើត Web API សម្រាប់ផ្តល់ទិន្នន័យ JSON ទៅឱ្យ Frontend ឬ Mobile App។
+* **បណ្ណាល័យសំខាន់ៗ:** `fastapi`, `uvicorn`, `pydantic`
+* **ឧទាហរណ៍កូដសាមញ្ញ:**
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Student(BaseModel):
+    name: str
+    major: str
+    gpa: float
+
+@app.get("/")
+def home():
+    return {"message": "សូមស្វាគមន៍មកកាន់ Tech Academy API!"}
+
+@app.post("/students/")
+def add_student(student: Student):
+    return {"status": "success", "data": student}
+```
+
+---
+
+### 🤖 ជម្រើស B: Automation & Scripting Track (ស្វ័យប្រវត្តិកម្ម)
+* **គោលបំណង:** បង្កើត Script ដែលទាញទិន្នន័យពី Website (Web Scraping) និងចាត់ចែង Files ក្នុងកុំព្យូទ័រដោយស្វ័យប្រវត្តិ។
+* **បណ្ណាល័យសំខាន់ៗ:** `beautifulsoup4`, `requests`, `argparse`, `os`, `shutil`
+
+---
+
+### 📊 ជម្រើស C: Data Analysis Track (ការវិភាគ និងមើលឃើញទិន្នន័យ)
+* **គោលបំណង:** អានទិន្នន័យពី CSV/Excel, សម្អាតទិន្នន័យស្ទួន, គណនាស្ថិតិ និងគូសក្រាហ្វិកវិភាគអាជីវកម្ម។
+* **បណ្ណាល័យសំខាន់ៗ:** `pandas`, `numpy`, `matplotlib`, `seaborn`
+* **ឧទាហរណ៍កូដសាមញ្ញ:**
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# អានទិន្នន័យ និងគូរក្រាហ្វិក
+data = {"Month": ["Jan", "Feb", "Mar", "Apr"], "Revenue": [1200, 1500, 1800, 2200]}
+df = pd.DataFrame(data)
+
+df.plot(x="Month", y="Revenue", kind="bar", color="skyblue")
+plt.title("Monthly Revenue Growth")
+plt.ylabel("Revenue in USD ($)")
+plt.savefig("revenue_chart.png")
+print("✅ បានបង្កើតក្រាហ្វិកវិភាគដោយជោគជ័យ!")
+```
+
