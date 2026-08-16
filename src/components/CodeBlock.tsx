@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Highlight, themes } from "prism-react-renderer";
+import { Mermaid } from "./Mermaid";
 
 interface CodeBlockProps {
   code: string;
@@ -61,6 +62,12 @@ export function CodeBlock({
   };
 
   const lang = language.toLowerCase();
+
+  // If language is mermaid, render diagram component
+  if (lang === "mermaid") {
+    return <Mermaid code={code.trim()} />;
+  }
+
   const label = LANGUAGE_LABELS[lang] ?? language;
   const badgeColor = LANGUAGE_COLORS[lang] ?? "text-gray-400 bg-gray-400/10";
   const isPlainText = lang === "text" || lang === "plaintext";
