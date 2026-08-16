@@ -16,6 +16,16 @@ const COURSE_TITLES = {
 };
 
 const MODULE_TITLES = {
+  // New Python Syllabus
+  "module-1-foundations-setup": "មេរៀនទី ១៖ មូលដ្ឋានគ្រឹះ និងការដំឡើងបរិស្ថានសរសេរកូដ (Foundations & Setup)",
+  "module-2-control-flow-logic": "មេរៀនទី ២៖ លក្ខខណ្ឌ និងរង្វិលជុំ (Control Flow & Logic)",
+  "module-3-core-data-structures": "មេរៀនទី ៣៖ រចនាសម្ព័ន្ធទិន្នន័យស្នូល (Core Data Structures)",
+  "module-4-functions-modular-programming": "មេរៀនទី ៤៖ អនុគមន៍ និងការបំបែកកូដ (Functions & Modular Programming)",
+  "module-5-file-handling-error-management": "មេរៀនទី ៥៖ ការគ្រប់គ្រង File និងការដោះស្រាយបញ្ហា (File Handling & Error Management)",
+  "module-6-oop": "មេរៀនទី ៦៖ ការសរសេរកូដបែប Object-Oriented (OOP)",
+  "module-7-ecosystem-tooling": "មេរៀនទី ៧៖ ប្រព័ន្ធអេកូឡូស៊ី និងឧបករណ៍បន្ថែម (Ecosystem & Tooling)",
+  "module-8-capstone-projects": "មេរៀនទី ៨៖ គម្រោងបញ្ចប់វគ្គ (Capstone Project Tracks)",
+
   "module-1-foundations":   "Module 1 — Foundations",
   "module-2-data-wrangling":"Module 2 — Data Wrangling with pandas",
   "module-3-eda":           "Module 3 — EDA and Feature Engineering",
