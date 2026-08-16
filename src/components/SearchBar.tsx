@@ -8,6 +8,8 @@ interface SearchResult {
   title: string;
   url: string;
   description?: string;
+  courseName?: string;
+  moduleName?: string;
 }
 
 export function SearchBar() {
@@ -84,17 +86,24 @@ export function SearchBar() {
               }}
               className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
             >
-              <div className="font-medium text-gray-900 dark:text-white">
+              {/* Separate Path Block */}
+              {(result.courseName || result.moduleName) && (
+                <div className="text-[10px] font-bold text-blue-600 dark:text-blue-400 tracking-wider uppercase mb-1">
+                  {result.courseName} {result.moduleName ? `› ${result.moduleName}` : ""}
+                </div>
+              )}
+
+              {/* Title Detail */}
+              <div className="font-semibold text-gray-900 dark:text-white leading-snug">
                 {result.title}
               </div>
+
+              {/* Description Detail */}
               {result.description && (
-                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2 leading-relaxed">
                   {result.description}
                 </div>
               )}
-              <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                មេរៀន
-              </div>
             </Link>
           ))}
         </div>

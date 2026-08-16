@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCourse, getAllCourseSlugs } from "@/server/services/courses.service";
+import { Lock, ArrowLeft, Play } from "lucide-react";
 
 export async function generateStaticParams() {
   const slugs = getAllCourseSlugs();
@@ -28,6 +29,47 @@ export default async function CourseOverviewPage({
 
   if (!course) {
     notFound();
+  }
+
+  // Handle locked/coming soon courses
+  if (courseSlug !== "python") {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-20 text-center flex flex-col items-center justify-center min-h-[70vh]">
+        {/* Animated Lock Icon */}
+        <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-6 border border-amber-500/20 shadow-sm animate-pulse">
+          <Lock className="w-8 h-8" />
+        </div>
+
+        <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 text-gray-900 dark:text-white tracking-tight">
+          {course.title}
+        </h1>
+
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 mb-6">
+          ជិតមកដល់ • Coming Soon
+        </div>
+
+        <p className="text-gray-600 dark:text-gray-400 max-w-md mb-10 text-sm sm:text-base leading-relaxed">
+          វគ្គសិក្សានេះកំពុងត្រូវបានរៀបចំឡើងយ៉ាងយកចិត្តទុកដាក់។ សូមត្រឡប់មកពិនិត្យឡើងវិញនៅពេលក្រោយ ឬចាប់ផ្តើមសិក្សាវគ្គ Python ជាមុនសិន។
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <Link
+            href="/learn"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm font-medium"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            វគ្គសិក្សាផ្សេងទៀត
+          </Link>
+          <Link
+            href="/learn/python"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-colors text-sm font-medium shadow-md shadow-blue-500/15"
+          >
+            <Play className="w-4 h-4 fill-white" />
+            រៀន Python ឥឡូវនេះ
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
