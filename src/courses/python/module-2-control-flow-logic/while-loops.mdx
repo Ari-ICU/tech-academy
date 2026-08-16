@@ -1,29 +1,36 @@
 ---
 title: while Loops និង Loop Control
-description: ប្រើ while loops សម្រាប់ repetition ដោយផ្អែកលើ condition ហើយចាប់ផ្តើមជាម្ចាស់ជាមួយ break, continue, និង else clause។
+description: >-
+  ប្រើ while loops សម្រាប់ repetition ដោយផ្អែកលើ condition
+  ហើយចាប់ផ្តើមជាម្ចាស់ជាមួយ break, continue, និង else clause។
 objectives:
   - សរសេរ while loops ដែល terminate ត្រឹមត្រូវ
   - ប្រើ break ដើម្បី exit loop លឿន និង continue ដើម្បី skip iterations
   - ជៀស infinite loops ដោយប្រើ guard conditions ត្រឹមត្រូវ
-module: module-2-control-flow
 order: 3
 quiz:
-  - question: What happens if a while loop's condition never becomes False and there is no break?
+  - question: >-
+      What happens if a while loop's condition never becomes False and there is
+      no break?
     options:
       - Python raises a TimeoutError after 10 seconds
       - The loop runs forever (infinite loop)
       - Python automatically exits after 1000 iterations
       - A RecursionError is raised
     correctAnswer: 1
-    explanation: Python has no built-in loop time limit. If the condition is always True and there is no break, the loop runs until the process is killed.
+    explanation: >-
+      Python has no built-in loop time limit. If the condition is always True
+      and there is no break, the loop runs until the process is killed.
   - question: When does the else clause of a while loop execute?
     options:
       - Every time the loop body executes
       - When the condition becomes False naturally (no break)
       - When a break is encountered
-      - Always, after the loop
+      - 'Always, after the loop'
     correctAnswer: 1
-    explanation: The else clause runs only when the condition becomes False naturally — it is skipped if the loop exits via break.
+    explanation: >-
+      The else clause runs only when the condition becomes False naturally — it
+      is skipped if the loop exits via break.
 ---
 
 ## 🌐 Overview

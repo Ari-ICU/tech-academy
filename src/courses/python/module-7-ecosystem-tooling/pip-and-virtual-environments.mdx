@@ -1,29 +1,42 @@
 ---
 title: Pip និង Virtual Environments
-description: រៀនពីរបៀបដំឡើង Library ពីខាងក្រៅដោយប្រើប្រាស់ pip និងការប្រើប្រាស់ Virtual Environment (venv) ដើម្បីការពារកុំឱ្យមានជម្លោះរវាងគម្រោងផ្សេងៗគ្នា។
+description: >-
+  រៀនពីរបៀបដំឡើង Library ពីខាងក្រៅដោយប្រើប្រាស់ pip និងការប្រើប្រាស់ Virtual
+  Environment (venv) ដើម្បីការពារកុំឱ្យមានជម្លោះរវាងគម្រោងផ្សេងៗគ្នា។
 objectives:
   - ស្វែងយល់ពីតួនាទីរបស់ PyPI និង pip package manager
   - បង្កើត និងដំណើរការ Virtual Environment (venv) សម្រាប់គម្រោងនីមួយៗ
   - រក្សាទុកបញ្ជី Library (requirements.txt) ដើម្បីងាយស្រួលចែករំលែកកូដ
-module: module-9-modules-packages
-order: 2
+order: 1
 quiz:
-  - question: ហេតុអ្វីបានជាអ្នកសរសេរកម្មវិធី Python អាជីពតែងតែបង្កើត Virtual Environment សម្រាប់គម្រោងនីមួយៗ?
+  - question: >-
+      ហេតុអ្វីបានជាអ្នកសរសេរកម្មវិធី Python អាជីពតែងតែបង្កើត Virtual Environment
+      សម្រាប់គម្រោងនីមួយៗ?
     options:
       - ព្រោះវាធ្វើឱ្យកម្មវិធីដំណើរការលឿនជាងមុន
-      - ដើម្បីការពារកុំឱ្យមានជម្លោះជំនាន់ (Version conflicts) នៃ Library វាងគម្រោងមួយ និងគម្រោងមួយទៀត
+      - >-
+        ដើម្បីការពារកុំឱ្យមានជម្លោះជំនាន់ (Version conflicts) នៃ Library
+        វាងគម្រោងមួយ និងគម្រោងមួយទៀត
       - ព្រោះ Python បង្ខំឱ្យប្រើ បើមិនប្រើកូដមិនរត់ទេ
       - ដើម្បីសន្សំសំចៃទំហំ Hard Disk
     correctAnswer: 2
-    explanation: 'គម្រោង A អាចត្រូវការ Django ជំនាន់ 3 ខណៈគម្រោង B ត្រូវការជំនាន់ 4។ បើអ្នកដំឡើងវារួមគ្នាក្នុងកុំព្យូទ័រតែមួយ វានឹងជាន់គ្នា (Conflict)។ Virtual Environment ដោះស្រាយបញ្ហានេះដោយបង្កើតកន្លែងដាច់ដោយឡែកសម្រាប់គម្រោងនីមួយៗ។'
-  - question: តើពាក្យបញ្ជាណាមួយដែលប្រើសម្រាប់រក្សាទុកឈ្មោះ និងជំនាន់នៃ Library ទាំងអស់ដែលគម្រោងរបស់អ្នកកំពុងប្រើ ចូលទៅក្នុងឯកសារ requirements.txt?
+    explanation: >-
+      គម្រោង A អាចត្រូវការ Django ជំនាន់ 3 ខណៈគម្រោង B ត្រូវការជំនាន់ 4។
+      បើអ្នកដំឡើងវារួមគ្នាក្នុងកុំព្យូទ័រតែមួយ វានឹងជាន់គ្នា (Conflict)។ Virtual
+      Environment ដោះស្រាយបញ្ហានេះដោយបង្កើតកន្លែងដាច់ដោយឡែកសម្រាប់គម្រោងនីមួយៗ។
+  - question: >-
+      តើពាក្យបញ្ជាណាមួយដែលប្រើសម្រាប់រក្សាទុកឈ្មោះ និងជំនាន់នៃ Library
+      ទាំងអស់ដែលគម្រោងរបស់អ្នកកំពុងប្រើ ចូលទៅក្នុងឯកសារ requirements.txt?
     options:
       - pip save > requirements.txt
       - pip freeze > requirements.txt
       - pip list > requirements.txt
       - pip export requirements.txt
     correctAnswer: 2
-    explanation: 'pip freeze បង្ហាញបញ្ជី Library ដែលបានដំឡើងរួចជាមួយនឹងជំនាន់ពិតប្រាកដរបស់វា (ឧ. requests==2.28.1)។ ការប្រើ > requirements.txt គឺដើម្បីរក្សាទុកបញ្ជីនោះចូលក្នុងឯកសារ។'
+    explanation: >-
+      pip freeze បង្ហាញបញ្ជី Library ដែលបានដំឡើងរួចជាមួយនឹងជំនាន់ពិតប្រាកដរបស់វា
+      (ឧ. requests==2.28.1)។ ការប្រើ > requirements.txt
+      គឺដើម្បីរក្សាទុកបញ្ជីនោះចូលក្នុងឯកសារ។
 ---
 
 ## 🌐 សេចក្តីផ្តើម (Overview)

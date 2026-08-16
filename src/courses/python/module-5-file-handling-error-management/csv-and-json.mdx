@@ -1,29 +1,44 @@
 ---
 title: ការប្រើប្រាស់ CSV និង JSON
-description: រៀនពីរបៀបអាន និងសរសេរទិន្នន័យដែលមានរចនាសម្ព័ន្ធ (Structured Data) ដូចជាឯកសារ CSV សម្រាប់តារាងទិន្នន័យ និង JSON សម្រាប់ទិន្នន័យពី Web API។
+description: >-
+  រៀនពីរបៀបអាន និងសរសេរទិន្នន័យដែលមានរចនាសម្ព័ន្ធ (Structured Data) ដូចជាឯកសារ
+  CSV សម្រាប់តារាងទិន្នន័យ និង JSON សម្រាប់ទិន្នន័យពី Web API។
 objectives:
   - ប្រើប្រាស់ csv module ដើម្បីអាន និងសរសេរឯកសារ CSV (ជា List និង Dictionary)
-  - ប្រើប្រាស់ json module ដើម្បីបំប្លែងទិន្នន័យរវាង Python Objects ទៅជា JSON string (Serialization/Deserialization)
+  - >-
+    ប្រើប្រាស់ json module ដើម្បីបំប្លែងទិន្នន័យរវាង Python Objects ទៅជា JSON
+    string (Serialization/Deserialization)
   - យល់ដឹងពីសារៈសំខាន់នៃ CSV និង JSON ក្នុង Data Science និង Web Development
-module: module-6-file-handling
-order: 2
+order: 4
 quiz:
-  - question: ហេតុអ្វីបានជាយើងគួរប្រើ 'csv' module ជាជាងការប្រើ '.split(",")' ដោយខ្លួនឯងដើម្បីអានឯកសារ CSV?
+  - question: >-
+      ហេតុអ្វីបានជាយើងគួរប្រើ 'csv' module ជាជាងការប្រើ '.split(",")'
+      ដោយខ្លួនឯងដើម្បីអានឯកសារ CSV?
     options:
       - ព្រោះវាដើរលឿនជាងការប្រើ .split()
-      - ព្រោះ .split(",") មិនអាចដោះស្រាយបញ្ហាទិន្នន័យដែលមានសញ្ញាក្បៀសនៅខាងក្នុងសញ្ញាធ្មេញកណ្តុរ (ឧ. "Sok, Sao") បានត្រឹមត្រូវទេ
+      - >-
+        ព្រោះ .split(",")
+        មិនអាចដោះស្រាយបញ្ហាទិន្នន័យដែលមានសញ្ញាក្បៀសនៅខាងក្នុងសញ្ញាធ្មេញកណ្តុរ
+        (ឧ. "Sok, Sao") បានត្រឹមត្រូវទេ
       - ព្រោះវាតម្រូវឱ្យប្រើដោយ Python 3
       - ព្រោះវាអាចបំប្លែងអក្សរទៅជាលេខដោយស្វ័យប្រវត្តិ
     correctAnswer: 2
-    explanation: 'ទិន្នន័យ CSV ពេលខ្លះមានផ្ទុកសញ្ញាក្បៀស (,) នៅខាងក្នុងអត្ថបទ ដែលត្រូវបានរុំដោយសញ្ញាធ្មេញកណ្តុរ ("...")។ កូដ .split(",") សាមញ្ញនឹងកាត់ផ្តាច់វាខុស ខណៈដែល csv module អាចយល់ពីច្បាប់នេះបានយ៉ាងច្បាស់។'
-  - question: តើអនុគមន៍មួយណាដែលប្រើសម្រាប់បំប្លែងទិន្នន័យ (Dictionary/List) របស់ Python ទៅជាអក្សរ JSON ធម្មតា?
+    explanation: >-
+      ទិន្នន័យ CSV ពេលខ្លះមានផ្ទុកសញ្ញាក្បៀស (,) នៅខាងក្នុងអត្ថបទ
+      ដែលត្រូវបានរុំដោយសញ្ញាធ្មេញកណ្តុរ ("...")។ កូដ .split(",")
+      សាមញ្ញនឹងកាត់ផ្តាច់វាខុស ខណៈដែល csv module អាចយល់ពីច្បាប់នេះបានយ៉ាងច្បាស់។
+  - question: >-
+      តើអនុគមន៍មួយណាដែលប្រើសម្រាប់បំប្លែងទិន្នន័យ (Dictionary/List) របស់ Python
+      ទៅជាអក្សរ JSON ធម្មតា?
     options:
       - json.load()
       - json.loads()
       - json.dump()
       - json.dumps()
     correctAnswer: 4
-    explanation: 'json.dumps() (dump string) ប្រើសម្រាប់បំប្លែង Object ទៅជា String (JSON)។ ចំណែក json.dump() ប្រើសម្រាប់សរសេរចូល file ផ្ទាល់។'
+    explanation: >-
+      json.dumps() (dump string) ប្រើសម្រាប់បំប្លែង Object ទៅជា String (JSON)។
+      ចំណែក json.dump() ប្រើសម្រាប់សរសេរចូល file ផ្ទាល់។
 ---
 
 ## 🌐 សេចក្តីផ្តើម (Overview)

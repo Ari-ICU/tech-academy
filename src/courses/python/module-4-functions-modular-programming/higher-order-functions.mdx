@@ -1,29 +1,47 @@
 ---
 title: Higher-Order និង Pure Functions
-description: ឈ្វេងយល់ពីទស្សនៈវិជ្ជាដ៏ជ្រាលជ្រៅរបស់ Functional Programming រួមមាន Pure Functions, Immutability, និងការប្រើប្រាស់ Higher-Order Functions កម្រិតខ្ពស់។
+description: >-
+  ឈ្វេងយល់ពីទស្សនៈវិជ្ជាដ៏ជ្រាលជ្រៅរបស់ Functional Programming រួមមាន Pure
+  Functions, Immutability, និងការប្រើប្រាស់ Higher-Order Functions កម្រិតខ្ពស់។
 objectives:
   - ស្វែងយល់ពីភាពខុសគ្នារវាង Pure Functions និង Impure Functions
-  - យល់ដឹងពីសារៈសំខាន់នៃ Immutability (ភាពមិនអាចកែប្រែបាន) ក្នុង Functional Programming
-  - បង្កើត Higher-Order Functions ស្មុគស្មាញដើម្បីរៀបចំកូដឱ្យកាន់តែមានប្រសិទ្ធភាព
-module: module-11-functional-programming
-order: 2
+  - >-
+    យល់ដឹងពីសារៈសំខាន់នៃ Immutability (ភាពមិនអាចកែប្រែបាន) ក្នុង Functional
+    Programming
+  - >-
+    បង្កើត Higher-Order Functions
+    ស្មុគស្មាញដើម្បីរៀបចំកូដឱ្យកាន់តែមានប្រសិទ្ធភាព
+order: 4
 quiz:
   - question: តើលក្ខណៈសម្បត្តិអ្វីខ្លះដែលធ្វើឱ្យអនុគមន៍មួយក្លាយជា 'Pure Function'?
     options:
       - វាត្រូវតែអត់មាន Parameters
-      - វាត្រូវតែមិនមាន Side Effects ហើយតែងតែប្រគល់លទ្ធផលដូចគ្នាជានិច្ចប្រសិនបើបញ្ចូល Arguments ដូចគ្នា
+      - >-
+        វាត្រូវតែមិនមាន Side Effects
+        ហើយតែងតែប្រគល់លទ្ធផលដូចគ្នាជានិច្ចប្រសិនបើបញ្ចូល Arguments ដូចគ្នា
       - វាត្រូវតែសរសេរត្រឹមតែមួយបន្ទាត់ (One-liner)
       - វាត្រូវតែដំណើរការលឿនជាងអនុគមន៍ធម្មតា
     correctAnswer: 2
-    explanation: 'Pure Function ប្រៀបដូចជារូបមន្តគណិតវិទ្យា។ បើអ្នកដាក់ x=2 វានឹងចេញ y=4 ជានិច្ច ហើយវាមិនលួចទៅកែប្រែអថេរផ្សេងៗនៅក្រៅកូដរបស់វានោះទេ (No Side Effects)។'
-  - question: ហេតុអ្វីបានជា Functional Programming លើកទឹកចិត្តឱ្យប្រើប្រាស់ទិន្នន័យដែលមិនអាចកែប្រែបាន (Immutability) ដូចជា Tuple ជាជាង List?
+    explanation: >-
+      Pure Function ប្រៀបដូចជារូបមន្តគណិតវិទ្យា។ បើអ្នកដាក់ x=2 វានឹងចេញ y=4
+      ជានិច្ច ហើយវាមិនលួចទៅកែប្រែអថេរផ្សេងៗនៅក្រៅកូដរបស់វានោះទេ (No Side
+      Effects)។
+  - question: >-
+      ហេតុអ្វីបានជា Functional Programming
+      លើកទឹកចិត្តឱ្យប្រើប្រាស់ទិន្នន័យដែលមិនអាចកែប្រែបាន (Immutability) ដូចជា
+      Tuple ជាជាង List?
     options:
       - ព្រោះ Tuple ស៊ី Memory តិចជាង
-      - ព្រោះវាការពារមិនឱ្យមានកំហុស (Bugs) ដោយសារការកែប្រែទិន្នន័យដោយអចេតនាពីកន្លែងផ្សេង
+      - >-
+        ព្រោះវាការពារមិនឱ្យមានកំហុស (Bugs)
+        ដោយសារការកែប្រែទិន្នន័យដោយអចេតនាពីកន្លែងផ្សេង
       - ព្រោះ Python 3 នឹងលុប List ចោលនៅពេលអនាគត
       - ព្រោះ Tuple អាចផ្ទុកទិន្នន័យបានច្រើនជាង List
     correctAnswer: 2
-    explanation: 'នៅពេលទិន្នន័យមិនអាចកែប្រែបាន (Immutable) អ្នកមិនបាច់បារម្ភថាមានអនុគមន៍ណាមួយលួចប្តូរតម្លៃរបស់វានោះទេ។ វាធ្វើឱ្យកូដមានសុវត្ថិភាពខ្ពស់ក្នុងការដំណើរការ (Thread-safe)។'
+    explanation: >-
+      នៅពេលទិន្នន័យមិនអាចកែប្រែបាន (Immutable)
+      អ្នកមិនបាច់បារម្ភថាមានអនុគមន៍ណាមួយលួចប្តូរតម្លៃរបស់វានោះទេ។
+      វាធ្វើឱ្យកូដមានសុវត្ថិភាពខ្ពស់ក្នុងការដំណើរការ (Thread-safe)។
 ---
 
 ## 🌐 Overview

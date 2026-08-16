@@ -1,29 +1,48 @@
 ---
 title: Threading និង Multiprocessing
-description: រៀនពីរបៀបធ្វើឱ្យកុំព្យូទ័ររបស់អ្នកធ្វើការងារច្រើនក្នុងពេលតែមួយ (Concurrency & Parallelism) ដើម្បីសន្សំសំចៃពេលវេលាដោយប្រើប្រាស់ Threading និង Multiprocessing។
+description: >-
+  រៀនពីរបៀបធ្វើឱ្យកុំព្យូទ័ររបស់អ្នកធ្វើការងារច្រើនក្នុងពេលតែមួយ (Concurrency &
+  Parallelism) ដើម្បីសន្សំសំចៃពេលវេលាដោយប្រើប្រាស់ Threading និង
+  Multiprocessing។
 objectives:
-  - ស្វែងយល់ពីភាពខុសគ្នារវាងការសរសេរកូដធម្មតា (Synchronous) និងការសរសេរកូដស្របគ្នា (Concurrent/Parallel)
+  - >-
+    ស្វែងយល់ពីភាពខុសគ្នារវាងការសរសេរកូដធម្មតា (Synchronous)
+    និងការសរសេរកូដស្របគ្នា (Concurrent/Parallel)
   - យល់ដឹងពីឥទ្ធិពលនៃ GIL (Global Interpreter Lock) នៅក្នុង Python
-  - ប្រើប្រាស់ Threading សម្រាប់ការងាររង់ចាំ (I/O-Bound) និង Multiprocessing សម្រាប់ការងារគណនា (CPU-Bound)
-module: module-12-concurrency
-order: 1
+  - >-
+    ប្រើប្រាស់ Threading សម្រាប់ការងាររង់ចាំ (I/O-Bound) និង Multiprocessing
+    សម្រាប់ការងារគណនា (CPU-Bound)
+order: 4
 quiz:
-  - question: តើអ្វីទៅជាបញ្ហាធំបំផុតរបស់ 'Threading' នៅក្នុង Python (CPython) សម្រាប់ការងារគណនាធ្ងន់ៗ (CPU-Bound)?
+  - question: >-
+      តើអ្វីទៅជាបញ្ហាធំបំផុតរបស់ 'Threading' នៅក្នុង Python (CPython)
+      សម្រាប់ការងារគណនាធ្ងន់ៗ (CPU-Bound)?
     options:
       - Threading ប្រើប្រាស់ Memory ច្រើនពេក
-      - បញ្ហា GIL (Global Interpreter Lock) ដែលអនុញ្ញាតឱ្យមានតែ Thread មួយគត់ដំណើរការកូដ Python ក្នុងពេលតែមួយ
+      - >-
+        បញ្ហា GIL (Global Interpreter Lock) ដែលអនុញ្ញាតឱ្យមានតែ Thread
+        មួយគត់ដំណើរការកូដ Python ក្នុងពេលតែមួយ
       - Threading អាចប្រើបានតែនៅលើ Windows ប៉ុណ្ណោះ
       - Threading មិនអាចអានឯកសារ (File I/O) បានទេ
     correctAnswer: 2
-    explanation: 'ដោយសារតែ GIL ទោះបីជាកុំព្យូទ័រអ្នកមាន 8 Cores ក៏ Threading នៅក្នុង Python អាចរត់កូដបានតែមួយ Core ដែរក្នុងពេលតែមួយ។ នេះធ្វើឱ្យ Threading មិនល្អសម្រាប់ការងារគណនាធ្ងន់ៗ តែវាល្អសម្រាប់ការងាររង់ចាំ (I/O) ដូចជាទាញយកទិន្នន័យពីអុីនធឺណិត។'
-  - question: ប្រសិនបើអ្នកចង់ដំណើរការ AI ម៉ូដែលដែលស៊ី CPU ខ្លាំងឱ្យដើរលឿនជាងមុន តើអ្នកគួរជ្រើសរើសមួយណា?
+    explanation: >-
+      ដោយសារតែ GIL ទោះបីជាកុំព្យូទ័រអ្នកមាន 8 Cores ក៏ Threading នៅក្នុង Python
+      អាចរត់កូដបានតែមួយ Core ដែរក្នុងពេលតែមួយ។ នេះធ្វើឱ្យ Threading
+      មិនល្អសម្រាប់ការងារគណនាធ្ងន់ៗ តែវាល្អសម្រាប់ការងាររង់ចាំ (I/O)
+      ដូចជាទាញយកទិន្នន័យពីអុីនធឺណិត។
+  - question: >-
+      ប្រសិនបើអ្នកចង់ដំណើរការ AI ម៉ូដែលដែលស៊ី CPU ខ្លាំងឱ្យដើរលឿនជាងមុន
+      តើអ្នកគួរជ្រើសរើសមួយណា?
     options:
       - Threading
       - Multiprocessing
       - Asyncio
       - គ្មានចម្លើយត្រឹមត្រូវ
     correctAnswer: 2
-    explanation: 'Multiprocessing បង្កើតដំណើរការ (Process) ដាច់ដោយឡែកពីគ្នា ដែល Process នីមួយៗមាន GIL ផ្ទាល់ខ្លួនរបស់វា។ វាអនុញ្ញាតឱ្យកុំព្យូទ័រប្រើប្រាស់ Cores ទាំងអស់របស់វាដើម្បីគណនាព្រមៗគ្នា (True Parallelism)។'
+    explanation: >-
+      Multiprocessing បង្កើតដំណើរការ (Process) ដាច់ដោយឡែកពីគ្នា ដែល Process
+      នីមួយៗមាន GIL ផ្ទាល់ខ្លួនរបស់វា។ វាអនុញ្ញាតឱ្យកុំព្យូទ័រប្រើប្រាស់ Cores
+      ទាំងអស់របស់វាដើម្បីគណនាព្រមៗគ្នា (True Parallelism)។
 ---
 
 ## 🌐 Overview

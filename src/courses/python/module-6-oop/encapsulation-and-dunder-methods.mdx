@@ -1,11 +1,17 @@
 ---
 title: Encapsulation និង Dunder Methods
-description: គ្រប់គ្រង access ទៅ class internals ជាមួយ encapsulation conventions, ហើយធ្វើឱ្យ objects របស់អ្នកដំណើរការដូច built-in Python types ដោយប្រើ dunder (magic) methods។
+description: >-
+  គ្រប់គ្រង access ទៅ class internals ជាមួយ encapsulation conventions,
+  ហើយធ្វើឱ្យ objects របស់អ្នកដំណើរការដូច built-in Python types ដោយប្រើ dunder
+  (magic) methods។
 objectives:
-  - អនុវត្ត encapsulation conventions របស់ Python ដោយប្រើ single និង double underscores
-  - Implement dunder methods ដើម្បី support operators, comparisons, និង iteration
+  - >-
+    អនុវត្ត encapsulation conventions របស់ Python ដោយប្រើ single និង double
+    underscores
+  - >-
+    Implement dunder methods ដើម្បី support operators, comparisons, និង
+    iteration
   - ប្រើ __slots__ ដើម្បី optimize memory-intensive classes
-module: module-5-oop
 order: 3
 quiz:
   - question: What does a double-underscore prefix (__name) do to a class attribute?
@@ -15,7 +21,9 @@ quiz:
       - Marks it as a constant
       - Makes it a class attribute rather than an instance attribute
     correctAnswer: 1
-    explanation: Double underscore triggers name mangling. Python renames __name to _ClassName__name, making accidental subclass overrides much harder.
+    explanation: >-
+      Double underscore triggers name mangling. Python renames __name to
+      _ClassName__name, making accidental subclass overrides much harder.
   - question: Which dunder method is called when you use the + operator on two objects?
     options:
       - __plus__
@@ -23,7 +31,9 @@ quiz:
       - __add__
       - __combine__
     correctAnswer: 2
-    explanation: __add__(self, other) is called when the + operator is applied to an object.
+    explanation: >-
+      __add__(self, other) is called when the + operator is applied to an
+      object.
 ---
 
 ## 🌐 សេចក្តីផ្តើម (Overview)

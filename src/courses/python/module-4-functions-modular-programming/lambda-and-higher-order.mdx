@@ -1,29 +1,34 @@
 ---
 title: Lambda Functions និង Higher-Order Functions
-description: សរសេរ anonymous functions ដែលខ្លីជាមួយ lambda, ហើយ pass functions ជា arguments ដោយប្រើ map(), filter(), និង sorted()។
+description: >-
+  សរសេរ anonymous functions ដែលខ្លីជាមួយ lambda, ហើយ pass functions ជា arguments
+  ដោយប្រើ map(), filter(), និង sorted()។
 objectives:
   - សរសេរ lambda expressions សម្រាប់ functions មួយបន្ទាត់សាមញ្យ
   - ប្រើ map() និង filter() ដើម្បី transform និង select ពី iterables
   - Pass functions ជា arguments ទៅ sorted() និង built-ins ផ្សេងទៀត
-module: module-3-functions
-order: 2
+order: 3
 quiz:
-  - question: "What does lambda x, y: x * y do?"
+  - question: 'What does lambda x, y: x * y do?'
     options:
-      - "Defines a named function that multiplies two numbers"
-      - "Creates an anonymous function that returns the product of x and y"
-      - "Immediately calls a function with arguments x and y"
-      - "Creates a list [x, y]"
+      - Defines a named function that multiplies two numbers
+      - Creates an anonymous function that returns the product of x and y
+      - Immediately calls a function with arguments x and y
+      - 'Creates a list [x, y]'
     correctAnswer: 1
-    explanation: "lambda creates an anonymous (unnamed) function. lambda x, y: x * y returns the product of its two parameters."
-  - question: "What does list(filter(lambda x: x > 0, [-3, -1, 0, 2, 5])) return?"
+    explanation: >-
+      lambda creates an anonymous (unnamed) function. lambda x, y: x * y returns
+      the product of its two parameters.
+  - question: 'What does list(filter(lambda x: x > 0, [-3, -1, 0, 2, 5])) return?'
     options:
-      - "[-3, -1, 0, 2, 5]"
-      - "[2, 5]"
-      - "[True, True]"
-      - "[0, 2, 5]"
+      - '[-3, -1, 0, 2, 5]'
+      - '[2, 5]'
+      - '[True, True]'
+      - '[0, 2, 5]'
     correctAnswer: 1
-    explanation: "filter() keeps only items for which the function returns True. x > 0 is True for 2 and 5 only."
+    explanation: >-
+      filter() keeps only items for which the function returns True. x > 0 is
+      True for 2 and 5 only.
 ---
 
 ## 🌐 Overview

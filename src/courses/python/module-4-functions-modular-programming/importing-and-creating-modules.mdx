@@ -1,29 +1,42 @@
 ---
 title: Modules និង Packages
-description: រៀនពីរបៀបនាំចូលកូដពីកន្លែងផ្សេង (Importing) និងការបង្កើតម៉ូឌុលផ្ទាល់ខ្លួនដើម្បីរៀបចំកូដឱ្យមានសណ្តាប់ធ្នាប់ ព្រមទាំងការប្រើប្រាស់ Standard Library របស់ Python។
+description: >-
+  រៀនពីរបៀបនាំចូលកូដពីកន្លែងផ្សេង (Importing)
+  និងការបង្កើតម៉ូឌុលផ្ទាល់ខ្លួនដើម្បីរៀបចំកូដឱ្យមានសណ្តាប់ធ្នាប់
+  ព្រមទាំងការប្រើប្រាស់ Standard Library របស់ Python។
 objectives:
-  - ស្វែងយល់ពីរបៀបប្រើប្រាស់ពាក្យគន្លឹះ import, from, និង as
+  - 'ស្វែងយល់ពីរបៀបប្រើប្រាស់ពាក្យគន្លឹះ import, from, និង as'
   - បង្កើតម៉ូឌុល (Module) និងកញ្ចប់ (Package) ដោយខ្លួនឯង
-  - ប្រើប្រាស់ Python Standard Library (ដូចជា math, random, os)
-module: module-9-modules-packages
-order: 1
+  - 'ប្រើប្រាស់ Python Standard Library (ដូចជា math, random, os)'
+order: 6
 quiz:
   - question: តើការប្រើប្រាស់ 'from math import *' មានហានិភ័យអ្វីខ្លះ?
     options:
       - វាធ្វើឱ្យកម្មវិធីដំណើរការយឺត
-      - វាអាចទាញយកអថេរ ឬអនុគមន៍ដែលមានឈ្មោះជាន់ជាមួយកូដរបស់អ្នក (Namespace Pollution)
+      - >-
+        វាអាចទាញយកអថេរ ឬអនុគមន៍ដែលមានឈ្មោះជាន់ជាមួយកូដរបស់អ្នក (Namespace
+        Pollution)
       - វាទាញយកតែផ្នែកខ្លះនៃ math module ប៉ុណ្ណោះ
       - Python 3 លែងអនុញ្ញាតឱ្យប្រើសញ្ញាផ្កាយ (*) ទៀតហើយ
     correctAnswer: 2
-    explanation: 'ការប្រើ * (Import ទាំងអស់) នឹងចាក់ឈ្មោះអនុគមន៍ទាំងអស់ចូលទៅក្នុងកូដរបស់អ្នក។ បើអ្នកមានអនុគមន៍ឈ្មោះ sin() ស្រាប់ វានឹងត្រូវជាន់ពីលើដោយអចេតនា។ យកល្អគួរប្រើ import math ឬ from math import pi, sin។'
+    explanation: >-
+      ការប្រើ * (Import ទាំងអស់)
+      នឹងចាក់ឈ្មោះអនុគមន៍ទាំងអស់ចូលទៅក្នុងកូដរបស់អ្នក។ បើអ្នកមានអនុគមន៍ឈ្មោះ
+      sin() ស្រាប់ វានឹងត្រូវជាន់ពីលើដោយអចេតនា។ យកល្អគួរប្រើ import math ឬ from
+      math import pi, sin។
   - question: តើអ្វីជាភាពខុសគ្នារវាង Module និង Package នៅក្នុង Python?
     options:
-      - Module ជាឯកសារ .py មួយ ចំណែកឯ Package ជាថត (Folder) ដែលផ្ទុក Modules ច្រើន
+      - >-
+        Module ជាឯកសារ .py មួយ ចំណែកឯ Package ជាថត (Folder) ដែលផ្ទុក Modules
+        ច្រើន
       - Module ជាកូដដែលអ្នកដទៃសរសេរ ចំណែក Package ជាកូដដែលយើងសរសេរ
       - Module ប្រើសម្រាប់ Data Science ឯ Package ប្រើសម្រាប់ Web Development
       - គ្មានភាពខុសគ្នាទេ គ្រាន់តែហៅខុសគ្នា
     correctAnswer: 1
-    explanation: 'Module គ្រាន់តែជាឯកសារ Python មួយ (.py) ចំណែកឯ Package គឺជា Folder មួយដែលមានផ្ទុកឯកសារ .py ច្រើន ហើយជាទូទៅមានឯកសារពិសេសមួយឈ្មោះ __init__.py នៅខាងក្នុង។'
+    explanation: >-
+      Module គ្រាន់តែជាឯកសារ Python មួយ (.py) ចំណែកឯ Package គឺជា Folder
+      មួយដែលមានផ្ទុកឯកសារ .py ច្រើន ហើយជាទូទៅមានឯកសារពិសេសមួយឈ្មោះ __init__.py
+      នៅខាងក្នុង។
 ---
 
 ## 🌐 សេចក្តីផ្តើម (Overview)

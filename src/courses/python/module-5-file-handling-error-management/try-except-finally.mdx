@@ -1,11 +1,14 @@
 ---
-title: Exception Handling (Try, Except, Finally)
-description: រៀនពីរបៀបការពារកម្មវិធីរបស់អ្នកកុំឱ្យគាំងនៅពេលមានបញ្ហាកើតឡើង ដោយប្រើប្រាស់ try, except, else, និង finally blocks។
+title: 'Exception Handling (Try, Except, Finally)'
+description: >-
+  រៀនពីរបៀបការពារកម្មវិធីរបស់អ្នកកុំឱ្យគាំងនៅពេលមានបញ្ហាកើតឡើង ដោយប្រើប្រាស់
+  try, except, else, និង finally blocks។
 objectives:
   - យល់ពីភាពខុសគ្នារវាង Syntax Errors និង Exceptions
-  - ប្រើប្រាស់ try-except ដើម្បីចាប់ និងដោះស្រាយកំហុស (Error Handling) ដោយសុវត្ថិភាព
+  - >-
+    ប្រើប្រាស់ try-except ដើម្បីចាប់ និងដោះស្រាយកំហុស (Error Handling)
+    ដោយសុវត្ថិភាព
   - យល់ពីតួនាទីរបស់ else និង finally ក្នុងការគ្រប់គ្រងលំហូរកូដ
-module: module-7-exception-handling
 order: 1
 quiz:
   - question: តើ 'finally' block ត្រូវបានដំណើរការនៅពេលណា?
@@ -15,15 +18,22 @@ quiz:
       - វាត្រូវបានដំណើរការជានិច្ច ទោះបីជាមាន ឬគ្មានកំហុសក៏ដោយ
       - នៅពេលដែល Python ជួបប្រទះ Syntax Error
     correctAnswer: 3
-    explanation: 'finally block ត្រូវបានដំណើរការជានិច្ច មិនថាកូដនៅក្នុង try ជោគជ័យ ឬបរាជ័យនោះទេ។ គេប្រើវាសម្រាប់បិទ File ឬកាត់ផ្តាច់ Database Connection។'
-  - question: ហេតុអ្វីបានជាការសរសេរ 'except:' ទទេៗ (Bare except) គឺជារឿងមិនល្អ?
+    explanation: >-
+      finally block ត្រូវបានដំណើរការជានិច្ច មិនថាកូដនៅក្នុង try ជោគជ័យ
+      ឬបរាជ័យនោះទេ។ គេប្រើវាសម្រាប់បិទ File ឬកាត់ផ្តាច់ Database Connection។
+  - question: 'ហេតុអ្វីបានជាការសរសេរ ''except:'' ទទេៗ (Bare except) គឺជារឿងមិនល្អ?'
     options:
       - ព្រោះវាធ្វើឱ្យកម្មវិធីដើរយឺត
-      - ព្រោះវានឹងចាប់យកគ្រប់កំហុសទាំងអស់ សូម្បីតែកំហុសប្រព័ន្ធ (SystemExit) ដែលធ្វើឱ្យយើងពិបាករកមូលហេតុពិតប្រាកដ
+      - >-
+        ព្រោះវានឹងចាប់យកគ្រប់កំហុសទាំងអស់ សូម្បីតែកំហុសប្រព័ន្ធ (SystemExit)
+        ដែលធ្វើឱ្យយើងពិបាករកមូលហេតុពិតប្រាកដ
       - ព្រោះ Python 3 លែងគាំទ្រការសរសេរបែបនេះទៀតហើយ
       - ព្រោះវានឹងធ្វើឱ្យកម្មវិធីលោត Error បន្ថែមទៀត
     correctAnswer: 2
-    explanation: 'ការប្រើ bare except នឹងលាក់បាំងកំហុសពិតប្រាកដ (ឧទាហរណ៍ ការវាយអក្សរខុស)។ យើងគួរតែចាប់យកតែកំហុសដែលយើងរំពឹងទុកប៉ុណ្ណោះ ដូចជា except ValueError: ជាដើម។'
+    explanation: >-
+      ការប្រើ bare except នឹងលាក់បាំងកំហុសពិតប្រាកដ (ឧទាហរណ៍ ការវាយអក្សរខុស)។
+      យើងគួរតែចាប់យកតែកំហុសដែលយើងរំពឹងទុកប៉ុណ្ណោះ ដូចជា except ValueError:
+      ជាដើម។
 ---
 
 ## 🌐 សេចក្តីផ្តើម (Overview)

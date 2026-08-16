@@ -1,29 +1,34 @@
 ---
 title: for Loops និង Iteration
-description: Iterate លើ sequences, ranges, និង iterable ណាមួយជាមួយ for loop, ហើយប្រើ enumerate(), zip(), និង list comprehensions។
+description: >-
+  Iterate លើ sequences, ranges, និង iterable ណាមួយជាមួយ for loop, ហើយប្រើ
+  enumerate(), zip(), និង list comprehensions។
 objectives:
-  - Iterate លើ lists, strings, ranges, និង dictionaries ជាមួយ for loops
+  - 'Iterate លើ lists, strings, ranges, និង dictionaries ជាមួយ for loops'
   - ប្រើ enumerate() និង zip() សម្រាប់ iteration ដែលសម្បូរជាង
   - សរសេរ list comprehensions ជាជម្រើសខ្លីជំនួស loops
-module: module-2-control-flow
 order: 2
 quiz:
-  - question: What does list(range(2, 10, 3)) produce?
+  - question: 'What does list(range(2, 10, 3)) produce?'
     options:
-      - "[2, 5, 8, 11]"
-      - "[2, 5, 8]"
-      - "[3, 6, 9]"
-      - "[2, 4, 6, 8]"
+      - '[2, 5, 8, 11]'
+      - '[2, 5, 8]'
+      - '[3, 6, 9]'
+      - '[2, 4, 6, 8]'
     correctAnswer: 1
-    explanation: range(2, 10, 3) starts at 2 and steps by 3 — giving 2, 5, 8. The next value (11) exceeds stop (10) so it is excluded.
-  - question: What does enumerate(['a', 'b', 'c']) yield on each iteration?
+    explanation: >-
+      range(2, 10, 3) starts at 2 and steps by 3 — giving 2, 5, 8. The next
+      value (11) exceeds stop (10) so it is excluded.
+  - question: 'What does enumerate([''a'', ''b'', ''c'']) yield on each iteration?'
     options:
-      - Just the values 'a', 'b', 'c'
-      - Tuples of (index, value) — (0,'a'), (1,'b'), (2,'c')
-      - A dictionary {0:'a', 1:'b', 2:'c'}
-      - Tuples of (value, index)
+      - 'Just the values ''a'', ''b'', ''c'''
+      - 'Tuples of (index, value) — (0,''a''), (1,''b''), (2,''c'')'
+      - 'A dictionary {0:''a'', 1:''b'', 2:''c''}'
+      - 'Tuples of (value, index)'
     correctAnswer: 1
-    explanation: enumerate() yields (index, value) tuples, defaulting to a start index of 0.
+    explanation: >-
+      enumerate() yields (index, value) tuples, defaulting to a start index of
+      0.
 ---
 
 ## 🎯 ហេតុអ្វីយើងត្រូវការរង្វិលជុំ (Loops)?

@@ -1,29 +1,45 @@
 ---
 title: Custom Exceptions និង Logging
-description: រៀនពីរបៀបបង្កើតកំហុសផ្ទាល់ខ្លួន (Custom Exceptions) ជាមួយពាក្យគន្លឹះ raise និងរបៀបប្រើប្រាស់ logging module ដើម្បីតាមដានសកម្មភាពកម្មវិធី។
+description: >-
+  រៀនពីរបៀបបង្កើតកំហុសផ្ទាល់ខ្លួន (Custom Exceptions) ជាមួយពាក្យគន្លឹះ raise
+  និងរបៀបប្រើប្រាស់ logging module ដើម្បីតាមដានសកម្មភាពកម្មវិធី។
 objectives:
   - ប្រើប្រាស់ពាក្យគន្លឹះ raise ដើម្បីបញ្ឈប់កម្មវិធីនៅពេលទិន្នន័យមិនត្រឹមត្រូវ
   - បង្កើត Custom Exception Classes ដោយទទួលមរតក (Inherit) ពី Exception class
-  - រៀបចំម៉ូឌុល logging ដើម្បីកត់ត្រាបញ្ហា និងព័ត៌មាន (INFO, WARNING, ERROR) ជាជាងការប្រើ print()
-module: module-7-exception-handling
+  - >-
+    រៀបចំម៉ូឌុល logging ដើម្បីកត់ត្រាបញ្ហា និងព័ត៌មាន (INFO, WARNING, ERROR)
+    ជាជាងការប្រើ print()
 order: 2
 quiz:
-  - question: ហេតុអ្វីបានជាយើងគួរប្រើ 'logging' ជាជាងប្រើ 'print()' ដើម្បីបង្ហាញព័ត៌មាននៅក្នុងកម្មវិធីពិតប្រាកដ (Production)?
+  - question: >-
+      ហេតុអ្វីបានជាយើងគួរប្រើ 'logging' ជាជាងប្រើ 'print()'
+      ដើម្បីបង្ហាញព័ត៌មាននៅក្នុងកម្មវិធីពិតប្រាកដ (Production)?
     options:
       - ព្រោះ print() ប្រើប្រាស់ Memory ច្រើនជាង
-      - ព្រោះ logging អាចរក្សាទុកទិន្នន័យចូលទៅក្នុង File និងអាចកំណត់កម្រិតសំខាន់ (Severity levels) ដូចជា WARNING ឬ ERROR បាន
+      - >-
+        ព្រោះ logging អាចរក្សាទុកទិន្នន័យចូលទៅក្នុង File និងអាចកំណត់កម្រិតសំខាន់
+        (Severity levels) ដូចជា WARNING ឬ ERROR បាន
       - ព្រោះ print() ដើរយឺតជាង
       - ព្រោះ Python 3 លែងគាំទ្រ print() សម្រាប់ការសរសេរកម្មវិធីធំៗ
     correctAnswer: 2
-    explanation: 'logging អនុញ្ញាតឱ្យអ្នករក្សាទុកសារនៅក្នុង File, កំណត់ពេលវេលាជាក់លាក់ (Timestamps), និងត្រងយកតែកំហុសធ្ងន់ធ្ងរ (ERROR) ដោយមិនចាំបាច់បង្ហាញរាល់សារធម្មតា (INFO) នោះទេ។ វាមានភាពបត់បែនជាង print() ឆ្ងាយណាស់។'
-  - question: តើពាក្យគន្លឹះអ្វីដែលប្រើសម្រាប់បង្កើតកំហុសដោយខ្លួនឯង (បញ្ឈប់កម្មវិធីដោយចេតនា)?
+    explanation: >-
+      logging អនុញ្ញាតឱ្យអ្នករក្សាទុកសារនៅក្នុង File, កំណត់ពេលវេលាជាក់លាក់
+      (Timestamps), និងត្រងយកតែកំហុសធ្ងន់ធ្ងរ (ERROR)
+      ដោយមិនចាំបាច់បង្ហាញរាល់សារធម្មតា (INFO) នោះទេ។ វាមានភាពបត់បែនជាង print()
+      ឆ្ងាយណាស់។
+  - question: >-
+      តើពាក្យគន្លឹះអ្វីដែលប្រើសម្រាប់បង្កើតកំហុសដោយខ្លួនឯង
+      (បញ្ឈប់កម្មវិធីដោយចេតនា)?
     options:
       - stop
       - break
       - throw
       - raise
     correctAnswer: 4
-    explanation: 'នៅក្នុង Python យើងប្រើពាក្យ "raise" ដើម្បីគប់ ឬបង្កើត Exception មួយ (ឧទាហរណ៍: raise ValueError("ខុសហើយ!"))។ ចំណែកភាសាផ្សេងដូចជា Java ប្រើពាក្យ "throw"។'
+    explanation: >-
+      នៅក្នុង Python យើងប្រើពាក្យ "raise" ដើម្បីគប់ ឬបង្កើត Exception មួយ
+      (ឧទាហរណ៍: raise ValueError("ខុសហើយ!"))។ ចំណែកភាសាផ្សេងដូចជា Java ប្រើពាក្យ
+      "throw"។
 ---
 
 ## 🌐 សេចក្តីផ្តើម (Overview)

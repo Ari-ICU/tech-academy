@@ -1,29 +1,38 @@
 ---
-title: Scope, Closures, និង Decorators
-description: យល់ពីរបៀបដែល Python resolve names ជាមួយ LEGB rule, របៀប closures capture state, និងរបៀប decorators wrap functions។
+title: 'Scope, Closures, និង Decorators'
+description: >-
+  យល់ពីរបៀបដែល Python resolve names ជាមួយ LEGB rule, របៀប closures capture
+  state, និងរបៀប decorators wrap functions។
 objectives:
   - ពន្យល់ LEGB scope chain និងពេលណាគួរប្រើ global និង nonlocal
   - កំណត់ closure ហើយពន្យល់អ្វីដែលវា capture
   - សរសេរ និងអនុវត្ត function decorator សាមញ្យ
-module: module-3-functions
-order: 3
+order: 2
 quiz:
-  - question: What keyword allows a nested function to modify a variable in its enclosing function's scope?
+  - question: >-
+      What keyword allows a nested function to modify a variable in its
+      enclosing function's scope?
     options:
       - global
       - nonlocal
       - outer
       - enclosing
     correctAnswer: 1
-    explanation: nonlocal allows a nested function to rebind a variable in the nearest enclosing (non-global) scope.
+    explanation: >-
+      nonlocal allows a nested function to rebind a variable in the nearest
+      enclosing (non-global) scope.
   - question: What is a closure?
     options:
       - A function that has no parameters
-      - A function that remembers the variables from its enclosing scope even after that scope has returned
+      - >-
+        A function that remembers the variables from its enclosing scope even
+        after that scope has returned
       - A class with a __call__ method
       - A function that cannot be called more than once
     correctAnswer: 1
-    explanation: A closure is a nested function that retains references to variables in its enclosing scope, even after the outer function has finished executing.
+    explanation: >-
+      A closure is a nested function that retains references to variables in its
+      enclosing scope, even after the outer function has finished executing.
 ---
 
 ## 🌐 Overview

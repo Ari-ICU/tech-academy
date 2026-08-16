@@ -1,29 +1,41 @@
 ---
 title: File System Operations
-description: រៀនពីរបៀបគ្រប់គ្រងឯកសារ និងថត (Directories) ដោយប្រើប្រាស់ pathlib ដើម្បីស្វែងរក បង្កើត ចម្លង និងលុបទីតាំងឯកសារ។
+description: >-
+  រៀនពីរបៀបគ្រប់គ្រងឯកសារ និងថត (Directories) ដោយប្រើប្រាស់ pathlib
+  ដើម្បីស្វែងរក បង្កើត ចម្លង និងលុបទីតាំងឯកសារ។
 objectives:
   - ស្វែងយល់ពីភាពខុសគ្នារវាង Absolute Path និង Relative Path
   - ប្រើប្រាស់ pathlib និង shutil សម្រាប់បង្កើត ចម្លង លុប និងប្តូរឈ្មោះឯកសារ/ថត
   - ទាញយកបញ្ជីឯកសារនៅក្នុងថត (Directory Listing) មកប្រើប្រាស់
-module: module-6-file-handling
-order: 3
+order: 5
 quiz:
   - question: តើភាពខុសគ្នារវាង Absolute Path និង Relative Path គឺជាអ្វី?
     options:
-      - Absolute Path ចាប់ផ្តើមពីថតបច្ចុប្បន្ន ចំណែក Relative Path ចាប់ផ្តើមពី Root (C:\ ឬ /)
-      - Absolute Path ចាប់ផ្តើមពីគល់ (Root) នៃ Drive (ឧ. C:\) ឯ Relative Path ចាប់ផ្តើមពីទីតាំងដែលយើងកំពុងឈរ (ថតបច្ចុប្បន្ន)
+      - >-
+        Absolute Path ចាប់ផ្តើមពីថតបច្ចុប្បន្ន ចំណែក Relative Path ចាប់ផ្តើមពី
+        Root (C:\ ឬ /)
+      - >-
+        Absolute Path ចាប់ផ្តើមពីគល់ (Root) នៃ Drive (ឧ. C:\) ឯ Relative Path
+        ចាប់ផ្តើមពីទីតាំងដែលយើងកំពុងឈរ (ថតបច្ចុប្បន្ន)
       - ទាំងពីរនេះគឺដូចគ្នា គ្រាន់តែប្រើក្នុងប្រព័ន្ធប្រតិបត្តិការខុសគ្នា
       - Relative Path អាចប្រើបានតែនៅលើ Mac ប៉ុណ្ណោះ
     correctAnswer: 2
-    explanation: 'Absolute Path គឺជាទីតាំងពេញលេញ (ឧ. C:\Users\Admin\file.txt)។ Relative Path គឺជាទីតាំងធៀបនឹងកន្លែងដែលកម្មវិធីកំពុងរត់ (ឧ. ./file.txt)។'
-  - question: តើ Library មួយណាដែល Python ណែនាំឱ្យប្រើសម្រាប់ការគ្រប់គ្រង File Paths ជំនាន់ថ្មីព្រោះវាងាយស្រួលជាងការតអក្សរចូលគ្នា?
+    explanation: >-
+      Absolute Path គឺជាទីតាំងពេញលេញ (ឧ. C:\Users\Admin\file.txt)។ Relative Path
+      គឺជាទីតាំងធៀបនឹងកន្លែងដែលកម្មវិធីកំពុងរត់ (ឧ. ./file.txt)។
+  - question: >-
+      តើ Library មួយណាដែល Python ណែនាំឱ្យប្រើសម្រាប់ការគ្រប់គ្រង File Paths
+      ជំនាន់ថ្មីព្រោះវាងាយស្រួលជាងការតអក្សរចូលគ្នា?
     options:
       - os.path
       - sys
       - pathlib
       - filemanager
     correctAnswer: 3
-    explanation: 'pathlib ជា Library ជំនាន់ថ្មី (មានតាំងពី Python 3.4) ដែលប្រើប្រាស់ Object-Oriented approach ដែលធ្វើឱ្យការសរសេរកូដគ្រប់គ្រង Path មានភាពងាយស្រួល និងស្អាតជាង os.path ឆ្ងាយណាស់។'
+    explanation: >-
+      pathlib ជា Library ជំនាន់ថ្មី (មានតាំងពី Python 3.4) ដែលប្រើប្រាស់
+      Object-Oriented approach ដែលធ្វើឱ្យការសរសេរកូដគ្រប់គ្រង Path
+      មានភាពងាយស្រួល និងស្អាតជាង os.path ឆ្ងាយណាស់។
 ---
 
 ## 🌐 សេចក្តីផ្តើម (Overview)

@@ -1,12 +1,13 @@
 ---
-title: Input, Output, និង Type Conversion
-description: រៀនពីរបៀបអាន user input, បង្កើត formatted output, និង convert ស្រួលរវាង data types របស់ Python។
+title: 'Input, Output, និង Type Conversion'
+description: >-
+  រៀនពីរបៀបអាន user input, បង្កើត formatted output, និង convert ស្រួលរវាង data
+  types របស់ Python។
 objectives:
   - អាន input ពី user ជាមួយ input() និង convert ទៅ type ត្រឹមត្រូវ
   - បង្កើត output ដែលរៀបរយ ជាមួយ print() និង f-strings
-  - Convert ស្រួលរវាង int, float, str, និង bool
-module: module-1-basics
-order: 5
+  - 'Convert ស្រួលរវាង int, float, str, និង bool'
+order: 4
 quiz:
   - question: What type does input() always return?
     options:
@@ -15,15 +16,19 @@ quiz:
       - str
       - depends on what the user types
     correctAnswer: 2
-    explanation: input() always returns a string, regardless of what the user types. You must explicitly convert it with int(), float(), etc.
+    explanation: >-
+      input() always returns a string, regardless of what the user types. You
+      must explicitly convert it with int(), float(), etc.
   - question: What does int("3.7") return?
     options:
-      - "3"
-      - "4"
-      - "3.7"
-      - "ValueError"
+      - '3'
+      - '4'
+      - '3.7'
+      - ValueError
     correctAnswer: 3
-    explanation: int() cannot parse a string containing a decimal point directly. You need int(float("3.7")) to get 3.
+    explanation: >-
+      int() cannot parse a string containing a decimal point directly. You need
+      int(float("3.7")) to get 3.
 ---
 
 ## 🎯 ហេតុអ្វីយើងត្រូវការ Input និង Output?

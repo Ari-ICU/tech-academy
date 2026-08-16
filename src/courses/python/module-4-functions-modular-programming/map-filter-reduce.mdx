@@ -1,21 +1,26 @@
 ---
-title: Map, Filter, និង Reduce
-description: រៀនពីរបៀបដំណើរការបញ្ជីទិន្នន័យ (Lists) ដោយមិនចាំបាច់ប្រើ for loops ដោយប្រើប្រាស់អនុគមន៍ map(), filter(), និង reduce() ដែលមានប្រសិទ្ធភាពខ្ពស់។
+title: 'Map, Filter, និង Reduce'
+description: >-
+  រៀនពីរបៀបដំណើរការបញ្ជីទិន្នន័យ (Lists) ដោយមិនចាំបាច់ប្រើ for loops
+  ដោយប្រើប្រាស់អនុគមន៍ map(), filter(), និង reduce() ដែលមានប្រសិទ្ធភាពខ្ពស់។
 objectives:
   - ស្វែងយល់ពីរបៀបប្រើប្រាស់ map() ដើម្បីផ្លាស់ប្តូរទិន្នន័យរាល់ធាតុនៅក្នុងបញ្ជី
   - ប្រើប្រាស់ filter() ដើម្បីត្រងយកតែទិន្នន័យដែលស្របតាមលក្ខខណ្ឌ
   - ប្រើប្រាស់ reduce() ដើម្បីបង្រួមបញ្ជីទិន្នន័យទាំងមូលទៅជាតម្លៃតែមួយ
-module: module-11-functional-programming
-order: 1
+order: 5
 quiz:
-  - question: តើអនុគមន៍មួយណាដែលអ្នកគួរប្រើ ប្រសិនបើអ្នកចង់ដកយកលេខសេសចេញពីបញ្ជី ហើយរក្សាទុកតែលេខគូ?
+  - question: >-
+      តើអនុគមន៍មួយណាដែលអ្នកគួរប្រើ ប្រសិនបើអ្នកចង់ដកយកលេខសេសចេញពីបញ្ជី
+      ហើយរក្សាទុកតែលេខគូ?
     options:
       - map()
       - filter()
       - reduce()
       - sort()
     correctAnswer: 2
-    explanation: 'filter() ត្រូវបានប្រើដើម្បីត្រង (ចម្រាញ់) យកតែទិន្នន័យណាដែលធ្វើឱ្យលក្ខខណ្ឌរបស់អ្នកក្លាយជា True ប៉ុណ្ណោះ។'
+    explanation: >-
+      filter() ត្រូវបានប្រើដើម្បីត្រង (ចម្រាញ់)
+      យកតែទិន្នន័យណាដែលធ្វើឱ្យលក្ខខណ្ឌរបស់អ្នកក្លាយជា True ប៉ុណ្ណោះ។
   - question: តើ 'reduce()' ស្ថិតនៅក្នុងម៉ូឌុលមួយណារបស់ Python 3?
     options:
       - វាជា built-in function មិនបាច់ import ទេ
@@ -23,7 +28,10 @@ quiz:
       - itertools
       - functools
     correctAnswer: 4
-    explanation: 'ចាប់ពី Python 3 មក reduce() លែងជា built-in function ទៀតហើយ ដោយសារអ្នកបង្កើត Python (Guido) គិតថាគេគួរតែប្រើ for loop ធម្មតាជំនួសវិញ។ អ្នកត្រូវតែសរសេរ: from functools import reduce។'
+    explanation: >-
+      ចាប់ពី Python 3 មក reduce() លែងជា built-in function ទៀតហើយ
+      ដោយសារអ្នកបង្កើត Python (Guido) គិតថាគេគួរតែប្រើ for loop ធម្មតាជំនួសវិញ។
+      អ្នកត្រូវតែសរសេរ: from functools import reduce។
 ---
 
 ## 🌐 Overview

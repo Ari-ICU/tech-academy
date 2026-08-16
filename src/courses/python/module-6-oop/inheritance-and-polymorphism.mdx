@@ -1,29 +1,38 @@
 ---
 title: Inheritance និង Polymorphism
-description: ពង្រីក classes ដែលមានស្រាប់ជាមួយ inheritance, override methods, ប្រើ super(), ហើយសរសេរ code ដែលដំណើរការជាមួយ object ណាមួយដែលត្រូវគ្នាតាម polymorphism។
+description: >-
+  ពង្រីក classes ដែលមានស្រាប់ជាមួយ inheritance, override methods, ប្រើ super(),
+  ហើយសរសេរ code ដែលដំណើរការជាមួយ object ណាមួយដែលត្រូវគ្នាតាម polymorphism។
 objectives:
   - កំណត់ subclass ដែល inherits ពី parent class
   - Override parent methods ហើយហៅពួកវាជាមួយ super()
   - ពន្យល់ polymorphism និង duck typing ក្នុង Python
-module: module-5-oop
 order: 2
 quiz:
   - question: What does super().__init__() do inside a subclass?
     options:
       - Creates a new instance of the parent class
-      - Calls the parent class's __init__ method to initialise inherited attributes
+      - >-
+        Calls the parent class's __init__ method to initialise inherited
+        attributes
       - Replaces self with the parent class
       - Deletes the current instance
     correctAnswer: 1
-    explanation: super().__init__() calls the parent class's initialiser, ensuring inherited attributes are set up before the subclass adds its own.
+    explanation: >-
+      super().__init__() calls the parent class's initialiser, ensuring
+      inherited attributes are set up before the subclass adds its own.
   - question: What is duck typing?
     options:
       - A type-checking system that requires explicit type declarations
-      - An approach where an object's suitability is determined by its methods and attributes, not its class
+      - >-
+        An approach where an object's suitability is determined by its methods
+        and attributes, not its class
       - A method for converting between types
       - A feature exclusive to Python 3.10+
     correctAnswer: 1
-    explanation: Duck typing — if it walks like a duck and quacks like a duck, it's a duck. Python cares about methods, not class hierarchy.
+    explanation: >-
+      Duck typing — if it walks like a duck and quacks like a duck, it's a duck.
+      Python cares about methods, not class hierarchy.
 ---
 
 ## 🌐 សេចក្តីផ្តើម (Overview)
